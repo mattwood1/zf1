@@ -1,0 +1,32 @@
+<?php
+	$modelname = $this->model->getModelName();
+	$modelAlias = $this->model->getModelAlias();
+	$photosets = $this->model->getModelPhotosets();
+	$this->title = $modelname->name;
+	$this->headTitle($this->title);
+?>
+
+<?php
+/*
+ * List Model Alias
+ */
+if ($modelAlias) {
+	foreach ($modelAlias as $alias) {
+		echo $alias->name;
+	}
+}
+?>
+
+<div>
+<a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id'=>$this->model['ID']));?>">Edit</a>
+</div>
+
+<?php
+/*
+ * List Photosets
+ */
+if ($photosets) : ?>
+    <ul id="photosets">
+<?php echo $this->partialLoop('photosetPartial.phtml', $photosets); ?>
+    </ul>
+<?php endif; ?>

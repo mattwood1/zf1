@@ -1,0 +1,99 @@
+@CHARSET "UTF-8";
+
+body,html {
+    margin: 0 5px;
+    font-family: Verdana,sans-serif;
+}
+h1 {
+    font-size: 1.4em;
+    color: #008000;
+}
+a {
+    color: #008000;
+}
+/* Table */
+th {
+    text-align: left;
+}
+td, th {
+	padding-right: 5px;
+}
+/* style form */
+form dt {
+    width: 100px;
+    display: block;
+    float: left;
+    clear: left;
+}
+form dd {
+    margin-left: 0;
+    float: left;
+    
+}
+form #submitbutton {
+	margin-left: 100px;
+}
+
+#photosets {
+    list-style: none;
+    padding: 0;
+}
+
+#photosets li {
+    float:left;
+    margin: 0 5px 5px 0;
+    width: 150px;
+    height: 240px;
+}
+
+.pagination {
+    clear: both;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+	/* iPhone, Android rules here */
+	body {
+		background: black;
+		color: rgb(179,179,179);
+		font-family: Helvetica;
+		font-size:12px;
+	}
+	h2 a {
+		color: rgb(179,179,179);
+	}
+	#content {
+		width: 320px;
+		margin: 0 auto;
+	}
+	#banner a {
+		color: rgb(179,179,179);
+	}
+	a {
+		color: rgb(179,179,179);
+	}
+	a:hover {
+		color: white;
+	}
+	
+	#ranking ul li{
+		margin: 0 5px 0 0;
+	}
+	
+	img {
+		border: 3px solid black;
+	}
+	
+	img.autoThumb {
+		border: 3px solid red;
+	}
+	
+    #photosets li {
+        float:left;
+        margin: 0 5px 5px 0;
+        width: 100px;
+        height: 160px;
+    }
+}

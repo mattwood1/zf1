@@ -1,0 +1,16 @@
+<?php
+	$modelname = $this->model->getModelName();
+	$this->title = $modelname->name;
+	$this->headTitle($this->title);
+?>
+
+<?php
+/*
+ * List images in Photoset
+ */
+
+if ($this->data) : ?>
+    <ul id="photosets">
+<?php echo $this->partialLoop('GalleryPartial.phtml', $this->data); ?>
+    </ul>
+<?php endif; ?>

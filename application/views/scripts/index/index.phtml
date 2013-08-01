@@ -1,0 +1,34 @@
+<?php
+	$this->title = "Goddesses";
+?>
+	<p>
+		<a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add'));?>">Add a new model</a>
+	</p>
+	<p>
+		<a href="<?php echo $this->url(array('order' => 'ranking_desc'));?>">Ranking</a>
+		<a href="<?php echo $this->url(array('order' => 'name_asc'));?>">Name</a>
+	</p>
+	<ul id="photosets">
+<?php
+	foreach($this->paginator as $model) :
+		$modelname = $model->getModelName();
+?>
+		<li>
+		    <?php $image = $model->getModelLatestPhotoset(); ?>
+			<a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null)); ?>">
+			    <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->thumbnail), 'page' => null)); ?>" />
+    			<div class="name">
+    			    <?php echo $this->escape($modelname->name);?>
+    			    (<?php echo $this->escape($model->ranking)?>)
+			    </div>
+
+			</a>
+
+		</li>
+<?php
+	endforeach;
+?>
+	</ul>
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+?>

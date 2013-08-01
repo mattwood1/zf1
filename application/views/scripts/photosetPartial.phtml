@@ -1,0 +1,9 @@
+		<li>
+			<a href="<?php echo $this->url(array('controller'=>'gallery', 'action'=>'view', 'photoset'=>$this->id)); ?>">
+				<img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($this->thumbnail))); ?>" />			
+				<div class="name">
+					<div class="background"></div>
+					<div class="text"><?php echo $this->name; ?></div>
+				</div>
+			</a>
+		</li>
