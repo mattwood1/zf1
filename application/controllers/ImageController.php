@@ -22,22 +22,22 @@ class ImageController extends Zend_Controller_Action
     public function thumbnailAction()
     {
         $this->_height('thumb');
-        $image = new Application_Model_Image();
+        $image = new God_Model_Image();
         return $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
     }
 
     public function largeAction()
     {
-    	$this->_height('large');
-    	$image = new Application_Model_Image();
-    	return $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, $this->_largeWidth.':'.$this->_height);
+        $this->_height('large');
+        $image = new God_Model_Image();
+        return $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, $this->_largeWidth.':'.$this->_height);
     }
 
     public function fullAction()
     {
-    	// action body
-    	// TODO: needs a view image/full.phtml
-    	$this->view->image = $this->_getParam('id');
+        // action body
+        // TODO: needs a view image/full.phtml
+        $this->view->image = $this->_getParam('id');
     }
 
     protected function _orientation()

@@ -1,34 +1,47 @@
 <?php
-	$this->title = "Goddesses";
+    $this->title = "Goddesses";
 ?>
-	<p>
-		<a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add'));?>">Add a new model</a>
-	</p>
-	<p>
-		<a href="<?php echo $this->url(array('order' => 'ranking_desc'));?>">Ranking</a>
-		<a href="<?php echo $this->url(array('order' => 'name_asc'));?>">Name</a>
-	</p>
-	<ul id="photosets">
-<?php
-	foreach($this->paginator as $model) :
-		$modelname = $model->getModelName();
-?>
-		<li>
-		    <?php $image = $model->getModelLatestPhotoset(); ?>
-			<a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null)); ?>">
-			    <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->thumbnail), 'page' => null)); ?>" />
-    			<div class="name">
-    			    <?php echo $this->escape($modelname->name);?>
-    			    (<?php echo $this->escape($model->ranking)?>)
-			    </div>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add'));?>">Add a new model</a>
+    </p>
 
-			</a>
+    <p>
+        <a href="<?php echo $this->url(array('order' => 'ranking_desc'));?>">Ranking</a>
+        <a href="<?php echo $this->url(array('order' => 'name_asc'));?>">Name</a>
+    </p>
 
-		</li>
-<?php
-	endforeach;
-?>
-	</ul>
-<?php
-	echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
-?>
+    <ul id="photosets">
+<?php foreach($this->models as $model): ?>
+        <li>
+            <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null)); ?>">
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->photosets[0]->thumbnail), 'page' => null)); ?>" />
+                <div class="name">
+                    <?php echo $model->names[0]->name ;?>
+                    (<?php echo $this->escape($model->ranking)?>)
+                </div>
+            </a>
+        </li>
+<?php endforeach; ?>
+    </ul>
+
+<?php $pagerRange = $this->paginator->getRange('Sliding', array('chunk' => 7))->rangeAroundPage(); ?>
+
+<?php if ($this->paginator->haveToPaginate()): ?>
+<div class="pagination" style="width:100%">
+    <div>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>">&lt;&lt;</a>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getPreviousPage())); ?>">&lt;</a>
+        <?php foreach ($pagerRange as $page): ?>
+            <?php
+            if ($page != $this->paginator->getPage()) {
+                echo '<a href="' . $this->url(array('page' => $page)) . '">' . $page . '</a> ';
+            } else {
+                echo $page.' ';
+            }
+            ?>
+        <?php endforeach; ?>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getNextPage())); ?>">&gt;</a>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">&gt;&gt;</a>
+    </div>
+</div>
+<?php endif; ?>

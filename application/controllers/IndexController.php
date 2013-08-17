@@ -10,20 +10,29 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
-    	$models = new Application_Model_DbTable_Models();
+        $paginator = new Doctrine_Pager(
+            Doctrine_Core::getTable('God_Model_Model')
+                ->createQuery('m')
+                ->innerJoin('m.names n')
+                ->innerJoin('m.photosets p')
 
-    	$order = $this->_getParam('order', 'ranking_desc');
-    	$order = str_replace("_", " ", $order);
+                ->where('m.active = ?', 1)
+                ->andWhere('m.ranking >= ?', 0)
 
-    	$result = $models->fetchAll('`active` = 1 AND `ranking` >= 0',$order);
-	    $page=$this->_getParam('page',1);
-	    $paginator = Zend_Paginator::factory($result);
-	    $paginator->setItemCountPerPage(24);
-	    $paginator->setDefaultPageRange(5);
-	    $paginator->setCurrentPageNumber($page);
+                ->andWhere('n.default = ?', 1)
 
-    	$this->view->paginator = $paginator;
+                ->andWhere('p.active = ?', 1)
+                ->andWhere('p.manual_thumbnail = ?', 1)
+                ->orderBy('m.ranking desc, p.name desc')
+
+                ,
+            $this->_getParam('page',1), 24 );
+
+        $models = $paginator->execute();
+
+        $this->view->paginator = $paginator;
+        $this->view->models = $models;
+
     }
 
     public function addAction()
