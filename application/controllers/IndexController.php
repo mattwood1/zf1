@@ -13,7 +13,7 @@ class IndexController extends Zend_Controller_Action
         $query = Doctrine_Core::getTable('God_Model_Model')
                         ->createQuery('m')
                         ->innerJoin('m.names n')
-                        ->innerJoin('m.photosets p')
+                        ->leftJoin('m.photosets p')
 
                         ->where('m.active = ?', 1)
                         ->andWhere('m.ranking >= ?', 0)
@@ -21,14 +21,28 @@ class IndexController extends Zend_Controller_Action
                         ->andWhere('n.default = ?', 1)
 
                         ->andWhere('p.active = ?', 1)
-                        ->andWhere('p.manual_thumbnail = ?', 1)
-                        ->orderBy('m.ranking desc, p.name desc');
+                        ->andWhere('p.manual_thumbnail = ?', 1);
 
-        if ($this->_request->isPost()) {
+        // Search
+        if ($this->_request->getParam('search')) {
             $query->andWhere('n.name like ?', '%' . $this->_request->getParam('search') . '%') ;
         }
 
-        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 24 );
+        // Ordering
+        if ($this->_request->getParam('order')) {
+            switch ($this->_request->getParam('order')) {
+                case 'ranking':
+                    $query->orderBy('m.ranking desc, p.name desc');
+                    break;
+                case 'name':
+                    $query->orderBy('n.name asc, p.name desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('m.ranking desc, p.name desc');
+        }
+
+        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
         $models = $paginator->execute();
 

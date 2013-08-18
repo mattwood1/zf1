@@ -1,5 +1,5 @@
 <?php
-class Application_Form_Model extends Zend_Form
+class God_Form_Model extends Zend_Form
 {
     public function init()
     {

@@ -11,7 +11,7 @@ class ModelController extends Zend_Controller_Action
     public function indexAction()
     {
         // action body
-        $model = new Application_Model_DbTable_Models();
+        $model = new God_Model_Model();
         $this->view->models = $model->fetchAll();
     }
 
@@ -37,7 +37,7 @@ class ModelController extends Zend_Controller_Action
     public function addAction()
     {
         // add body
-        $form = new Application_Form_Model();
+        $form = new God_Form_Model();
         $form->submit->setLabel('Add');
         $this->view->form = $form;
     }
