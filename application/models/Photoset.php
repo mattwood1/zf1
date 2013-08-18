@@ -49,4 +49,13 @@ class God_Model_Photoset extends Doctrine_Record
                 'length'             => '25'
         ));
     }
+
+    public function setUp()
+    {
+        $this->hasOne('God_Model_Model as model', array(
+                'local'   =>  'model_id',
+                'foreign' =>  'ID',
+                //'cascade' => array('delete')
+        ));
+    }
 }

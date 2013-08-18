@@ -1,40 +1,20 @@
-<?php //TODO: Replace with pagination in index/index.phtml ?>
+<?php if ($this->paginator->haveToPaginate()): ?>
+<?php $pagerRange = $this->paginator->getRange('Sliding', array('chunk' => 7))->rangeAroundPage(); ?>
 <div class="pagination" style="width:100%">
     <div>
-        <!-- First page link -->
-        <?php if (isset($this->previous)): ?>
-              <a href="<?php echo $this->url(array('page' => $this->first)); ?>">Start</a> |
-        <?php else: ?>
-                <span class="disabled">Start</span> |
-        <?php endif; ?>
-
-        <!-- Previous page link -->
-
-        <?php if (isset($this->previous)): ?>
-              <a href="<?php echo $this->url(array('page' => $this->previous)); ?>">&lt; Previous</a> |
-        <?php else: ?>
-            <span class="disabled">&lt; Previous</span> |
-        <?php endif; ?>
-        <!-- Numbered page links -->
-        <?php foreach ($this->pagesInRange as $page): ?>
-            <?php if ($page != $this->current): ?>
-                <a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a>
-            <?php else: ?>
-                <?php echo $page; ?>
-            <?php endif; ?>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>">&lt;&lt;</a>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getPreviousPage())); ?>">&lt;</a>
+        <?php foreach ($pagerRange as $page): ?>
+            <?php
+            if ($page != $this->paginator->getPage()) {
+                echo '<a href="' . $this->url(array('page' => $page)) . '">' . $page . '</a> ';
+            } else {
+                echo $page.' ';
+            }
+            ?>
         <?php endforeach; ?>
-        <!-- Next page link -->
-        <?php if (isset($this->next)): ?>
-              | <a href="<?php echo $this->url(array('page' => $this->next)); ?>">Next &gt;</a> |
-        <?php else: ?>
-            | <span class="disabled">Next &gt;</span> |
-        <?php endif; ?>
-        <!-- Last page link -->
-        <?php if (isset($this->next)): ?>
-              <a href="<?php echo $this->url(array('page' => $this->last)); ?>">End</a>
-        <?php else: ?>
-            <span class="disabled">End</span>
-        <?php endif; ?>
-        <br />Page <?php echo $this->current; ?> of <?php echo $this->last; ?>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getNextPage())); ?>">&gt;</a>
+        <a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">&gt;&gt;</a>
     </div>
- </div>
+</div>
+<?php endif; ?>

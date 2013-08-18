@@ -18,10 +18,11 @@ class ModelController extends Zend_Controller_Action
     public function viewAction()
     {
         // add body
-        $model = Doctrine_Core::getTable('God_Model_Model')
-            ->createQuery('m')
+
+        $query = Doctrine_Core::getTable('God_Model_Photoset')
+            ->createQuery('p')
+            ->innerJoin('p.model m')
             ->innerJoin('m.names n')
-            ->innerJoin('m.photosets p')
 
             ->where('m.ID = ?', $this->_request->getParam('id'))
             ->andWhere('m.active = ?', 1)
@@ -29,9 +30,12 @@ class ModelController extends Zend_Controller_Action
             ->andWhere('p.active = ?', 1)
             ->orderBy('p.name asc');
 
-        $model = $model->execute();
+        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
-        $this->view->model = $model[0];
+        $photosets = $paginator->execute();
+
+        $this->view->paginator = $paginator;
+        $this->view->photosets = $photosets;
     }
 
     public function addAction()

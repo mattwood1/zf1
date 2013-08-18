@@ -1,16 +1,18 @@
 <?php
-    $this->title = $this->model->names[0]->name;
-    $this->headTitle($this->model->names[0]->name);
+    $this->title = $this->photosets[0]->model->names[0]->name;
+    $this->headTitle($this->photosets[0]->model->names[0]->name);
 ?>
 
-<?php echo $this->model->names[0]->name; ?>
+<?php $this->photosets[0]->model->names[0]->name; ?>
 
 <div>
-    <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->model->ID));?>">Edit</a>
+    <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID));?>">Edit</a>
 </div>
 
-<?php if ($this->model->photosets): ?>
+<?php if ($this->photosets): ?>
     <ul id="photosets">
-        <?php echo $this->partialLoop('photosetPartial.phtml', $this->model->photosets); ?>
+        <?php echo $this->partialLoop('photosetPartial.phtml', $this->photosets); ?>
     </ul>
 <?php endif; ?>
+
+<?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
