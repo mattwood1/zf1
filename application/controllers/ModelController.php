@@ -49,7 +49,7 @@ class ModelController extends Zend_Controller_Action
     public function editAction()
     {
         // edit body
-        $form = new Application_Form_Model();
+        $form = new God_Form_Model();
         $form->submit->setLabel('Save');
         $this->view->form = $form;
         if ($this->getRequest()->isPost()) {
@@ -60,18 +60,22 @@ class ModelController extends Zend_Controller_Action
                 /*
                  * TODO: Add in the path and uri
                  */
-                $models = new Application_Model_DbTable_Models();
+                $models = new God_Model_Model();
                 $models->updateModel($id, $name, $path, $uri);
                 $this->_helper->redirector('view');
             } else {
                 $form->populate($formData);
             }
         } else {
-            $id = $this->_getParam('id', 0);
-            if ($id > 0) {
-                $models = new Application_Model_DbTable_Models();
-                $form->populate($models->getModel($id));
-            }
+            $model = Doctrine_Core::getTable('God_Model_Model')
+                ->createQuery('m')
+                ->innerJoin('m.names n')
+                ->where('m.ID = ?', $this->_request->getParam('id'));
+            $model = $model->execute()->toArray();
+
+            //echo '<pre>';var_dump($model);echo '</pre>';
+
+            $form->populate($model[0]);
         }
     }
 
