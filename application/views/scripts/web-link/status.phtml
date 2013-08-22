@@ -1,0 +1,10 @@
+<?php if ($this->webLinks): ?>
+    <ul>
+    <?php foreach($this->webLinks as $links): ?>
+        <li>
+            <?php echo $links->count; ?>
+            <a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'web-link', 'id' => $links->model->ID), null ,true); ?>"><?php echo $links->model->names[0]->name; ?></a>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

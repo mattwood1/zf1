@@ -79,6 +79,31 @@ class ModelController extends Zend_Controller_Action
         }
     }
 
+    public function webLinkAction()
+    {
+        $query = Doctrine_Query::create()
+            ->select('count(l.model_id) count, n.name, m.ID, l.*')
+            ->from('God_Model_WebLink l')
+            ->innerJoin('l.model m')
+            ->innerJoin('m.names n')
+
+            ->where('action = ?', God_Model_WebLink::webLink_GotThumbs)
+            ->andWhere('m.ID = ?', $this->_request->getParam('id'))
+            ->andWhere('n.default = ?', 1)
+
+            //->groupBy('l.model_id')
+            //->orderBy('m.ranking desc')
+        ;
+
+        $weblinks = $query->execute();
+        $this->view->webLinks = $weblinks;
+
+        echo '<pre>';
+        var_dump($weblinks->toArray());
+
+        exit;
+    }
+
     public function deleteAction()
     {
         // delete body

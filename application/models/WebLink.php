@@ -1,6 +1,13 @@
 <?php
 class God_Model_WebLink extends Doctrine_Record
 {
+    const webLink_Google    = 0;
+    const weblink_GetThumbs = 1;
+    const webLink_GotThumbs = 2;
+    const webLink_Problem   = 3;
+    const webLink_GetImages = 5;
+    const webLink_GotImages = 6;
+
     public function setTableDefinition()
     {
         $this->setTableName('webLinks');
@@ -57,6 +64,15 @@ class God_Model_WebLink extends Doctrine_Record
         $this->hasColumn('dateCreated', 'date', 25, array(
                 'type'               => 'date',
                 'length'             => '25'
+        ));
+    }
+
+    public function setUp()
+    {
+        $this->hasOne('God_Model_Model as model', array(
+                'local'   =>  'model_id',
+                'foreign' =>  'ID',
+                //'cascade' => array('delete')
         ));
     }
 }
