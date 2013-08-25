@@ -1,0 +1,29 @@
+<?php if ($this->webLinks): ?>
+    <form action="" method="post">
+    <ul>
+    <?php foreach ($this->webLinks as $webLink): ?>
+        <li>
+            <a href="<?php echo $webLink->url; ?>" target="_blank"><?php echo $webLink->url; ?></a><br />
+            <?php $thumbnails = unserialize($webLink->thumbnails); ?>
+            <?php foreach ($thumbnails as $thumbnail): ?>
+
+                <a href="/image/external?referer=<?php echo $webLink->url; ?>&url=<?php echo $thumbnail; ?>" target="_blank">
+                    <img src="/image/external?referer=<?php echo $webLink->url; ?>&url=<?php echo $thumbnail; ?>&width=80" />
+                </a>
+            <?php endforeach; ?><br />
+            <select name="weblink[<?php echo $webLink->id;?>]">
+
+                <option value="-1">Discard</option>
+                <option value="0">New Link</option>
+                <option value="1">Get thumbnails</option>
+                <option value="2">Got thumbnails</option>
+                <option value="3">Requires Attention</option>
+                <option value="6" selected="selected">Get Images</option>
+
+            </select>
+        </li>
+    <?php endforeach; ?>
+    </ul>
+    <button type="submit">Update</button>
+    </form>
+<?php endif; ?>

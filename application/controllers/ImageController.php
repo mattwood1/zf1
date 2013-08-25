@@ -26,6 +26,11 @@ class ImageController extends Zend_Controller_Action
         return $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
     }
 
+    public function mediumAction()
+    {
+        // Used for the Rating, comparing models
+    }
+
     public function largeAction()
     {
         $this->_height('large');
@@ -38,6 +43,15 @@ class ImageController extends Zend_Controller_Action
         // action body
         // TODO: needs a view image/full.phtml
         $this->view->image = $this->_getParam('id');
+    }
+
+    public function externalAction()
+    {
+        if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
+            $curl = new God_Model_Curl;
+            $curl->Curl($this->_request->getParam('referer'), $this->_request->getParam('url'), $this->_request->getParam('width'));
+        }
+        exit; // No template - direct output.
     }
 
     protected function _orientation()

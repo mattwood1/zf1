@@ -81,27 +81,37 @@ class ModelController extends Zend_Controller_Action
 
     public function webLinkAction()
     {
+        if ($this->_request->isPost()) {
+            foreach ($this->_request->getParam('weblink') as $id => $action) {
+                $weblink = Doctrine_Core::getTable('God_Model_WebLink')->findBy('id', $id);
+                $weblink->set('action', $action);
+                //$weblink->save();
+                echo '<pre>'; var_dump($action, $weblink); echo '</pre>';
+            }
+        }
+
         $query = Doctrine_Query::create()
-            ->select('count(l.model_id) count, n.name, m.ID, l.*')
+            ->select('l.*')
             ->from('God_Model_WebLink l')
             ->innerJoin('l.model m')
             ->innerJoin('m.names n')
 
-            ->where('action = ?', God_Model_WebLink::webLink_GotThumbs)
+            ->where('action = ?', $this->_request->getParam('key'))
             ->andWhere('m.ID = ?', $this->_request->getParam('id'))
             ->andWhere('n.default = ?', 1)
+
+            ->limit(5);
 
             //->groupBy('l.model_id')
             //->orderBy('m.ranking desc')
         ;
-
         $weblinks = $query->execute();
         $this->view->webLinks = $weblinks;
-
+        /*
         echo '<pre>';
         var_dump($weblinks->toArray());
-
         exit;
+        */
     }
 
     public function deleteAction()
