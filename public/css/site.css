@@ -6,14 +6,17 @@ body,html {
 }
 h1 {
     font-size: 1.4em;
-    color: #008000;
+    color: #000000;
+    text-align: center;
+    margin: 0 0 10px 0;
 }
 h2 {
     font-size: 1.2em;
-    color: #008000;
+    color: #000000;
+    margin: 0 0 10px 0;
 }
 a {
-    color: #008000;
+    color: #000000;
 }
 /* Table */
 th {
@@ -38,6 +41,11 @@ form #submitbutton {
     margin-left: 100px;
 }
 
+#filter > * {
+    float: left;
+    margin-right: 1em;
+}
+
 #content {
     max-width: 960px;
     margin: 0 auto;
@@ -46,6 +54,18 @@ form #submitbutton {
 #photosets {
     list-style: none;
     padding: 0;
+}
+
+.clearfix {
+    margin: 10px 0;
+}
+
+.clearfix:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
 }
 
 #photosets li {
@@ -105,5 +125,8 @@ form #submitbutton {
         margin: 0 5px 5px 0;
         width: 100px;
         height: 160px;
+    }
+    #search input {
+        width: 10em;
     }
 }

@@ -1,13 +1,17 @@
-    <p>
+    <div id="menu" class="clearfix">
         <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add', 'page' => null, 'search' => null, 'order' => null));?>">Add a new model</a>
-    </p>
+    </div>
 
-    <p>
+    <div id="filter" class="clearfix">
         <a href="<?php echo $this->url(array('order' => 'ranking'));?>">Ranking</a>
         <a href="<?php echo $this->url(array('order' => 'name'));?>">Name</a>
-    </p>
+        <form action="<?php echo $this->url(array('controller' => 'index', 'action' => 'search'),null,true); ?>" method="post" id="search">
+            <input type="text" name="keyword" value="<?php echo $this->keyword; ?>" />
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
-    <ul id="photosets">
+    <ul id="photosets" class="clearfix">
 <?php foreach($this->models as $model): ?>
         <li>
             <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>">
@@ -23,4 +27,4 @@
 
 <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
 
-<img src="http://zf.local/image/external/?referer=http://mx1.www.redpornblog.com/hot-adriana-malkova-posing-in-red-bikini&url=http://91.83.237.41/absoluteadriana.com/0009/tn_00.jpg&width=80" />
+<img src="http://erekosa.privatedns.org/image/external/?referer=http://mx1.www.redpornblog.com/hot-adriana-malkova-posing-in-red-bikini&url=http://91.83.237.41/absoluteadriana.com/0009/tn_00.jpg&width=80" />

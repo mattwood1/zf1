@@ -12,7 +12,7 @@ echo $this->doctype(); ?>
 <body>
 <div id="content">
     <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>
-    <h2><?php echo $this->escape($this->title); ?></h2>
+    <h2><?php echo $this->title; ?></h2>
     <?php echo $this->layout()->content; ?>
 </div>
 </body>

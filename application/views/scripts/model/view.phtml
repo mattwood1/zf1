@@ -10,7 +10,7 @@
 </div>
 
 <?php if ($this->photosets): ?>
-    <ul id="photosets">
+    <ul id="photosets" class="clearfix">
         <?php echo $this->partialLoop('photosetPartial.phtml', $this->photosets); ?>
     </ul>
 <?php endif; ?>

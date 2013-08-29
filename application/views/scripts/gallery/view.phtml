@@ -1,12 +1,12 @@
 <?php
-    $this->title = $this->model->names[0]->name;
+    $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->model->ID), null, true) . '">' . $this->model->names[0]->name . '</a>';
     $this->headTitle($this->model->names[0]->name);
 ?>
 
 <?php echo $this->model->photosets[0]->name; ?>
 
 <?php if ($this->data) : ?>
-    <ul id="photosets">
+    <ul id="photosets" class="clearfix">
         <?php echo $this->partialLoop('GalleryPartial.phtml', $this->data); ?>
     </ul>
 <?php endif; ?>

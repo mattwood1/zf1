@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends Zend_Controller_Action
+class IndexController extends Coda_Controller
 {
 
     public function init()
@@ -25,7 +25,8 @@ class IndexController extends Zend_Controller_Action
 
         // Search
         if ($this->_request->getParam('search')) {
-            $query->andWhere('n.name like ?', '%' . $this->_request->getParam('search') . '%') ;
+            $query->andWhere('n.name like ?', '%' . $this->_request->getParam('search') . '%');
+            $this->view->keyword = $this->_request->getParam('search');
         }
 
         // Ordering
@@ -49,6 +50,14 @@ class IndexController extends Zend_Controller_Action
         $this->view->paginator = $paginator;
         $this->view->models = $models;
 
+    }
+
+    public function searchAction()
+    {
+        if ($this->_request->isPost()) {
+            $this->gotoRoute(array('action' => 'index', 'search' => $this->_request->getParam('keyword')));
+        }
+        $this->gotoRoute(array('action' => 'index'));
     }
 
     public function addAction()

@@ -35,7 +35,7 @@ class ImageController extends Zend_Controller_Action
     {
         $this->_height('large');
         $image = new God_Model_Image();
-        return $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, $this->_largeWidth.':'.$this->_height);
+        return $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, null);
     }
 
     public function fullAction()
