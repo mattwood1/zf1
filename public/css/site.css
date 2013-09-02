@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 body,html {
-    margin: 0 5px;
+    margin: 0;
     font-family: Verdana,sans-serif;
 }
 h1 {
@@ -90,6 +90,7 @@ form #submitbutton {
         color: rgb(179,179,179);
         font-family: Helvetica;
         font-size:12px;
+        width: 312px;
     }
     h2 {
         color: rgb(179,179,179);
@@ -98,7 +99,7 @@ form #submitbutton {
         color: black;
     }
     #content {
-        width: 320px;
+        width: 312px;
         margin: 0 auto;
     }
     #banner a {
@@ -125,7 +126,7 @@ form #submitbutton {
     
     #photosets li {
         float:left;
-        margin: 0 5px 5px 0;
+        margin: 0 2px 0px 0;
         width: 100px;
         height: 160px;
     }
