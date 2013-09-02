@@ -74,6 +74,20 @@ class God_Model_Model extends Doctrine_Record
                 //'cascade' => array('delete')
         ));
     }
+
+    public function getName()
+    {
+        return $this->names[0]->name;
+    }
+
+
+    public function getLatestPhotoset()
+    {
+        $lastKey = array_pop(array_keys($this->photosets->toArray()));
+        return $this->photosets[$lastKey];
+    }
+
+
 /*
     public function getModelName()
     {

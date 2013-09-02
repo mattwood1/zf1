@@ -15,9 +15,9 @@
 <?php foreach($this->models as $model): ?>
         <li>
             <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>">
-                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->photosets[0]->thumbnail), 'page' => null)); ?>" />
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
                 <div class="name">
-                    <?php echo $model->names[0]->name ;?>
+                    <?php echo $model->getName() ;?>
                     (<?php echo $this->escape($model->ranking)?>)
                 </div>
             </a>

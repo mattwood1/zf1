@@ -58,4 +58,5 @@ class God_Model_Photoset extends Doctrine_Record
                 //'cascade' => array('delete')
         ));
     }
+
 }

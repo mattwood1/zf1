@@ -91,8 +91,11 @@ form #submitbutton {
         font-family: Helvetica;
         font-size:12px;
     }
-    h2 a {
+    h2 {
         color: rgb(179,179,179);
+    }
+    button {
+        color: black;
     }
     #content {
         width: 320px;
