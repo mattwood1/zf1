@@ -79,6 +79,39 @@ class ModelController extends Zend_Controller_Action
         }
     }
 
+    public function rankingAction()
+    {
+        echo '<pre>';
+        if ($this->_request->isPost()) {
+            // handle post
+        }
+
+        $modelTable = new God_Model_ModelTable;
+
+        // Get model ranking stats
+        $rankingStats = $modelTable->getRankingStats()->execute();
+
+        // Choose a random model stat
+        $rankingStatsKey = array_rand($rankingStats->toArray(), 1);
+
+
+
+        // Get models where ranking = the chosen stat
+        $models = $modelTable->getModelsByRanking($rankingStats[$rankingStatsKey]->ranking)->execute();
+
+        // Choose two random models.
+        $modelKeys = array_rand($models->toArray(), 2);
+
+var_dump($rankingStats[$rankingStatsKey]->toArray(), $models->toArray(), $modelKeys);
+
+
+
+        // View side by side.
+
+        // Buttons for Godlike! (Like).
+        exit;
+    }
+
     public function webLinkAction()
     {
         if ($this->_request->isPost()) {

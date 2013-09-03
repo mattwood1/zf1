@@ -10,19 +10,19 @@ class IndexController extends Coda_Controller
 
     public function indexAction()
     {
-        $ModelTable = new God_Model_ModelTable;
+        $modelTable = new God_Model_ModelTable;
 
-        $ModelTable->getModels();
+        $modelTable->getModels();
 
         if ($this->_request->getParam('search')) {
-            $ModelTable->setSearch($this->_request->getParam('search'));
+            $modelTable->setSearch($this->_request->getParam('search'));
         }
 
         if ($this->_request->getParam('order')) {
-            $ModelTable->setOrder($this->_request->getParam('order'));
+            $modelTable->setOrder($this->_request->getParam('order'));
         }
 
-        $paginator = new Doctrine_Pager($ModelTable->getQuery(), $this->_request->getParam('page'), 18);
+        $paginator = new Doctrine_Pager($modelTable->getQuery(), $this->_request->getParam('page'), 18);
         $models = $paginator->execute();
 
         $this->view->paginator = $paginator;

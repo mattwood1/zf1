@@ -26,6 +26,29 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_getOrder();
     }
 
+    public function getRankingStats()
+    {
+        $this->_query = $this->getInstance()
+            ->createQuery('m')
+            ->select('COUNT( * ) AS count, m.ranking')
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking >= ?', 0)
+            ->groupBy('m.ranking')
+            ->having('count > 1');
+        return $this->_query;
+    }
+
+    public function getModelsByRanking($ranking)
+    {
+        $this->_query = $this->getInstance()
+            ->createQuery('m')
+            ->innerJoin('m.names n')
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking = ?', $ranking)
+            ->andWhere('n.default = ?', 1);
+        return $this->_query;
+    }
+
     protected function _getOrder()
     {
         switch ($this->_order) {
