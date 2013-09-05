@@ -103,19 +103,22 @@ form #submitbutton {
     padding: 20px 0;
 }
 
-#ranking{}
-
-#ranking ul{
+ul#ranking {
     padding: 0;
     list-style: none;
     width: 890px;
     margin: 0 auto;
 }
 
-#ranking ul li{
+ul#ranking li{
     float: left;
     margin: 0 20px;
 }
+
+ul#ranking li div.image {
+        width: 400px;
+        height: 533px
+    }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     /* iPhone, Android rules here */
@@ -153,12 +156,17 @@ form #submitbutton {
         border: 0px;
     }
     
-    #ranking ul {
+    ul#ranking {
         width: 100%;
     }
-    #ranking ul li{
+    ul#ranking li{
         margin: 0 0;
         width: 50%;
+    }
+    
+    ul#ranking li div.image {
+        width: 150px;
+        height: 200px
     }
     
     img {

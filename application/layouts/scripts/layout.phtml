@@ -1,22 +1,24 @@
 <?php
-$this->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
-$this->headTitle()->setSeparator(' - ');
-$this->headTitle('Goddesses');
-echo $this->doctype(); ?>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <?php echo $this->headMeta(); ?>
-    <?php echo $this->headTitle(); ?>
-    <?php echo $this->headLink()->prependStylesheet($this->baseUrl().'/css/site.css'); ?>
+    $this->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+    $this->headTitle()->setSeparator(' - ');
+    $this->headTitle('Goddesses');
 
-    <!-- Designed Fro BlackBerry 320px width -->
-    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-</head>
-<body>
-<div id="content">
-    <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>
-    <h2><?php echo $this->title; ?></h2>
-    <?php echo $this->layout()->content; ?>
-</div>
-</body>
+    echo $this->doctype();
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <?php echo $this->headMeta(); ?>
+        <?php echo $this->headTitle(); ?>
+        <?php echo $this->headLink()->prependStylesheet($this->baseUrl().'/css/site.css'); ?>
+
+        <!-- Designed Fro BlackBerry 320px width -->
+        <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    </head>
+    <body>
+        <div id="content">
+            <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>
+            <h2><?php echo $this->title; ?></h2>
+            <?php echo $this->layout()->content; ?>
+        </div>
+    </body>
 </html>
