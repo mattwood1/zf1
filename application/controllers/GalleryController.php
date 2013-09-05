@@ -58,6 +58,12 @@ class GalleryController extends Zend_Controller_Action
         $this->view->data = $data;
     }
 
+    public function thumbnailAction()
+    {
+        echo 'This is to be written. Choose the gallery thumbnail.';
+        exit;
+    }
+
     function three_digits($value) {
         switch (strlen($value)) {
             case 1:

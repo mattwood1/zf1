@@ -18,6 +18,26 @@ h2 {
 a {
     color: #000000;
 }
+
+ul#menu {
+    list-style: none;
+    margin: 1em 0;
+    padding: 0;
+}
+
+ul#menu li {
+    float: left;
+    margin-right: 1em;
+}
+
+ul#menu li a {
+    
+}
+
+ul#menu li a:hover {
+    
+}
+
 /* Table */
 th {
     text-align: left;
@@ -83,6 +103,20 @@ form #submitbutton {
     padding: 20px 0;
 }
 
+#ranking{}
+
+#ranking ul{
+    padding: 0;
+    list-style: none;
+    width: 890px;
+    margin: 0 auto;
+}
+
+#ranking ul li{
+    float: left;
+    margin: 0 20px;
+}
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     /* iPhone, Android rules here */
     body {
@@ -99,8 +133,11 @@ form #submitbutton {
         color: black;
     }
     #content {
-        width: 312px;
+        width: 100%;
         margin: 0 auto;
+    
+        /* Debug Devices Width */
+        /*background: blue;*/
     }
     #banner a {
         color: rgb(179,179,179);
@@ -112,8 +149,16 @@ form #submitbutton {
         color: white;
     }
     
+    a img {
+        border: 0px;
+    }
+    
+    #ranking ul {
+        width: 100%;
+    }
     #ranking ul li{
-        margin: 0 5px 0 0;
+        margin: 0 0;
+        width: 50%;
     }
     
     img {
@@ -131,6 +176,6 @@ form #submitbutton {
         height: 160px;
     }
     #search input {
-        width: 10em;
+        width: 9em;
     }
 }

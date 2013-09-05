@@ -81,9 +81,11 @@ class ModelController extends Zend_Controller_Action
 
     public function rankingAction()
     {
-        echo '<pre>';
         if ($this->_request->isPost()) {
-            // handle post
+            $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
+            $model->ranking++;
+            $model->search = (bool)$this->_request->getParam('search');
+            $model->save();
         }
 
         $modelTable = new God_Model_ModelTable;
@@ -94,22 +96,11 @@ class ModelController extends Zend_Controller_Action
         // Choose a random model stat
         $rankingStatsKey = array_rand($rankingStats->toArray(), 1);
 
-
-
         // Get models where ranking = the chosen stat
         $models = $modelTable->getModelsByRanking($rankingStats[$rankingStatsKey]->ranking)->execute();
 
-        // Choose two random models.
-        $modelKeys = array_rand($models->toArray(), 2);
-
-var_dump($rankingStats[$rankingStatsKey]->toArray(), $models->toArray(), $modelKeys);
-
-
-
-        // View side by side.
-
-        // Buttons for Godlike! (Like).
-        exit;
+        $this->view->models = $models;
+        $this->view->modelKeys = array_rand($models->toArray(), 2);
     }
 
     public function webLinkAction()

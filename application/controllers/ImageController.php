@@ -3,7 +3,7 @@
 class ImageController extends Zend_Controller_Action
 {
     protected $_largeWidth = 800;
-    protected $_mediumWidth = 400;
+    protected $_mediumWidth = 400; // Desktop 400, BlackBerry 150
     protected $_thumbWidth = 150;
     protected $_height = 200;
     protected $_ratio = 1.333;
@@ -81,7 +81,7 @@ class ImageController extends Zend_Controller_Action
         switch(true) {
             case stristr($_SERVER['HTTP_USER_AGENT'], 'Blackberry'):
                 $this->_largeWidth = 320;
-                $this->_mediumWidth = 200;
+                $this->_mediumWidth = 150;
                 $this->_thumbWidth = floor($this->_thumbWidth-(($this->_thumbWidth/100)*33));
                 $this->_largeWidth = floor($this->_largeWidth*2);
                 break;

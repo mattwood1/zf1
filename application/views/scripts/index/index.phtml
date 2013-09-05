@@ -1,6 +1,7 @@
-    <div id="menu" class="clearfix">
-        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add', 'page' => null, 'search' => null, 'order' => null));?>">Add a new model</a>
-    </div>
+    <ul id="menu" class="clearfix">
+        <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null));?>">Add a new model</a></li>
+        <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking')); ?>">Ranking</a></li>
+    </ul>
 
     <div id="filter" class="clearfix">
         <a href="<?php echo $this->url(array('order' => 'ranking'));?>">Ranking</a>

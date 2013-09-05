@@ -73,6 +73,12 @@ class God_Model_Model extends Doctrine_Record
                 'foreign' =>  'model_id',
                 //'cascade' => array('delete')
         ));
+
+        $this->hasMany('God_Model_WebLink as webLinks', array(
+                'local'   =>  'ID',
+                'foreign' =>  'model_id',
+                //'cascade' => array('delete')
+        ));
     }
 
     public function getName()
@@ -83,8 +89,24 @@ class God_Model_Model extends Doctrine_Record
 
     public function getLatestPhotoset()
     {
-        $lastKey = array_pop(array_keys($this->photosets->toArray()));
-        return $this->photosets[$lastKey];
+        $key = array_pop(array_keys($this->photosets->toArray()));
+        return $this->photosets[$key];
+    }
+
+    public function getRandomPhotoset()
+    {
+        if ($this->photosets) {
+            $key = array_rand($this->photosets->toArray(), 1);
+            return $this->photosets[$key];
+        }
+        return null;
+    }
+
+    public function getWebLinkStats()
+    {
+        $weblinks = $this->webLinks;
+
+        return $weblinks;
     }
 
 
