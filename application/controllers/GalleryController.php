@@ -15,6 +15,8 @@ class GalleryController extends Zend_Controller_Action
 
     public function viewAction()
     {
+        // TODO: This should be getting a photoset - Removing the need for id being passed.
+
         $model = Doctrine_Core::getTable('God_Model_Model')
                 ->createQuery('m')
                 ->innerJoin('m.names n')
@@ -29,15 +31,27 @@ class GalleryController extends Zend_Controller_Action
         $model = $model->execute();
         $this->view->model = $model[0];
 
-        $path = $model[0]->photosets[0]->path;
+        $this->view->files = $this->_getFiles($model[0]->photosets[0]->path);
+    }
 
+    public function thumbnailAction()
+    {
+        $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
+
+        $this->view->photoset = $photoset;
+        $this->view->files = $this->_getFiles($photoset->path);
+    }
+
+    protected function _getFiles($path)
+    {
         $data = array();
+
         if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].'/'.$path)) {
             //    $counter = 0;
             while (false !== ($files = readdir($handle))) {
                 if ($files != "." && $files != "..") {        // remove '.' '..' directories
                     if (is_file($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files) == true) {
-                        $counter = $this->three_digits( str_ireplace(".jpg", "", $files));
+                        $counter = $this->_threeDigits( str_ireplace(".jpg", "", $files));
                         list($width,$height)=getimagesize($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files);
                         $data[$counter]['uri'] = $path.'/'.$files;
                         $data[$counter]['name'] = $files;
@@ -51,20 +65,15 @@ class GalleryController extends Zend_Controller_Action
             }
             closedir($handle);
         } else {
-            echo 'Cannot open '.$_SERVER['DOCUMENT_ROOT'].'/'.$path;
+            return 'Cannot open '.$_SERVER['DOCUMENT_ROOT'].'/'.$path;
         }
 
         ksort($data);
-        $this->view->data = $data;
+
+        return $data;
     }
 
-    public function thumbnailAction()
-    {
-        echo 'This is to be written. Choose the gallery thumbnail.';
-        exit;
-    }
-
-    function three_digits($value) {
+    protected function _threeDigits($value) {
         switch (strlen($value)) {
             case 1:
                 $value = "00".$value;

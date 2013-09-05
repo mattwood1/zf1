@@ -97,7 +97,11 @@ class God_Model_Model extends Doctrine_Record
     {
         if ($this->photosets) {
             $key = array_rand($this->photosets->toArray(), 1);
-            return $this->photosets[$key];
+            $photoset = $this->photosets[$key];
+
+            if ($photoset->active == 0) $this->getRandomPhotoset();
+
+            return $photoset;
         }
         return null;
     }

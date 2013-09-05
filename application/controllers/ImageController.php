@@ -82,7 +82,7 @@ class ImageController extends Zend_Controller_Action
             case stristr($_SERVER['HTTP_USER_AGENT'], 'Blackberry'):
                 $this->_largeWidth = 320;
                 $this->_mediumWidth = 150;
-                $this->_thumbWidth = floor($this->_thumbWidth-(($this->_thumbWidth/100)*33));
+                $this->_thumbWidth = 100;
                 $this->_largeWidth = floor($this->_largeWidth*2);
                 break;
         }

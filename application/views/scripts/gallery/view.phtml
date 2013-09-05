@@ -5,8 +5,8 @@
 
 <?php echo $this->model->photosets[0]->name; ?>
 
-<?php if ($this->data) : ?>
+<?php if ($this->files): ?>
     <ul id="photosets" class="clearfix">
-        <?php echo $this->partialLoop('GalleryPartial.phtml', $this->data); ?>
+        <?php echo $this->partialLoop('GalleryPartial.phtml', $this->files); ?>
     </ul>
 <?php endif; ?>
