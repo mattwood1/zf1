@@ -5,16 +5,21 @@
 
 <?php echo $this->photoset->name; ?>
 
+<pre><?php // var_dump($this->photoset->toArray());?></pre>
+
 <?php if ($this->files): ?>
-<form action="" method="post">
+<form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
     <ul id="photosets" class="clearfix">
         <?php foreach ($this->files as $file):?>
         <li>
-            <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'thumbnail', 'id' => rawurlencode($file['uri']), 'photoset' => null)); ?>" />
-            <input type="radio" id="<?php echo $file['name']; ?>" name="thumbnail" value="<?php echo $file['uri']; ?>" <?php echo $photoset->thumbnail == $file['uri'] ? ' checked="checked"' : ''; ?> />
+            <label for="<?php echo md5($file['name']); ?>" class="image" >
+                <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'thumbnail', 'id' => rawurlencode($file['uri']), 'photoset' => null)); ?>" />
+            </label>
+            <input type="radio" id="<?php echo md5($file['name']); ?>" name="thumbnail" value="<?php echo $file['uri']; ?>" <?php echo $this->photoset->thumbnail == $file['uri'] ? ' checked="checked"' : ''; ?> />
         </li>
         <?php endforeach; ?>
     </ul>
+    <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" /> 
     <button type="submit">Update</button>
 </form>
 <?php endif; ?>

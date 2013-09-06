@@ -43,9 +43,11 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_query = $this->getInstance()
             ->createQuery('m')
             ->innerJoin('m.names n')
+            ->innerJoin('m.photosets p')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking = ?', $ranking)
-            ->andWhere('n.default = ?', 1);
+            ->andWhere('n.default = ?', 1)
+            ->andWhere('p.active = ?',1);
         return $this->_query;
     }
 

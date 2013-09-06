@@ -183,6 +183,14 @@ ul#ranking li div.image {
         width: 100px;
         height: 160px;
     }
+    
+    #photosets li .image {
+        width: 100px;
+        height: 133px;
+        cursor: pointer;
+        display: block;
+    }
+    
     #search input {
         width: 9em;
     }

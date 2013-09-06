@@ -1,6 +1,6 @@
 <?php
 
-class GalleryController extends Zend_Controller_Action
+class GalleryController extends Coda_Controller
 {
 
     public function init()
@@ -38,6 +38,17 @@ class GalleryController extends Zend_Controller_Action
     {
         $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
 
+        if ($this->_request->isPost()) {
+            if ($this->_request->getParam('thumbnail')) {
+                $photoset->thumbnail = $this->_request->getParam('thumbnail');
+                $photoset->save();
+            }
+            
+            if ($this->_request->getParam('refferer')) {
+                $this->_redirect($this->_request->getParam('refferer'));
+            }
+        }
+        
         $this->view->photoset = $photoset;
         $this->view->files = $this->_getFiles($photoset->path);
     }
