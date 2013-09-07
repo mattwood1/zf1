@@ -59,4 +59,12 @@ class God_Model_Photoset extends Doctrine_Record
         ));
     }
 
+    public function isActive()
+    {
+        if ($this->active) {
+            return true;
+        }
+        return false;
+    }
+
 }

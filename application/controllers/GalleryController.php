@@ -15,23 +15,10 @@ class GalleryController extends Coda_Controller
 
     public function viewAction()
     {
-        // TODO: This should be getting a photoset - Removing the need for id being passed.
+        $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
 
-        $model = Doctrine_Core::getTable('God_Model_Model')
-                ->createQuery('m')
-                ->innerJoin('m.names n')
-                ->innerJoin('m.photosets p')
-
-                ->where('m.ID = ?', $this->_request->getParam('id'))
-                ->andWhere('m.active = ?', 1)
-                ->andWhere('n.default = ?', 1)
-                ->andWhere('p.id = ?', $this->_getParam('photoset'))
-                ->orderBy('p.name asc');
-
-        $model = $model->execute();
-        $this->view->model = $model[0];
-
-        $this->view->files = $this->_getFiles($model[0]->photosets[0]->path);
+        $this->view->photoset = $photoset;
+        $this->view->files = $this->_getFiles($photoset->path);
     }
 
     public function thumbnailAction()

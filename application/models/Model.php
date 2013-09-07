@@ -94,6 +94,13 @@ class God_Model_Model extends Doctrine_Record
 
     public function getLatestPhotoset()
     {
+        if ($this->photosets) {
+            foreach ($this->photosets as $key => $photoset) {
+                if (! $photoset->isActive()) {
+                    unset($this->photosets[$key]);
+                }
+            }
+        }
         $key = array_pop(array_keys($this->photosets->toArray()));
         return $this->photosets[$key];
     }

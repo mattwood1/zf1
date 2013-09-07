@@ -11,7 +11,26 @@
 
 <?php if ($this->photosets): ?>
     <ul id="photosets" class="clearfix">
-        <?php echo $this->partialLoop('photosetPartial.phtml', $this->photosets); ?>
+
+        <?php foreach ($this->photosets as $photoset): ?>
+        <li class="<?php echo $photoset->manual_thumbnail ? '' : 'autoThumb'; ?>">
+
+                <div class="image">
+                    <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'view', 'photoset' => $photoset->id),null, true); ?>">
+                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail))); ?>" />
+                    </a>
+                </div>
+                <div class="name">
+                    <?php if (! $photoset->manual_thumbnail): ?>
+                        <div class="right">
+                            <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'photoset' => $photoset->id), null, true); ?>">Thumb</a>
+                        </div>
+                    <?php endif; ?>
+                    <div class="text"><?php echo $photoset->name; ?></div>
+                </div>
+
+        </li>
+        <?php endforeach; ?>
     </ul>
 <?php endif; ?>
 

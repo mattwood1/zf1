@@ -1,6 +1,7 @@
 <?php
-    $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->model->ID), null, true) . '">' . $this->model->names[0]->name . '</a>';
-    $this->headTitle($this->model->names[0]->name);
+    $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->photoset->model->ID), null, true) . '">' . $this->photoset->model->getName(). '</a>';
+    $this->headTitle($this->photoset->name);
+    $this->headTitle($this->photoset->model->getName());
 ?>
 
 <ul id="menu" class="clearfix">
@@ -9,7 +10,7 @@
     </li>
 </ul>
 
-<?php echo $this->model->photosets[0]->name; ?>
+<?php echo $this->photoset->name; ?>
 
 <?php if ($this->files): ?>
     <ul id="photosets" class="clearfix">

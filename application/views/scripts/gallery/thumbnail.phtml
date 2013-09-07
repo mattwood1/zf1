@@ -12,7 +12,7 @@
 <form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
     <ul id="photosets" class="clearfix">
         <?php foreach ($this->files as $file):?>
-        <li>
+        <li class="<?php echo $this->photoset->thumbnail != $file['uri'] ? '' : 'autoThumb'; ?>">
             <label for="<?php echo md5($file['name']); ?>" class="image" >
                 <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'thumbnail', 'id' => rawurlencode($file['uri']), 'photoset' => null)); ?>" />
             </label>

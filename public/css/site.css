@@ -61,6 +61,10 @@ form #submitbutton {
     margin-left: 100px;
 }
 
+.right {
+    float: right;
+}
+
 #filter > * {
     float: left;
     margin-right: 1em;
@@ -93,6 +97,15 @@ form #submitbutton {
     margin: 0 5px 5px 0;
     width: 150px;
     height: 240px;
+}
+
+#photosets li div.image {
+    width: 150px;
+    height: 199px
+}
+
+ul#photosets li.autoThumb {
+    background: darkred;
 }
 
 .pagination {
@@ -189,7 +202,7 @@ ul#ranking li div.image {
         height: 133px;
         cursor: pointer;
         display: block;
-    }
+    }    
     
     #search input {
         width: 9em;
