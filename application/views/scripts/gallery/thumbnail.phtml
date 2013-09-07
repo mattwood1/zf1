@@ -1,6 +1,7 @@
 <?php
     $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->photoset->model->ID), null, true) . '">' . $this->photoset->model->getName() . '</a>';
     $this->headTitle($this->photoset->name);
+    $this->headTitle($this->photoset->model->getName());
 ?>
 
 <?php echo $this->photoset->name; ?>
@@ -19,7 +20,7 @@
         </li>
         <?php endforeach; ?>
     </ul>
-    <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" /> 
+    <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
     <button type="submit">Update</button>
 </form>
 <?php endif; ?>

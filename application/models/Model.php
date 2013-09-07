@@ -83,7 +83,12 @@ class God_Model_Model extends Doctrine_Record
 
     public function getName()
     {
-        return $this->names[0]->name;
+        foreach ($this->names as $key => $name){
+            if ($name->default == 1){
+                return $this->names[$key]->name;
+            }
+        }
+        return $this->names[0]->name . '(No Default)';
     }
 
 
