@@ -21,6 +21,7 @@
         <?php endforeach; ?>
     </ul>
     <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+    <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> /><label for="disableCheckbox">Disable photoset</label>
     <button type="submit">Update</button>
 </form>
 <?php endif; ?>

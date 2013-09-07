@@ -3,6 +3,12 @@
     $this->headTitle($this->model->names[0]->name);
 ?>
 
+<ul id="menu" class="clearfix">
+    <li>
+        <a href="<?php echo $this->url(array('action' => 'thumbnail'));?>">Change Thumbnail</a>
+    </li>
+</ul>
+
 <?php echo $this->model->photosets[0]->name; ?>
 
 <?php if ($this->files): ?>

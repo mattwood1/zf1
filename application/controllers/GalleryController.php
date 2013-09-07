@@ -41,14 +41,22 @@ class GalleryController extends Coda_Controller
         if ($this->_request->isPost()) {
             if ($this->_request->getParam('thumbnail')) {
                 $photoset->thumbnail = $this->_request->getParam('thumbnail');
-                $photoset->save();
+                $photoset->manual_thumbnail = true;
             }
-            
+
+            if ($this->_request->getParam('disable')) {
+                $photoset->active = false;
+            } else {
+                $photoset->active = true;
+            }
+
+            $photoset->save();
+
             if ($this->_request->getParam('refferer')) {
                 $this->_redirect($this->_request->getParam('refferer'));
             }
         }
-        
+
         $this->view->photoset = $photoset;
         $this->view->files = $this->_getFiles($photoset->path);
     }
