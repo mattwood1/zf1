@@ -26,16 +26,28 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_getOrder();
     }
 
-    public function getRankingStats()
+    /**
+     * 
+     * @return array of ranking => count
+     */
+    public function getRankingStats($minimum = null)
     {
-        $this->_query = $this->getInstance()
-            ->createQuery('m')
-            ->select('COUNT( * ) AS count, m.ranking')
-            ->where('m.active = ?', 1)
-            ->andWhere('m.ranking >= ?', 0)
-            ->groupBy('m.ranking')
-            ->having('count > 1');
-        return $this->_query;
+        $this->getModels();
+        
+        $ranking = array();
+        foreach ($this->_query->execute() as $model) {
+            @$ranking[$model->ranking]++; // @ to suppress warnings.
+        }
+        
+        if ($minimum) {
+            foreach ($ranking as $rank => $number) {
+                if ($number < $minimum) {
+                    unset($ranking[$rank]);
+                }
+            }
+        }
+        
+        return $ranking;
     }
 
     public function getModelsByRanking($ranking)
@@ -48,7 +60,8 @@ class God_Model_ModelTable extends Doctrine_Record
             ->andWhere('m.ranking = ?', $ranking)
             ->andWhere('n.default = ?', 1)
             ->andWhere('p.active = ?',1);
-        return $this->_query;
+
+        return $this->_query->execute();
     }
 
     protected function _getOrder()

@@ -104,7 +104,7 @@ form #submitbutton {
     height: 199px
 }
 
-ul#photosets li.autoThumb {
+li.autoThumb {
     background: darkred;
 }
 

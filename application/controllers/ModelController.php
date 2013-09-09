@@ -91,16 +91,27 @@ class ModelController extends Zend_Controller_Action
         $modelTable = new God_Model_ModelTable;
 
         // Get model ranking stats
-        $rankingStats = $modelTable->getRankingStats()->execute();
+        $rankingStats = $modelTable->getRankingStats(2);
 
         // Choose a random model stat
-        $rankingStatsKey = array_rand($rankingStats->toArray(), 1);
-
+        $rankingStatsKey = array_rand($rankingStats, 1);
+        
         // Get models where ranking = the chosen stat
-        $models = $modelTable->getModelsByRanking($rankingStats[$rankingStatsKey]->ranking)->execute();
+        $models = $modelTable->getModelsByRanking($rankingStatsKey);
 
         $this->view->models = $models;
         $this->view->modelKeys = array_rand($models->toArray(), 2);
+    }
+    
+    public function statsAction()
+    {
+        $models = new God_Model_ModelTable;
+        echo '<pre>';
+        //var_dump($models->getRankingStats()->toArray());
+        
+        $data = $models->getRankingStats(2);
+        var_dump($data);
+        exit;
     }
 
     public function webLinkAction()

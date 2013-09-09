@@ -8,7 +8,7 @@
             $model = $this->models[$modelKey];
             $photoset = $model->getRandomPhotoset();
     ?>
-    <li>
+    <li class="<?php echo $photoset->manual_thumbnail ? '' : 'autoThumb'; ?>">
         <div class="image">
             <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'view', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>">
                 <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'medium', 'id' => rawurlencode($photoset->thumbnail), 'page' => null)); ?>" />

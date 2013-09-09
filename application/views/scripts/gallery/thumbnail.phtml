@@ -8,8 +8,8 @@
 
 <pre><?php // var_dump($this->photoset->toArray());?></pre>
 
-<?php if ($this->files): ?>
 <form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
+    <?php if ($this->files): ?>
     <ul id="photosets" class="clearfix">
         <?php foreach ($this->files as $file):?>
         <li class="<?php echo $this->photoset->thumbnail != $file['uri'] ? '' : 'autoThumb'; ?>">
@@ -20,8 +20,8 @@
         </li>
         <?php endforeach; ?>
     </ul>
+    <?php endif; ?>
     <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-    <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> /><label for="disableCheckbox">Disable photoset</label>
     <button type="submit">Update</button>
+    <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> /><label for="disableCheckbox">Disable photoset</label>
 </form>
-<?php endif; ?>
