@@ -1,6 +1,6 @@
 <?php
 
-class ImageController extends Zend_Controller_Action
+class ImageController extends Coda_Controller
 {
     protected $_largeWidth = 800;
     protected $_mediumWidth = 400; // Desktop 400, BlackBerry 150

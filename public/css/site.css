@@ -71,7 +71,7 @@ form #submitbutton {
 }
 
 #content {
-    max-width: 960px;
+    max-width: 930px;
     margin: 0 auto;
 }
 
@@ -132,6 +132,11 @@ ul#ranking li div.image {
         width: 400px;
         height: 533px
     }
+    
+.rankingLine {
+    height: 3px;
+    background: black;
+}
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     /* iPhone, Android rules here */
@@ -206,5 +211,10 @@ ul#ranking li div.image {
     
     #search input {
         width: 9em;
+    }
+    
+    .rankingLine {
+        height: 2px;
+        background: white;
     }
 }

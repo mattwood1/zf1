@@ -96,7 +96,7 @@ class God_Model_Model extends Doctrine_Record
     {
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
-                if (! $photoset->isActive()) {
+                if (! $photoset->isActive() || ! $photoset->isManualThumb() ) {
                     unset($this->photosets[$key]);
                 }
             }

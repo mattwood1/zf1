@@ -16,6 +16,13 @@
     </head>
     <body>
         <div id="content">
+            <div class="right">
+                <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout')); ?>">Log out <?php echo Zend_Auth::getInstance()->getIdentity(); ?></a>
+                <?php else: ?>
+                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'login')); ?>">Log In</a>
+                <?php endif;?>
+            </div>
             <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>
             <h2><?php echo $this->title; ?></h2>
             <?php echo $this->layout()->content; ?>

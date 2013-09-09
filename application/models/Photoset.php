@@ -67,4 +67,12 @@ class God_Model_Photoset extends Doctrine_Record
         return false;
     }
 
+    public function isManualThumb()
+    {
+        if ($this->manual_thumbnail) {
+            return true;
+        }
+        return false;
+    }
+
 }

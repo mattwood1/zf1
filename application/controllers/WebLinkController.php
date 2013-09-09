@@ -1,6 +1,6 @@
 <?php
 
-class WebLinkController extends Zend_Controller_Action
+class WebLinkController extends Coda_Controller
 {
 
     public function init()

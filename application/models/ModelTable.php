@@ -27,18 +27,18 @@ class God_Model_ModelTable extends Doctrine_Record
     }
 
     /**
-     * 
+     *
      * @return array of ranking => count
      */
     public function getRankingStats($minimum = null)
     {
         $this->getModels();
-        
+
         $ranking = array();
         foreach ($this->_query->execute() as $model) {
             @$ranking[$model->ranking]++; // @ to suppress warnings.
         }
-        
+
         if ($minimum) {
             foreach ($ranking as $rank => $number) {
                 if ($number < $minimum) {
@@ -46,7 +46,9 @@ class God_Model_ModelTable extends Doctrine_Record
                 }
             }
         }
-        
+
+        ksort($ranking);
+
         return $ranking;
     }
 
