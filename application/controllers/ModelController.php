@@ -8,17 +8,9 @@ class ModelController extends Coda_Controller
         /* Initialize action controller here */
     }
 
-    public function indexAction()
-    {
-        // action body
-        $model = new God_Model_Model();
-        $this->view->models = $model->fetchAll();
-    }
-
     public function viewAction()
     {
         // add body
-
         $query = Doctrine_Core::getTable('God_Model_Photoset')
             ->createQuery('p')
             ->innerJoin('p.model m')
@@ -77,6 +69,10 @@ class ModelController extends Coda_Controller
 
             $form->populate($model[0]);
         }
+
+        $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('id'));
+
+        $this->view->model = $model;
     }
 
     public function rankingAction()

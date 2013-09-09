@@ -81,6 +81,10 @@ class God_Model_Model extends Doctrine_Record
         ));
     }
 
+    /**
+     * Returns the Models default name
+     * @return string
+     */
     public function getName()
     {
         foreach ($this->names as $key => $name){
@@ -89,6 +93,20 @@ class God_Model_Model extends Doctrine_Record
             }
         }
         return $this->names[0]->name . '(No Default)';
+    }
+
+    /**
+     * Returns the Models Aliases
+     * @return God_Model_Model->names[]
+     */
+    public function getAliases()
+    {
+        foreach ($this->names as $key => $name){
+            if ($name->default == 1){
+                unset ($this->names[$key]);
+            }
+        }
+        return $this->names;
     }
 
 

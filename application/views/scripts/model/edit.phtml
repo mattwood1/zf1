@@ -1,7 +1,27 @@
 <?php
-$this->title = $this->model['name'];
-$this->headTitle($this->title);
 $this->headTitle('Edit');
-
-echo $this->form;
+$this->headTitle($this->model->getName());
+$this->title = $this->model->getName();
 ?>
+
+<form action="" method="post">
+
+    <?php if ($this->model->names): ?>
+        <h3>Display Name</h3>
+        <?php foreach ($this->model->names as $alias): ?>
+        <div>
+            <input type="radio" name="modelName" value="<?php echo $alias->ID; ?>" id="modelName_<?php echo $alias->ID; ?>" <?php echo $this->model->getName() == $alias->name ? ' checked="checked"' : ''; ?>>
+            <label for="modelName_<?php echo $alias->ID; ?>"><?php echo $alias->name; ?></label>
+        </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php // New Alias ?>
+
+    <?php // Last Google search date ?>
+
+    <?php // WebLink Stats for this model ?>
+
+
+
+</form>
