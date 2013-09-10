@@ -9,7 +9,7 @@
 <pre><?php // var_dump($this->photoset->toArray());?></pre>
 
 <form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
-    <?php if ($this->files): ?>
+    <?php if (is_array($this->files)): ?>
     <ul id="photosets" class="clearfix">
         <?php foreach ($this->files as $file):?>
         <li class="<?php echo $this->photoset->thumbnail != $file['uri'] ? '' : 'autoThumb'; ?>">
@@ -20,6 +20,8 @@
         </li>
         <?php endforeach; ?>
     </ul>
+    <?php else:?>
+    <?php echo $this->files; ?>
     <?php endif; ?>
     <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
     <button type="submit">Update</button>

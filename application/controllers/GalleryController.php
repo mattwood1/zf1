@@ -51,8 +51,8 @@ class GalleryController extends Coda_Controller
     protected function _getFiles($path)
     {
         $data = array();
-
-        if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].'/'.$path)) {
+        if (is_dir($_SERVER['DOCUMENT_ROOT'].'/'.$path)) {
+            $handle = opendir($_SERVER['DOCUMENT_ROOT'].'/'.$path);
             //    $counter = 0;
             while (false !== ($files = readdir($handle))) {
                 if ($files != "." && $files != "..") {        // remove '.' '..' directories
