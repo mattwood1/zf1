@@ -26,8 +26,7 @@
             <?php echo $this->files; ?>
         </div>
     <?php endif; ?>
-
-    <input type="hidden" name="refferer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+    <input type="hidden" name="referer" value="<?php echo array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : ''; ?>" />
     <button type="submit">Update</button>
     <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> /><label for="disableCheckbox">Disable photoset</label>
 </form>

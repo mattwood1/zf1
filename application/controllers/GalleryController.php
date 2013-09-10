@@ -39,8 +39,8 @@ class GalleryController extends Coda_Controller
 
             $photoset->save();
 
-            if ($this->_request->getParam('refferer')) {
-                $this->_redirect($this->_request->getParam('refferer'));
+            if ($this->_request->getParam('referer')) {
+                $this->_redirect($this->_request->getParam('referer'));
             }
         }
 
