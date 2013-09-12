@@ -203,7 +203,7 @@ ul#ranking li div.image {
         height: 160px;
     }
     
-    #photosets li .image {
+    #photosets li div.image, #photosets li label.image {
         width: 100px;
         height: 133px;
         cursor: pointer;
