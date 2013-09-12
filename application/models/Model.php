@@ -58,6 +58,13 @@ class God_Model_Model extends Doctrine_Record
                 'type'               => 'timestamp',
                 'length'             => '25'
         ));
+
+        $this->hasColumn('photosetsChecked', 'date', 25, array(
+                'type'               => 'date',
+                'length'             => '25'
+        ));
+
+
     }
 
     public function setUp()
