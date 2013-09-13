@@ -123,6 +123,103 @@ class God_Model_Model extends Doctrine_Record
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
             //echo('Update Photosets');
+
+            /*
+             * ORIGINAL CODE FROM GODDESSES
+             *
+             * provided to the function $model_id, $path, $uri
+             *
+            $sql = new sql();
+            if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].$path)) {
+                while (false !== ($photoset = readdir($handle))) {
+                    if ($photoset != "." && $photoset != "..") {        // remove '.' '..' directories
+                        if (is_dir($_SERVER['DOCUMENT_ROOT'].$path.'/'.$photoset) == true) {
+                            //                      echo '<p>'.$path.'/'.$photoset;
+
+                            // Find first image
+                            $imagehandle = opendir($_SERVER['DOCUMENT_ROOT'].$path.'/'.$photoset);
+                            $images = array();
+                            while (false !== ($image = readdir($imagehandle))) {
+                                if ($image != "." && $image != "..") {      // remove '.' '..' directories
+                                    if (is_file($_SERVER['DOCUMENT_ROOT'].$path.'/'.$photoset.'/'.$image) == true) {
+                                        $images[] = $image;
+                                    }
+                                }
+                            }
+                            closedir($imagehandle);
+                            asort($images);
+
+                            $sql->query('SELECT * FROM `photosets` WHERE path = "'.mysql_escape_string($path).'/'.mysql_escape_string($photoset).'"');
+                            if ($sql->count() == 0) {
+                                $sql->query('INSERT INTO `photosets` (`model_id`, `name`, `path`, `uri`, `thumbnail`) VALUES ("'.$model_id.'", "'.mysql_escape_string($photoset).'", "'.$path.'/'.$photoset.'", "'.$uri.'/'.$photoset.'", "'.$path.'/'.$photoset.'/'.$images[0].'")');
+                                //                          echo ' -> Inserted<br />';
+                            } else {
+                                //                          echo ' -> Exists<br />';
+                                $result = $sql->result();
+                                if (!file_exists( $result['thumbnail'] )) {
+                                    $sql->query("UPDATE `photosets` SET `thumbnail` = '".mysql_escape_string($path).'/'.mysql_escape_string($photoset).'/'.$images[0]."' WHERE id = ".$result['id']." AND manual_thumbnail = 0");
+                                }
+                            }
+                            echo '</p>';
+                        } else {
+                            echo '<p>'.$path.'/'.$photoset.' is not a directory!</p>';
+                        }
+                    }
+                }
+                closedir($handle);
+            } else {
+                echo 'Cannot open '.$path;
+            }
+            return true;
+             */
+
+            /* TODO: Futher Developement
+            if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].$this->path)) {
+                while (false !== ($photosetDir = readdir($handle))) {
+                    if ($photosetDir != "." && $photosetDir != "..") {        // remove '.' '..' directories
+                        if (is_dir($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir) == true) {
+
+                            // Find first image
+                            $fileshandle = opendir($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir);
+                            $files = array();
+                            while (false !== ($file = readdir($fileshandle))) {
+                                if ($file != "." && $file != "..") {      // remove '.' '..' directories
+                                    if (is_file($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir.'/'.$file) == true) {
+                                        $files[] = $file;
+                                    }
+                                }
+                            }
+
+                            closedir($fileshandle);
+                            asort($files);
+
+                            // Query for photoset
+                            $photosetFound = false;
+                            foreach ($this->photosets as $photoset) {
+                                if ($photoset->path == $this->path.'/'.$photosetDir) {
+                                    $photosetFound == true;
+                                }
+                            }
+
+                            if ($photosetFound == false) {
+
+                                $this->photosets[] =
+
+                                array(
+                                        'name' => $photosetDir,
+                                        'path' => $this->path.'/'.$photosetDir,
+                                        'uri' => $this->uri.'/'.$photosetDir,
+                                        'thumbnail' => $this->path.'/'.$photosetDir.'/'.$files[0]
+                                );
+
+                            //    $this->save();
+                            }
+
+                        } // else file is not a directory
+                    }
+                }
+            }
+            */
         }
 
         // Set the model photosetsChecked to today

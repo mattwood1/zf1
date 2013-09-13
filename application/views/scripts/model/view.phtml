@@ -1,9 +1,9 @@
 <?php
-    $this->title = $this->photosets[0]->model->names[0]->name;
-    $this->headTitle($this->photosets[0]->model->names[0]->name);
+    $this->title = $this->photosets[0]->model->getName();
+    $this->headTitle($this->photosets[0]->model->getName());
 ?>
 
-<?php $this->photosets[0]->model->names[0]->name; ?>
+<?php $this->photosets[0]->model->getName(); ?>
 
 <div>
     <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID));?>">Edit</a>
@@ -35,3 +35,5 @@
 <?php endif; ?>
 
 <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
+
+<pre><?php //var_dump($this->photosets[0]->model->photosets->toArray()); ?></pre>
