@@ -122,7 +122,7 @@ class God_Model_Model extends Doctrine_Record
     public function updatePhotosets()
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
-            echo('Update Photosets');
+            //echo('Update Photosets');
         }
 
         // Set the model photosetsChecked to today
