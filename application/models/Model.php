@@ -122,7 +122,7 @@ class God_Model_Model extends Doctrine_Record
     public function updatePhotosets()
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
-            var_dump('Update Photosets');
+            echo('Update Photosets');
         }
 
         // Set the model photosetsChecked to today
@@ -147,6 +147,7 @@ class God_Model_Model extends Doctrine_Record
 
     public function getRandomPhotoset()
     {
+        $this->updatePhotosets();
         if ($this->photosets) {
             $key = array_rand($this->photosets->toArray(), 1);
             $photoset = $this->photosets[$key];
@@ -156,6 +157,19 @@ class God_Model_Model extends Doctrine_Record
             return $photoset;
         }
         return null;
+    }
+
+    public function getActivePhotosets()
+    {
+        $this->updatePhotosets();
+        if ($this->photosets) {
+            foreach ($this->photosets as $key => $photoset) {
+                if ($photoset->active == 0) {
+                    unset($this->photoset[$key]); // remove non active photosets
+                }
+            }
+        }
+        return $this->photosets;
     }
 
     public function getWebLinkStats()
