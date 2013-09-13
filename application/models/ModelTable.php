@@ -27,17 +27,6 @@ class God_Model_ModelTable extends Doctrine_Record
     }
 
     /**
-     * Gets a single model
-     */
-    public function getModel($id)
-    {
-        $this->_query = $this->getInstance()
-            ->createQuery('m')
-            ->innerJoin('m.names n')
-            ->where('m.ID = ?', $id);
-    }
-
-    /**
      *
      * @return array of ranking => count
      */
