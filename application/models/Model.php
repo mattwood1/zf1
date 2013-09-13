@@ -116,9 +116,24 @@ class God_Model_Model extends Doctrine_Record
         return $this->names;
     }
 
+    /**
+     * Update photosets that are on disk
+     */
+    public function updatePhotosets()
+    {
+        if ($this->photosetsChecked != date("Y-m-d", mktime())) {
+            var_dump('Update Photosets');
+        }
+
+        // Set the model photosetsChecked to today
+        $this->photosetsChecked = date("Y-m-d", mktime());
+        $this->save();
+    }
+
 
     public function getLatestPhotoset()
     {
+        $this->updatePhotosets();
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
                 if (! $photoset->isActive() || ! $photoset->isManualThumb() ) {
