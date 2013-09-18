@@ -101,8 +101,8 @@ class ModelController extends Coda_Controller
 
     public function statsAction()
     {
-        $models = new God_Model_ModelTable;
-        $this->view->rankings = $models->getRankingStats();
+        $modelTable = new God_Model_ModelTable;
+        $this->view->rankings = $modelTable->getRankingStats();
     }
 
     public function webLinkAction()
