@@ -27,15 +27,19 @@ class God_Model_ModelTable extends Doctrine_Record
     }
 
     /**
-     *
+     * Gets the Ranking Stats
+     * @param integer $minimum
+     * @param boolean $checkPhotosets
      * @return array of ranking => count
      */
-    public function getRankingStats($minimum = null)
+    public function getRankingStats($minimum = null, $checkPhotosets = false)
     {
         $this->getModels();
-        $this->_query
-            ->innerJoin('m.photosets p')
-            ->andWhere('p.active = ?',1);
+        if ($checkPhotosets) {
+            $this->_query
+                ->innerJoin('m.photosets p')
+                ->andWhere('p.active = ?',1);
+        }
 
         $ranking = array();
         foreach ($this->_query->execute() as $model) {

@@ -87,7 +87,7 @@ class ModelController extends Coda_Controller
         $modelTable = new God_Model_ModelTable;
 
         // Get model ranking stats
-        $rankingStats = $modelTable->getRankingStats(2);
+        $rankingStats = $modelTable->getRankingStats(2, true);
 
         // Choose a random model stat
         $rankingStatsKey = array_rand($rankingStats, 1);
