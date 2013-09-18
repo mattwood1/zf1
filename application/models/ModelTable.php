@@ -33,6 +33,9 @@ class God_Model_ModelTable extends Doctrine_Record
     public function getRankingStats($minimum = null)
     {
         $this->getModels();
+        $this->_query
+            ->innerJoin('m.photosets p')
+            ->andWhere('p.active = ?',1);
 
         $ranking = array();
         foreach ($this->_query->execute() as $model) {
@@ -54,14 +57,8 @@ class God_Model_ModelTable extends Doctrine_Record
 
     public function getModelsByRanking($ranking)
     {
-        $this->_query = $this->getInstance()
-            ->createQuery('m')
-            ->innerJoin('m.names n')
-            ->innerJoin('m.photosets p')
-            ->where('m.active = ?', 1)
-            ->andWhere('m.ranking = ?', $ranking)
-            ->andWhere('n.default = ?', 1)
-            ->andWhere('p.active = ?',1);
+        $this->getModels();
+        $this->_query->andWhere('m.ranking = ?', $ranking);
 
         return $this->_query->execute();
     }

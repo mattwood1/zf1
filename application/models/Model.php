@@ -157,7 +157,7 @@ class God_Model_Model extends Doctrine_Record
                                 }
                             }
 
-                            if ($photosetFound == false) {
+                            if ($photosetFound == false && is_array($files)) {
                                 $photosetObj = new God_Model_Photoset();
                                 $photosetObj['model_id'] = $this->ID;
                                 $photosetObj['name'] = $photosetDir;
@@ -201,20 +201,20 @@ class God_Model_Model extends Doctrine_Record
     public function getRandomPhotoset()
     {
         $this->updatePhotosets();
-        if ($this->photosets) {
+        if ($this->photosets) { // TODO: Needs to be $this->photosets->getActive()
             $key = array_rand($this->photosets->toArray(), 1);
             $photoset = $this->photosets[$key];
 
-            if ($photoset->active == 0) $this->getRandomPhotoset();
+            if ($photoset->active == 0) $this->getRandomPhotoset(); // Makes this redundant
 
             return $photoset;
         }
         return null;
     }
 
-    public function getActivePhotosets()
+    public function getActivePhotosets() // Makes this redundant
     {
-        $this->updatePhotosets();
+        // $this->updatePhotosets();
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
                 if ($photoset->active == 0) {
