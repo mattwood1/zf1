@@ -88,6 +88,14 @@ class God_Model_Model extends Doctrine_Record
         ));
     }
 
+    public function isActive()
+    {
+        if ($this->active) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns the Models default name
      * @return string
