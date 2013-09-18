@@ -30,7 +30,7 @@ class God_Model_ModelTable extends Doctrine_Record
      * Gets the Ranking Stats
      * @param integer $minimum
      * @param boolean $checkPhotosets
-     * @return array of ranking => count
+     * @return ranking['rank'] => count
      */
     public function getRankingStats($minimum = null, $checkPhotosets = false)
     {
