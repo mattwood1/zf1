@@ -3,7 +3,7 @@ class God_Model_ModelTable extends Doctrine_Record
 {
 
     protected $_query;
-    protected $_order = 'ranking';
+    protected $_order;
     protected $_search = '';
 
     const ORDER_RANKING = 'ranking';
@@ -37,8 +37,10 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->getModels();
         if ($checkPhotosets) {
             $this->_query
+                ->select('m.*')
                 ->innerJoin('m.photosets p')
-                ->andWhere('p.active = ?',1);
+                ->andWhere('p.active = ?',1)
+            ;
         }
 
         $ranking = array();
