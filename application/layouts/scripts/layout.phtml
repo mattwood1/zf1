@@ -18,7 +18,7 @@
         <div id="content">
             <div class="right">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout')); ?>">Log out</a>
+                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>">Log out</a>
                 <?php endif;?>
             </div>
             <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>

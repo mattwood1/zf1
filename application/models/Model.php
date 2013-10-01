@@ -96,6 +96,14 @@ class God_Model_Model extends Doctrine_Record
         return false;
     }
 
+    public function hasPhotosets()
+    {
+        if ( count($this->photosets) ) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns the Models default name
      * @return string
@@ -126,6 +134,8 @@ class God_Model_Model extends Doctrine_Record
 
     /**
      * Update photosets that are on disk
+     *
+     * Run by a CRON job
      */
     public function updatePhotosets()
     {
@@ -186,7 +196,6 @@ class God_Model_Model extends Doctrine_Record
 
     public function getLatestPhotoset()
     {
-        $this->updatePhotosets();
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
                 if (! $photoset->isActive() || ! $photoset->isManualThumb() ) {
@@ -200,7 +209,6 @@ class God_Model_Model extends Doctrine_Record
 
     public function getRandomPhotoset()
     {
-        $this->updatePhotosets();
         if ($this->photosets) { // TODO: Needs to be $this->photosets->getActive()
             $key = array_rand($this->photosets->toArray(), 1);
             $photoset = $this->photosets[$key];
@@ -214,7 +222,6 @@ class God_Model_Model extends Doctrine_Record
 
     public function getActivePhotosets() // Makes this redundant
     {
-        // $this->updatePhotosets();
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
                 if ($photoset->active == 0) {

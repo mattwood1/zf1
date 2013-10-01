@@ -12,16 +12,13 @@ class IndexController extends Coda_Controller
     {
         $modelTable = new God_Model_ModelTable;
 
+        $modelTable->setOrder($this->_getParam('order', 'ranking'));
+
+        $modelTable->getModels();
+
         if ($this->_request->getParam('search')) {
             $modelTable->setSearch($this->_request->getParam('search'));
         }
-
-        //if ($this->_request->getParam('order')) {
-            $modelTable->setOrder($this->_getParam('order', 'ranking'));
-        //}
-        //$modelTable->setOrder('ranking');
-
-        $modelTable->getModels();
 
         $paginator = new Doctrine_Pager($modelTable->getQuery(), $this->_getParam('page', 1), 18);
         $models = $paginator->execute();

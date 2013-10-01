@@ -21,7 +21,10 @@ class God_Model_ModelTable extends Doctrine_Record
             ->innerJoin('m.names n')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
-            ->andWhere('n.default = ?', 1);
+            ->andWhere('n.default = ?', 1)
+
+            ->innerJoin('m.photosets p')
+            ->andWhere('p.active = ?',1);
 
         $this->_getOrder();
     }
@@ -37,10 +40,7 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->getModels();
         if ($checkPhotosets) {
             $this->_query
-                ->select('m.*')
-                ->innerJoin('m.photosets p')
-                ->andWhere('p.active = ?',1)
-            ;
+                ->select('m.*');
         }
 
         $ranking = array();
@@ -64,7 +64,9 @@ class God_Model_ModelTable extends Doctrine_Record
     public function getModelsByRanking($ranking)
     {
         $this->getModels();
-        $this->_query->andWhere('m.ranking = ?', $ranking);
+        $this->_query
+                ->andWhere('m.ranking = ?', $ranking)
+                ;
 
         return $this->_query->execute();
     }
