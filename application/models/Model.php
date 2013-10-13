@@ -140,17 +140,17 @@ class God_Model_Model extends Doctrine_Record
     public function updatePhotosets()
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
-            if ($handle = opendir($_SERVER['DOCUMENT_ROOT'].$this->path)) {
+            if ($handle = opendir(APPLICATION_PATH.'/../public'.$this->path)) {
                 while (false !== ($photosetDir = readdir($handle))) {
                     if ($photosetDir != "." && $photosetDir != "..") {        // remove '.' '..' directories
-                        if (is_dir($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir) == true) {
+                        if (is_dir(APPLICATION_PATH.'/../public'.$this->path.'/'.$photosetDir) == true) {
 
                             // Find first image
-                            $fileshandle = opendir($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir);
+                            $fileshandle = opendir(APPLICATION_PATH.'/../public'.$this->path.'/'.$photosetDir);
                             $files = array();
                             while (false !== ($file = readdir($fileshandle))) {
                                 if ($file != "." && $file != "..") {      // remove '.' '..' directories
-                                    if (is_file($_SERVER['DOCUMENT_ROOT'].$this->path.'/'.$photosetDir.'/'.$file) == true) {
+                                    if (is_file(APPLICATION_PATH.'/../public'.$this->path.'/'.$photosetDir.'/'.$file) == true) {
                                         $files[] = $file;
                                     }
                                 }
@@ -176,10 +176,6 @@ class God_Model_Model extends Doctrine_Record
                                 $photosetObj['thumbnail'] = $this->path.'/'.$photosetDir.'/'.$files[0];
                                 $photosetObj->save();
 
-                            }
-
-                            if ($this->ranking < 1) {
-                                $this->ranking = 1;
                             }
 
                         } // else file is not a directory

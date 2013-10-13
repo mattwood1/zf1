@@ -4,10 +4,12 @@ $this->headTitle($this->model->getName());
 $this->title = $this->model->getName();
 ?>
 
-<form action="" method="post">
+<form action="<?php echo $this->url(array('action' => 'edit')); ?>" method="post">
+    <input type="checkbox" name="active" value="1" id="active" <?php echo $this->model->isActive() ? ' checked="checked"' : ''; ?> />
+    <label for="active">Active
 
     <?php if ($this->model->names): ?>
-        <h4>Display Name</h4>
+        <h4>Display Names</h4>
         <?php foreach ($this->model->names as $alias): ?>
         <div>
             <input type="radio" name="modelName" value="<?php echo $alias->ID; ?>" id="modelName_<?php echo $alias->ID; ?>" <?php echo $this->model->getName() == $alias->name ? ' checked="checked"' : ''; ?>>
@@ -25,6 +27,6 @@ $this->title = $this->model->getName();
 
     <?php // WebLink Stats for this model ?>
 
-
+    <p><input type="submit" value="Update" /></p>
 
 </form>

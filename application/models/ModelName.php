@@ -29,6 +29,11 @@ class God_Model_ModelName extends Doctrine_Record
                 'length'             => '1000',
         ));
 
+        $this->hasColumn('webLinkTargetId', 'integer', 11, array(
+                'type'               => 'integer',
+                'length'             => '11',
+        ));
+
         $this->hasColumn('datesearched', 'timestamp', 25, array(
                 'type'               => 'timestamp',
                 'length'             => '25',
