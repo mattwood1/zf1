@@ -17,11 +17,6 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         foreach ($models as $model) {
             if ($model->isActive()) {
                 $model->updatePhotosets();
-
-                if ($model->hasPhotosets() && $model->ranking == 0 ) {
-                    $model->ranking = 1;
-                    $model->save();
-                }
             }
         }
     }

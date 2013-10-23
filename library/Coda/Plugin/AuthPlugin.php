@@ -23,7 +23,7 @@ class Coda_Plugin_AuthPlugin extends Zend_Controller_Plugin_Abstract
         
         if ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
-            $user     = Doctrine_Core::getTable('Coda_Model_User')->findOneBy('email', $identity);
+            $user     = Doctrine_Core::getTable('ECB_Model_User')->findOneBy('email', $identity);
         }
 
         //inject the user into the session
