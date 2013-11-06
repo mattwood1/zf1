@@ -79,7 +79,7 @@ class ImageController extends Coda_Controller
     protected function _browserDetection()
     {
         switch(true) {
-            case stristr($_SERVER['HTTP_USER_AGENT'], 'Blackberry'):
+            case stristr($_SERVER['HTTP_USER_AGENT'], 'Mobile'):
                 $this->_largeWidth = 320;
                 $this->_mediumWidth = 150;
                 $this->_thumbWidth = 100;
