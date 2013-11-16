@@ -5,6 +5,8 @@ abstract class Job_Abstract
 
     protected $_lockFile;
 
+    protected $_startTime;
+
     public function __construct()
     {
         $this->_lockFile = '/tmp/GODJOB-' . get_class($this);
@@ -14,6 +16,7 @@ abstract class Job_Abstract
             Log::cli('--- Process ' . get_class($this) . ' already running, exiting ---');
             exit(0);
         } else {
+            $this->_startTime = mktime();
             Log::cli('--- Creating lock file: ' . $this->_lockFile . ' ---' . PHP_EOL);
             $fp = fopen($this->_lockFile, 'w');
             fputs($fp, 'Started: ' . date('Y-m-d H:i:s'));
@@ -31,6 +34,8 @@ abstract class Job_Abstract
 
         if (file_exists($this->_lockFile)) {
             unlink($this->_lockFile);
+            $runtime = mktime() - $this->_startTime;
+            Log::cli(PHP_EOL . 'Process time ' . $runtime );
             Log::cli(PHP_EOL . '--- Removing lock file: ' . $this->_lockFile . ' ---');
         }
 /*

@@ -20,9 +20,9 @@ class God_Model_WebURL extends Doctrine_Record
                 'length'             => '11'
         ));
 
-        $this->hasColumn('url', 'string', 1000, array(
+        $this->hasColumn('url', 'string', 10000, array(
                 'type'               => 'string',
-                'length'             => '1000'
+                'length'             => '10000'
         ));
 
         $this->hasColumn('httpStatusCode', 'integer', 11, array(
@@ -35,19 +35,24 @@ class God_Model_WebURL extends Doctrine_Record
                 'length'             => '11'
         ));
 
-        $this->hasColumn('thumbnails', 'string', 1000, array(
+        $this->hasColumn('thumbnails', 'string', 100000, array(
                 'type'               => 'string',
-                'length'             => '1000'
+                'length'             => '100000'
         ));
 
-        $this->hasColumn('links', 'string', 1000, array(
+        $this->hasColumn('links', 'string', 100000, array(
                 'type'               => 'string',
-                'length'             => '1000'
+                'length'             => '100000'
         ));
 
-        $this->hasColumn('images', 'string', 1000, array(
+        $this->hasColumn('images', 'string', 100000, array(
                 'type'               => 'string',
-                'length'             => '1000'
+                'length'             => '100000'
+        ));
+
+        $this->hasColumn('linked', 'integer', 1, array(
+                'type'               => 'integer',
+                'length'             => '1'
         ));
 
         $this->hasColumn('dateCreated', 'date', 25, array(
@@ -55,4 +60,5 @@ class God_Model_WebURL extends Doctrine_Record
                 'length'             => '25'
         ));
     }
+
 }
