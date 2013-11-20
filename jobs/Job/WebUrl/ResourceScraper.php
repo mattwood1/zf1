@@ -38,6 +38,10 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
             } else {
                 $webResource->checksum = md5(serialize($links));
 
+                preg_match("~^\+([\d]+)\shours~", $webResource->frequency, $timeMatch);
+                $hours = ceil($timeMatch[1]/2);
+                $webResource->frequency = '+'.$hours.' hours';
+
                 foreach ($links as $link) {
                     $webURLTable = new God_Model_WebURLTable;
                     if (!preg_match("~^http:\/\/~", $link["href"])) {
