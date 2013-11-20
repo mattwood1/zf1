@@ -1,0 +1,7 @@
+<?php if ($this->webResources): ?>
+<ul>
+    <?php foreach ($this->webResources as $webResource): ?>
+        <li><a href="<?php echo $this->url(array('action' => 'edit', 'id' => $webResource->id)); ?>"><?php echo $webResource->website; ?></a></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif;?>

@@ -2,15 +2,17 @@
 class God_Model_Curl
 {
     protected $_rawdata;
+    protected $_timeout;
 
-    public function Curl($url, $referer = null, $binary = false)
+    public function Curl($url, $referer = null, $binary = false, $timeout = 30)
     {
+        $this->_timeout = $timeout;
         $ch = curl_init ($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (http://www.googlebot.com/bot.html)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $binary ? curl_setopt($ch, CURLOPT_BINARYTRANSFER,1): '';
-        curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
         //curl_setopt($ch, CURLOPT_VERIFYHOST, 0);
         $referer ? curl_setopt($ch, CURLOPT_REFERER, $referer): '';
 

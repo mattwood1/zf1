@@ -39,4 +39,13 @@ class God_Model_ModelName extends Doctrine_Record
                 'length'             => '25',
         ));
     }
+
+    public function setUp()
+    {
+        $this->hasMany('God_Model_ModelNameWebURL as webUrls', array(
+                'local'   =>  'ID',
+                'foreign' =>  'model_name_id',
+                //'cascade' => array('delete')
+        ));
+    }
 }

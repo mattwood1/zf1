@@ -1,0 +1,19 @@
+<?php
+$this->headTitle('Web Urls');
+$this->headTitle($this->model->getName());
+$this->title = $this->model->getName();
+?>
+
+<?php
+foreach ($this->model->names as $name) {
+    foreach ($name->webUrls as $webUrlLink) {
+        foreach ($webUrlLink->webUrl as $webUrl) {
+?>
+            <div><?php echo $webUrl->httpStatusCode; ?>: <?php echo $webUrl->action; ?>: <?php echo $webUrl->url; ?></div>
+<?php
+        }
+    }
+}
+?>
+
+<pre><?php //var_dump($this->model->toArray()); ?></pre>

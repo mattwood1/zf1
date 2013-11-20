@@ -40,7 +40,10 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
 
                 foreach ($links as $link) {
                     $webURLTable = new God_Model_WebURLTable;
-                    $webURLTable->insertLink($domain.$link["href"], $webResource->id);
+                    if (!preg_match("~^http:\/\/~", $link["href"])) {
+                        $link["href"] = $domain.$link["href"];
+                    }
+                    $webURLTable->insertLink($link["href"], $webResource->id);
                 }
             }
 
