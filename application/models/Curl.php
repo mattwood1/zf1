@@ -1,20 +1,27 @@
 <?php
 class God_Model_Curl
 {
-    public function Curl($referer, $url, $displayWidth = null)
+    protected $_rawdata;
+
+    public function Curl($url, $referer = null, $binary = false)
     {
         $ch = curl_init ($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (http://www.googlebot.com/bot.html)');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+        $binary ? curl_setopt($ch, CURLOPT_BINARYTRANSFER,1): '';
         curl_setopt($ch, CURLOPT_TIMEOUT, 2);
         //curl_setopt($ch, CURLOPT_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_REFERER, $referer);
+        $referer ? curl_setopt($ch, CURLOPT_REFERER, $referer): '';
 
-        $rawdata=curl_exec($ch);
+        $this->_rawdata = curl_exec($ch);
 
-        if(strpos($rawdata,"Not Found") === false) {
-            $im = imagecreatefromstring($rawdata);
+        return $this->_rawdata;
+    }
+
+    public function image($displayWidth = null) {
+        if(strpos($this->_rawdata,"Not Found") === false) {
+            $im = imagecreatefromstring($this->_rawdata);
             if ($im !== null) {
                 if ($displayWidth) {
                     $width = imagesx( $im );

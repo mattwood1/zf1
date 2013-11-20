@@ -58,5 +58,10 @@ class God_Model_WebResource extends Doctrine_Record
                 'type'               => 'string',
                 'length'             => '1000'
         ));
+
+        $this->hasColumn('checksum', 'string', 1000, array(
+                'type'               => 'string',
+                'length'             => '1000'
+        ));
     }
 }
