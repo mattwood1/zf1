@@ -3,6 +3,7 @@ class God_Model_Curl
 {
     protected $_rawdata;
     protected $_timeout;
+    protected $_statusCode;
 
     public function Curl($url, $referer = null, $binary = false, $timeout = 30)
     {
@@ -18,7 +19,14 @@ class God_Model_Curl
 
         $this->_rawdata = curl_exec($ch);
 
+        $this->_statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         return $this->_rawdata;
+    }
+
+    public function statusCode()
+    {
+        return $this->_statusCode;
     }
 
     public function image($displayWidth = null) {

@@ -61,6 +61,7 @@ class God_Model_WebURLTable extends Doctrine_Record
 
                 if (preg_match("~(" . $name . ")~i", $webUrl->url)) {
                     $webUrl->linked = -5;                // Name Match found
+                    $webUrl->action = God_Model_WebURLTable::GET_THUMBNAILS; // Set to get thumbs
                     $modelNamewebUrl = Doctrine_Core::getTable('God_Model_ModelNameWebURL')->create(array(
                             'model_name_id' => $modelName->ID,
                             'webUrl_id'     => $webUrl->id

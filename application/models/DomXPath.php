@@ -14,8 +14,22 @@ class God_Model_DomXPath {
 
         $linksArray = array();
         for ($i = 0; $i < $links->length; $i++) {
-            $link = $links->item($i);
-            $linksArray[$i]['href'] = $link->getAttribute('href');
+            if (preg_match("~(img)~i", $path)) {
+                // get images and links
+                $img = $links->item($i);
+                $href = $links->item($i)->parentNode;
+                $href2 = $links->item($i)->parentNode->parentNode;
+                if ($href->getAttribute('href')) {
+                    $linksArray[$i]['href'] = addslashes($href->getAttribute('href'));
+                } else {
+                    $linksArray[$i]['href'] = addslashes($href2->getAttribute('href'));
+                }
+                $linksArray[$i]['img'] = addslashes($img->getAttribute('src'));
+            } else {
+                // get links
+                $link = $links->item($i);
+                $linksArray[$i]['href'] = $link->getAttribute('href');
+            }
         }
 
         return $linksArray;
