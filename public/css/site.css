@@ -218,4 +218,17 @@ ul#ranking li div.image {
         height: 2px;
         background: white;
     }
+    
+    button[type="submit"] {
+        display: inline-block;
+        padding: 6px 12px;
+        color: #333;
+        background-color: #ebebeb;
+        border-color: #adadad;
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
 }

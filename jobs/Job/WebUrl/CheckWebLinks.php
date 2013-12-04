@@ -12,8 +12,9 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
         $webUrlsTable = new God_Model_WebURLTable;
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
-            ->where('linked = ?', 0);
-//            ->limit(500);
+            ->where('linked = ?', 0)
+            ->limit(800)
+        ;
         $webUrls = $webUrlsQuery->execute();
 
         foreach ($webUrls as $webUrl) {
@@ -45,11 +46,13 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
             if ($webUrl->action == God_Model_WebURLTable::READY_TO_DOWNLOAD) {
                 $links = unserialize($webUrl->links);
                 if ($links) {
+                    $links = array_filter($links); // Remove empty entries
                     foreach ($links as $link) {
                         $webUrlsLinkTable = new God_Model_WebURLTable;
                         $webUrlsLinkQuery = $webUrlsTable->getInstance()
                             ->createQuery('wul')
-                            ->where('url LIKE ?', '%'.$link);
+                            ->where('url LIKE ?', '%'.$link)
+                            ->andWhere('webResourceId = ?', $webUrl->webResourceId);
                         $webUrlsLinks = $webUrlsLinkQuery->execute();
                         foreach ($webUrlsLinks as $webUrlsLink) {
                             if ($webUrlsLink->toArray()) {

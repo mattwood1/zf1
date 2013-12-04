@@ -28,11 +28,17 @@ class Job_WebUrl_LinkModelNames extends Job_Abstract
 
                 if (preg_match("~(" . $name . ")~i", $webUrl->url)) {
                     $webUrl->linked = -5;                // Name Match found
-                    $modelNamewebUrl = Doctrine_Core::getTable('God_Model_ModelNameWebURL')->create(array(
-                            'model_name_id' => $modelName->ID,
-                            'webUrl_id'     => $webUrl->id
-                    ));
-                    $modelNamewebUrl->save();
+                    $modelNamewebUrl = God_Model_ModelNameWebURLTable::getInstance()->createQuery('mnwu')
+                        ->where('model_name_id = ?', $modelName->ID)
+                        ->andWhere('webUrl_id = ?', $webUrl->id)
+                        ->execute();
+                    if (!$modelNamewebUrl->toArray()) {
+                        $modelNamewebUrl = Doctrine_Core::getTable('God_Model_ModelNameWebURL')->create(array(
+                                'model_name_id' => $modelName->ID,
+                                'webUrl_id'     => $webUrl->id
+                        ));
+                        $modelNamewebUrl->save();
+                    }
                 }
             }
 

@@ -12,7 +12,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
             ->where('action = ?', God_Model_WebURLTable::GET_THUMBNAILS)
-            ->limit(200);
+            ->limit(500);
         $webUrls = $webUrlsQuery->execute();
 
         if ($webUrls) {

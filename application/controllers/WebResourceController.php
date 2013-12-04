@@ -26,17 +26,11 @@ class WebResourceController extends Coda_Controller
         $this->view->webResource = $webResource;
 
         $curl = new God_Model_Curl();
-        $html = $curl->Curl($webResource->sitescanurl);
+        $html = $curl->Curl("http://www.theomegaproject.org/sunny-leone-hot-red-lingerie");
         $this->view->html = $html;
 
         $domXPath = new God_Model_DomXPath($html);
-        $links = $domXPath->evaluate('//div[contains(@class, "post_holder")]/div[@class="thumb_holder"]/a');
-
-        /*
-         * <div class="MainThumbFrame">
-                	<div class="MainThumb">
-                    	<p><center><a target="_blank"
-         */
+        $links = $domXPath->evaluate('//div[@class="postholder"]/div[@class="picture"]//a/img');
 
         $this->view->links = $links;
     }
