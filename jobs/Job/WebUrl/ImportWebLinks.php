@@ -15,15 +15,16 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
         $webLinks = $webLinkQuery->execute();
 
         foreach ($webLinks as $webLink) {
+//var_dump($webLink->url);
             // Find WebUrl by URL
             $webUrlTable = new God_Model_WebURLTable;
             $webUrlTable->getURL($webLink->url);
             $webUrl = $webUrlTable->getQuery()->execute();
 
-            //var_dump($webUrl->toArray());
+//var_dump($webUrl[0]->url);
 
             // If not found create it
-            if (!$webUrl->toArray()) {
+            if (!$webUrl[0]->url) {
                 $webUrl = new God_Model_WebURL;
 
                 $data = array(
@@ -38,9 +39,12 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
                 );
                 $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create($data);
                 $webUrl->save();
+//var_dump('Created');
                 $webLink->delete();
-            } elseif ($webUrl[0]->url == $webLink->url) { // else check it and delete.
+//var_dump('Deleted 1');
+            } elseif (preg_match("~^" . $webUrl[0]->url . "$~i", $webLink->url)) { // else check it and delete.
                 $webLink->delete();
+//var_dump('Deleted 2');
             }
         }
 
