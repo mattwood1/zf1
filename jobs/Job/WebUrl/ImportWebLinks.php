@@ -15,13 +15,13 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
         $webLinks = $webLinkQuery->execute();
 
         foreach ($webLinks as $webLink) {
-//var_dump($webLink->url);
+//var_dump($webLink->id, $webLink->url);
             // Find WebUrl by URL
             $webUrlTable = new God_Model_WebURLTable;
             $webUrlTable->getURL($webLink->url);
             $webUrl = $webUrlTable->getQuery()->execute();
 
-//var_dump($webUrl[0]->url);
+//var_dump($webUrl[0]->id, $webUrl[0]->url);
 
             // If not found create it
             if (!$webUrl[0]->url) {
@@ -42,10 +42,11 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
 //var_dump('Created');
                 $webLink->delete();
 //var_dump('Deleted 1');
-            } elseif (preg_match("~^" . $webUrl[0]->url . "$~i", $webLink->url)) { // else check it and delete.
+            } elseif (preg_match("~^" . preg_quote($webUrl[0]->url) . "$~i", addslashes($webLink->url))) { // else check it and delete.
                 $webLink->delete();
 //var_dump('Deleted 2');
             }
+//var_dump('Match -> ', preg_match("~^" . preg_quote($webUrl[0]->url) . "$~i", addslashes($webLink->url)));
         }
 
     }

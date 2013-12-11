@@ -4,16 +4,30 @@ $this->headTitle($this->model->getName());
 $this->title = $this->model->getName();
 ?>
 
-<?php
-foreach ($this->model->names as $name) {
-    foreach ($name->webUrls as $webUrlLink) {
-        foreach ($webUrlLink->webUrl as $webUrl) {
-?>
-            <div><?php echo $webUrl->httpStatusCode; ?>: <?php echo $webUrl->action; ?>: <?php echo $webUrl->url; ?></div>
-<?php
-        }
-    }
-}
-?>
-
-<pre><?php //var_dump($this->model->toArray()); ?></pre>
+<?php foreach ($this->model->names as $name): ?>
+    <h4><?php echo $name->name; ?></h4>
+    <table>
+        <thead>
+            <tr>
+                <th>http Status</th>
+                <th>Action</th>
+                <th>Link</th>
+                <th>ID</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($name->webUrls as $webUrlLink): ?>
+            <?php foreach ($webUrlLink->webUrl as $webUrl): ?>
+            <tr>
+                <td><?php echo $webUrl->httpStatusCode; ?></td>
+                <td><?php echo $webUrl->action; ?></td>
+                <td><?php echo $webUrl->linked; ?></td>
+                <td><?php echo $webUrl->id; ?></td>
+                <td><?php echo $webUrl->url; ?></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+       </tbody>
+    </table>
+<?php endforeach; ?>

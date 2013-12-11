@@ -10,7 +10,7 @@ class God_Model_Curl
         $this->_timeout = $timeout;
         $ch = curl_init ($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (http://www.googlebot.com/bot.html)');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.114 Safari/537.36');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $binary ? curl_setopt($ch, CURLOPT_BINARYTRANSFER,1): '';
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
