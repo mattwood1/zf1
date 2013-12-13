@@ -14,7 +14,7 @@ class God_Model_DomXPath {
 
         $linksArray = array();
         for ($i = 0; $i < $links->length; $i++) {
-            if (preg_match("~(img)~i", $path)) {
+            if (preg_match("~(<img)~i", $path)) {
                 // get images and links
                 $img = $links->item($i);
                 $href = $links->item($i)->parentNode;

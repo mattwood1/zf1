@@ -26,11 +26,11 @@ class WebResourceController extends Coda_Controller
         $this->view->webResource = $webResource;
 
         $curl = new God_Model_Curl();
-        $html = $curl->Curl("http://boobshere.com/own-galleries", 'http://boobshere.com/');
+        $html = $curl->Curl($webResource->sitescanurl);
         $this->view->html = $html;
 
         $domXPath = new God_Model_DomXPath($html);
-        $links = $domXPath->evaluate('//div[@class="thumb_holder"]/a');
+        $links = $domXPath->evaluate($webResource->sitescanxpath);
 
         $this->view->links = $links;
     }
