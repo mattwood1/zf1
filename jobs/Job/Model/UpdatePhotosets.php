@@ -13,7 +13,7 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
             ->createQuery('m')
             ->where('photosetsChecked < ?', date("Y-m-d", strtotime("-1 day")))
             ->andWhere('active = ?', 1)
-            ->andWhere('ranking > ?', 0);
+            ->andWhere('ranking >= ?', 0);
         $models = $modelsQuery->execute();
 
         foreach ($models as $model) {

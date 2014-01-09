@@ -1,7 +1,20 @@
 <?php if ($this->webResources): ?>
-<ul>
-    <?php foreach ($this->webResources as $webResource): ?>
-        <li><a href="<?php echo $this->url(array('action' => 'edit', 'id' => $webResource->id)); ?>"><?php echo $webResource->website; ?></a></li>
-    <?php endforeach; ?>
-</ul>
+<table>
+    <thead>
+        <tr>
+            <th>Website</th>
+            <th>Frequency</th>
+            <th>Next Check</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->webResources as $webResource): ?>
+        <tr>
+            <td><a href="<?php echo $this->url(array('action' => 'test', 'id' => $webResource->id)); ?>"><?php echo $webResource->website; ?></a></td>
+            <td><?php echo $webResource->frequency; ?></td>
+            <td><?php echo $webResource->nextCheck; ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 <?php endif;?>

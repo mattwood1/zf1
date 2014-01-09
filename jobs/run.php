@@ -1,4 +1,5 @@
 <?php
+proc_nice(10);
 // Define path to application directory
 defined('APPLICATION_PATH')
 || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
