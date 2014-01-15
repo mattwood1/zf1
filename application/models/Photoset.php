@@ -44,6 +44,11 @@ class God_Model_Photoset extends Doctrine_Record
                 'length'             => '25'
         ));
 
+        $this->hasColumn('imagesCheckedDate', 'date', 25, array(
+                'type'               => 'date',
+                'length'             => '25'
+        ));
+
         $this->hasColumn('active', 'boolean', 25, array(
                 'type'               => 'boolean',
                 'length'             => '25'
