@@ -5,6 +5,7 @@
             <th>Website</th>
             <th>Frequency</th>
             <th>Next Check</th>
+            <th>Web Urls</th>
         </tr>
     </thead>
     <tbody>
@@ -13,6 +14,7 @@
             <td><a href="<?php echo $this->url(array('action' => 'test', 'id' => $webResource->id)); ?>"><?php echo $webResource->website; ?></a></td>
             <td><?php echo $webResource->frequency; ?></td>
             <td><?php echo $webResource->nextCheck; ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'index', 'id' => $webResource->id)); ?>">Web Urls</a></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

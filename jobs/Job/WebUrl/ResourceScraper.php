@@ -42,12 +42,17 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
                 $hours = ceil($timeMatch[1]/2);
                 $webResource->frequency = '+'.$hours.' hours';
 
+                    var_dump($links);
                 foreach ($links as $link) {
                     $webURLTable = new God_Model_WebURLTable;
                     if (!preg_match("~^http:\/\/~", $link["href"])) {
                         $link["href"] = $domain.$link["href"];
                     }
-                    $webURLTable->insertLink($link["href"], $webResource->id);
+                    try {
+                        $webURLTable->insertLink($link["href"], $webResource->id);
+                    } catch (Exception $e) {
+                    }
+
                 }
             }
 

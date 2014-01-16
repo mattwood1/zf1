@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * OLD AND REDUNDANT CONTROLLER
+ * @author mwood
+ *
+ */
 class WebLinkController extends Coda_Controller
 {
 

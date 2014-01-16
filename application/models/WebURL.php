@@ -61,4 +61,13 @@ class God_Model_WebURL extends Doctrine_Record
         ));
     }
 
+    public function setUp()
+    {
+        $this->hasOne('God_Model_WebResource as webResource', array(
+                'local'   =>  'webResourceId',
+                'foreign' =>  'id',
+                //'cascade' => array('delete')
+        ));
+    }
+
 }
