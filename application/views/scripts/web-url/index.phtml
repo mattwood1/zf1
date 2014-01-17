@@ -1,0 +1,53 @@
+<?php if ($this->webUrls): ?>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>url</th>
+            <th>status</th>
+            <th>action</th>
+            <th>linked</th>
+            <th>date</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->webUrls as $url): ?>
+        <tr>
+            <td><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url->id), 'default', true); ?>"><?php echo $url->id; ?></a></td>
+            <td><?php echo $url->url; ?></td>
+            <td><?php echo $url->httpStatusCode; ?></td>
+            <td><?php echo $url->action; ?></td>
+            <td><?php echo $url->linked; ?></td>
+            <td><?php echo $url->dateCreated; ?></td>
+        </tr>
+        <?php
+            $thumbnails = unserialize($url->thumbnails);
+            if ($thumbnails):
+        ?>
+        <tr>
+            <td colspan="6">
+            <?php foreach($thumbnails as $thumbnail): ?>
+            <img src="<?php echo renderpath($url->url, $thumbnail); // Might need to use CURL ?>" />
+            <?php endforeach; ?>
+            </td>
+        </tr>
+        <?php endif; ?>
+
+    <?php endforeach; ?>
+    </tbody>
+</table>
+
+<?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
+
+<?php else: ?>
+
+<p>No URLS</p>
+
+<?php endif; ?>
+
+<?php
+function renderpath ($url, $path) {
+    return $url.$path;
+
+}
+?>
