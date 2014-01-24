@@ -6,7 +6,10 @@ class WebResourceController extends Coda_Controller
     {
         // List all resources
         $webResourcesTable = new God_Model_WebResourceTable;
-        $webResources = $webResourcesTable->getInstance()->createQuery('wr')->orderBy('nextCheck ASC')->execute();
+        $webResources = $webResourcesTable->getInstance()
+            ->createQuery('wr')
+            ->where('sitescan = ?', 1)
+            ->orderBy('nextCheck ASC')->execute();
 
         $this->view->webResources = $webResources;
     }

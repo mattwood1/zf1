@@ -55,7 +55,6 @@ class God_Model_Curl
         } else {
             echo("fail");
         }
-        curl_close ($ch);
 
         echo $im;
     }

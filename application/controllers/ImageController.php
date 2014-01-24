@@ -52,7 +52,8 @@ class ImageController extends Coda_Controller
     {
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
             $curl = new God_Model_Curl;
-            $curl->Curl($this->_request->getParam('referer'), $this->_request->getParam('url'), $this->_request->getParam('width'));
+            $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 5);
+            $curl->image($this->_request->getParam('width'));
         }
         exit; // No template - direct output.
     }

@@ -105,17 +105,6 @@ class ModelController extends Coda_Controller
         $this->view->rankings = $modelTable->getRankingStats();
     }
 
-    public function webUrlAction()
-    {
-        $model = Doctrine_Core::getTable('God_Model_Model')
-            ->createQuery('m')
-            ->innerJoin('m.names n')
-            ->where('m.ID = ?', $this->_request->getParam('id'));
-        $model = $model->execute();
-
-        $this->view->model = $model[0];
-    }
-
     /*
      * Potentially redundant
      */

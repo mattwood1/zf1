@@ -68,6 +68,12 @@ class God_Model_WebURL extends Doctrine_Record
                 'foreign' =>  'id',
                 //'cascade' => array('delete')
         ));
+
+        $this->hasMany('God_Model_ModelNameWebURL as ModelNameWebURL', array(
+                'local'   =>  'id',
+                'foreign' =>  'webUrl_id',
+                //'cascade' => array('delete')
+        ));
     }
 
 }

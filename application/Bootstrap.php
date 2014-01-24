@@ -2,6 +2,13 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    /**
+     * Set up autoloader
+     */
+    public function _initAutoLoader()
+    {
+        Zend_Loader::loadClass('Coda_Debug');
+    }
 
     // Initialises the doctrine orm framework
     protected function _initDoctrine ()

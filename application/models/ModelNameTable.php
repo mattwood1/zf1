@@ -5,4 +5,13 @@ class God_Model_ModelNameTable extends Doctrine_Record
     {
         return Doctrine_Core::getTable('God_Model_ModelName');
     }
+
+    public function getActiveModelNames()
+    {
+        $query = $this->getInstance()
+            ->createQuery('mn')
+            ->innerJoin('mn.model m')
+            ->where('m.active = ?', 1);
+        return $query->execute();
+    }
 }

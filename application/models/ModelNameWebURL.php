@@ -28,6 +28,12 @@ class God_Model_ModelNameWebURL extends Doctrine_Record
 
     public function setUp()
     {
+        $this->hasOne('God_Model_ModelName as modelName', array(
+                'local'   =>  'model_name_id',
+                'foreign' =>  'ID',
+                //'cascade' => array('delete')
+        ));
+
         $this->hasMany('God_Model_WebURL as webUrl', array(
                 'local'   =>  'webUrl_id',
                 'foreign' =>  'id',

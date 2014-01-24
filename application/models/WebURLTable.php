@@ -53,7 +53,7 @@ class God_Model_WebURLTable extends Doctrine_Record
 
             // Link Model Name
             $modelNameTable = new God_Model_ModelNameTable;
-            $modelNames = $modelNameTable->getInstance()->findAll();
+            $modelNames = $modelNameTable->getActiveModelNames();
 
             foreach ($modelNames as $modelName) {
                 //var_dump(($modelName->name));
