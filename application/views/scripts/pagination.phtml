@@ -1,11 +1,14 @@
 <?php if ($this->paginator->haveToPaginate()): ?>
-<?php $pagerRange = $this->paginator->getRange('Sliding', array('chunk' => 7))->rangeAroundPage(); ?>
+<?php $chunk = 7; ?>
+<?php $pagerRange = $this->paginator->getRange('Sliding', array('chunk' => $chunk))->rangeAroundPage(); ?>
 <div class="pagination" style="width:100%">
     <div>
 
         <?php if ($this->paginator->getFirstPage() != $this->paginator->getPage()): ?>
-            <a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>">&lt;&lt;</a>
             <a href="<?php echo $this->url(array('page' => $this->paginator->getPreviousPage())); ?>">&lt;</a>
+            <?php if ($this->paginator->getPage() > ceil($chunk/2)): ?>
+                <a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>"><?php echo $this->paginator->getFirstPage(); ?>...</a>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php foreach ($pagerRange as $page): ?>
@@ -19,8 +22,10 @@
         <?php endforeach; ?>
 
         <?php if ($this->paginator->getLastPage() != $this->paginator->getPage()): ?>
+            <?php if ($this->paginator->getLastPage() >= ($this->paginator->getPage() + ceil($chunk/2))): ?>
+                <a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">...<?php echo $this->paginator->getLastPage(); ?></a>
+            <?php endif; ?>
             <a href="<?php echo $this->url(array('page' => $this->paginator->getNextPage())); ?>">&gt;</a>
-            <a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">&gt;&gt;</a>
         <?php endif; ?>
 
     </div>
