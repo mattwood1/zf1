@@ -22,7 +22,7 @@
             <?php if ($url->ModelNameWebURL): ?>
                 <ul>
                 <?php foreach ($url->ModelNameWebURL as $modelNameLink): ?>
-                    <li><?php echo $modelNameLink->modelName->name; ?></li>
+                    <li><a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $modelNameLink->modelName->model->ID), 'default', true); ?>"><?php echo $modelNameLink->modelName->model->getName();?></a></li>
                 <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
@@ -35,7 +35,7 @@
             if ($thumbnails):
         ?>
         <tr>
-            <td colspan="6">
+            <td colspan="7">
             <?php foreach($thumbnails as $thumbnail): ?>
 
             <a href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>" target="_blank">
