@@ -56,6 +56,19 @@ class WebUrlController extends Coda_Controller
         $this->view->links = $links;
     }
 
+    public function cacheAction()
+    {
+        $cache = Zend_Cache::factory('Core', 'Memcached');
+
+        $test = $cache->load('MyTest');
+
+        $cache->save('My test text', 'MyTest');
+
+        _d($cache, $test);
+
+        exit;
+    }
+
     public function renderpath($path) {
 
         return $this->url.$path;

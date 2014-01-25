@@ -51,11 +51,27 @@ class ImageController extends Coda_Controller
     public function externalAction()
     {
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
-            $curl = new God_Model_Curl;
-            $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 5);
-            $curl->image($this->_request->getParam('width'));
+            header("Content-Type: image/jpeg");
+            $cache = Zend_Cache::factory('Core', 'Memcached');
+
+            $image = $cache->load(md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width')));
+            if ($this->_request->getParam('ignorecache') == 1) {
+                $image = false;
+            }
+
+            if (!$image) {
+                $curl = new God_Model_Curl;
+                $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 2);
+
+                ob_start();
+                echo $curl->image($this->_request->getParam('width'));
+                $image = ob_get_clean();
+
+                $cache->save($image, md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width')));
+            }
+            echo $image;
+            exit;
         }
-        exit; // No template - direct output.
     }
 
     protected function _orientation()

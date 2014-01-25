@@ -33,6 +33,7 @@ class God_Model_Curl
         if(strpos($this->_rawdata,"Not Found") === false) {
             $im = imagecreatefromstring($this->_rawdata);
             if ($im !== null) {
+
                 if ($displayWidth) {
                     $width = imagesx( $im );
                     $height = imagesy( $im );
@@ -49,13 +50,10 @@ class God_Model_Curl
                     // Output new file.
                     $im = $tmpimg;
                 }
-                header("Content-Type: image/jpeg");
-                echo imagejpeg($im);
+                return imagejpeg($im);
             }
         } else {
-            echo("fail");
+            return false;
         }
-
-        echo $im;
     }
 }

@@ -37,12 +37,9 @@
         <tr>
             <td colspan="7">
             <?php foreach($thumbnails as $thumbnail): ?>
-
             <a href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>" target="_blank">
                 <img src="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>&width=80" />
             </a>
-
-
             <?php endforeach; ?>
             </td>
         </tr>
