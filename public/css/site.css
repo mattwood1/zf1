@@ -58,6 +58,14 @@ form dd {
     float: left;
     
 }
+form dl:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+
 form #submitbutton {
     margin-left: 100px;
 }

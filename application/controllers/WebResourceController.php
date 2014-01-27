@@ -24,8 +24,14 @@ class WebResourceController extends Coda_Controller
 
     public function testAction()
     {
+        $form = new God_Form_WebResource();
+
         $webResourcesTable = new God_Model_WebResourceTable;
         $webResource = $webResourcesTable->getInstance()->findOneBy('id', $this->_request->getParam('id'));
+
+        $form->populate($webResource->toArray());
+        $this->view->form = $form;
+
         $this->view->webResource = $webResource;
 
         $curl = new God_Model_Curl();

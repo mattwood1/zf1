@@ -1,11 +1,11 @@
-<?php
-if ($this->webUrl) {
-    var_dump($this->webUrl->toArray());
-    echo '<br /><br /><br />';
-}
-?>
+<?php echo $this->form; ?>
 
-
-<pre><?php var_dump($this->webResource->toArray()); ?></pre>
 <textarea rows="8" cols="120"><?php var_dump($this->html); ?></textarea>
-<pre><?php var_dump($this->links); ?></pre>
+
+<?php if ($this->links): ?>
+    <?php foreach ($this->links as $link): ?>
+        <?php echo $link['img']; ?> - <?php echo $link['href']; ?><br />
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No links found</p>
+<?php endif;?>

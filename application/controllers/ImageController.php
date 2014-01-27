@@ -51,10 +51,10 @@ class ImageController extends Coda_Controller
     public function externalAction()
     {
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
-            header("Content-Type: image/jpeg");
             $cache = Zend_Cache::factory('Core', 'Memcached');
+            $cachekey = md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width'));
 
-            $image = $cache->load(md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width')));
+            $image = $cache->load($cachekey);
             if ($this->_request->getParam('ignorecache') == 1) {
                 $image = false;
             }
@@ -67,8 +67,9 @@ class ImageController extends Coda_Controller
                 echo $curl->image($this->_request->getParam('width'));
                 $image = ob_get_clean();
 
-                $cache->save($image, md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width')));
+                $cache->save($image, $cachekey);
             }
+            header("Content-Type: image/jpeg");
             echo $image;
             exit;
         }

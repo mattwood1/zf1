@@ -35,6 +35,8 @@ class WebUrlController extends Coda_Controller
 
     public function testAction()
     {
+        $form = new God_Form_WebResource();
+
         $webUrlTable = new God_Model_WebURLTable();
         $webUrlQuery = $webUrlTable->getInstance()
             ->createQuery('wu')
@@ -43,6 +45,9 @@ class WebUrlController extends Coda_Controller
         $webUrl = $webUrlQuery->execute();
         $webUrl = $webUrl[0];
 
+        $form->populate($webUrl->webResource->toArray());
+
+        $this->view->form = $form;
 
         $this->view->webResource = $webUrl;
 
@@ -54,19 +59,6 @@ class WebUrlController extends Coda_Controller
         $links = $domXPath->evaluate($webUrl->webResource->xpathfilter);
 
         $this->view->links = $links;
-    }
-
-    public function cacheAction()
-    {
-        $cache = Zend_Cache::factory('Core', 'Memcached');
-
-        $test = $cache->load('MyTest');
-
-        $cache->save('My test text', 'MyTest');
-
-        _d($cache, $test);
-
-        exit;
     }
 
     public function renderpath($path) {
