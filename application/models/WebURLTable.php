@@ -32,10 +32,11 @@ class God_Model_WebURLTable extends Doctrine_Record
         return $this->_query;
     }
 
-    public function insertLink($url, $webReourceId) {
+    public function insertLink($url, $webReourceId = null) {
         $urlQuery = $this->getURL($url);
-        $urlData = $this->getQuery()->execute();
-
+        $urlData = $this->getQuery();
+        _d($urlData);
+        $urlData->execute();
 
         if (!$urlData->toArray()) {
             $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create(array(
@@ -49,26 +50,7 @@ class God_Model_WebURLTable extends Doctrine_Record
                     'linked' => -2,
                     'dateCreated' => date(date("Y-m-d H:i:s"))
             ));
-            $webUrl->save();
-
-            // Link Model Name
-            $modelNameTable = new God_Model_ModelNameTable;
-            $modelNames = $modelNameTable->getActiveModelNames();
-
-            foreach ($modelNames as $modelName) {
-                //var_dump(($modelName->name));
-                $name = str_replace(" ", "[\s\-\_]", $modelName->name);
-
-                if (preg_match("~(" . $name . ")~i", $webUrl->url)) {
-                    $webUrl->linked = -5;                // Name Match found
-                    $webUrl->action = God_Model_WebURLTable::GET_THUMBNAILS; // Set to get thumbs
-                    $modelNamewebUrl = Doctrine_Core::getTable('God_Model_ModelNameWebURL')->create(array(
-                            'model_name_id' => $modelName->ID,
-                            'webUrl_id'     => $webUrl->id
-                    ));
-                    $modelNamewebUrl->save();
-                }
-            }
+            $webUrl->linkModelNameToUrl();
 
             $webUrl->save();
         }

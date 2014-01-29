@@ -11,7 +11,9 @@ class God_Model_ModelNameTable extends Doctrine_Record
         $query = $this->getInstance()
             ->createQuery('mn')
             ->innerJoin('mn.model m')
-            ->where('m.active = ?', 1);
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking > -1');
         return $query->execute();
     }
+
 }

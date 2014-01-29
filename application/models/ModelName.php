@@ -29,7 +29,7 @@ class God_Model_ModelName extends Doctrine_Record
                 'length'             => '1000',
         ));
 
-        $this->hasColumn('webLinkTargetId', 'integer', 11, array(
+        $this->hasColumn('webUrlActionTarget', 'integer', 11, array(
                 'type'               => 'integer',
                 'length'             => '11',
         ));
