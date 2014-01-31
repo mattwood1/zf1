@@ -74,6 +74,10 @@ form #submitbutton {
     float: right;
 }
 
+.left {
+    float: left;
+}
+
 #filter > * {
     float: left;
     margin-right: 1em;

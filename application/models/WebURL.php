@@ -88,10 +88,12 @@ class God_Model_WebURL extends Doctrine_Record
             if (preg_match("~((?:[\-\/])" . $name . "(?:[\-\/$]))~i", $this->url)) { // ~(" . $name . ")~i is pants
                 $this->linked = -5;                // Name Match found
                 $this->action = God_Model_WebURLTable::GET_THUMBNAILS; // Set to get thumbs
+
                 $modelNameWebUrl = Doctrine_Core::getTable('God_Model_ModelNameWebURL')->create(array(
                         'model_name_id' => $modelName->ID,
                         'webUrl_id'     => $this->id
                 ));
+                _d($modelNameWebUrl);
                 $modelNameWebUrl->save();
             }
         }

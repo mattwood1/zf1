@@ -2,7 +2,7 @@
     $this->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $this->headTitle()->setSeparator(' - ');
     $this->headTitle('Goddesses');
-
+    $load = sys_getloadavg();
     echo $this->doctype();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -16,6 +16,9 @@
     </head>
     <body>
         <div id="content">
+            <div class="left" style="float:left;">
+            <?php echo $load[0].','.$load[1].','.$load[2]; ?>
+            </div>
             <div class="right">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
                     <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>">Log out</a>

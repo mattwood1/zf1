@@ -34,9 +34,7 @@ class God_Model_WebURLTable extends Doctrine_Record
 
     public function insertLink($url, $webReourceId = null) {
         $urlQuery = $this->getURL($url);
-        $urlData = $this->getQuery();
-        _d($urlData);
-        $urlData->execute();
+        $urlData = $this->getQuery()->execute();
 
         if (!$urlData->toArray()) {
             $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create(array(
