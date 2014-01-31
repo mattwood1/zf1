@@ -93,7 +93,6 @@ class God_Model_WebURL extends Doctrine_Record
                         'model_name_id' => $modelName->ID,
                         'webUrl_id'     => $this->id
                 ));
-                _d($modelNameWebUrl);
                 $modelNameWebUrl->save();
             }
         }

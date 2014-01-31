@@ -48,6 +48,8 @@ class God_Model_WebURLTable extends Doctrine_Record
                     'linked' => -2,
                     'dateCreated' => date(date("Y-m-d H:i:s"))
             ));
+            $webUrl->save();
+
             $webUrl->linkModelNameToUrl();
 
             $webUrl->save();
