@@ -37,6 +37,7 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
 
             } else {
                 $webResource->checksum = md5(serialize($links));
+                $webResource->lastUpdated = date('c');
 
                 preg_match("~^\+([\d]+)\shours~", $webResource->frequency, $timeMatch);
                 $hours = ceil($timeMatch[1]/2);

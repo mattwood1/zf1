@@ -9,8 +9,12 @@ class WebResourceController extends Coda_Controller
         $webResources = $webResourcesTable->getInstance()
             ->createQuery('wr')
             ->where('sitescan = ?', 1)
-            ->orderBy('nextCheck ASC')->execute();
+            ->orderBy('lastUpdated DESC');
+        $paginator = new Doctrine_Pager($webResources, $this->_getParam('page',1), 18 );
 
+        $webResources = $paginator->execute();
+
+        $this->view->paginator = $paginator;
         $this->view->webResources = $webResources;
     }
 

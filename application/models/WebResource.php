@@ -39,6 +39,11 @@ class God_Model_WebResource extends Doctrine_Record
                 'length'             => '25'
         ));
 
+        $this->hasColumn('lastUpdated', 'timestamp', 25, array(
+                'type'               => 'timstamp',
+                'length'             => '25'
+        ));
+
         $this->hasColumn('sitescan', 'boolean', 25, array(
                 'type'               => 'boolean',
                 'length'             => '25'

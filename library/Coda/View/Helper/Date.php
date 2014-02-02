@@ -1,5 +1,5 @@
 <?php
-class Xigen_View_Helper_Date extends Zend_View_Helper_Abstract
+class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
 {
     const SHORT     = 'd-m-Y';
     const TIME      = 'H:i';

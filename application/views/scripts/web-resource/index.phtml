@@ -5,6 +5,7 @@
             <th>Website</th>
             <th>Frequency</th>
             <th>Next Check</th>
+            <th>Last Updated</th>
             <th>Web Urls</th>
         </tr>
     </thead>
@@ -13,10 +14,13 @@
         <tr>
             <td><a href="<?php echo $this->url(array('action' => 'test', 'id' => $webResource->id)); ?>"><?php echo $webResource->website; ?></a></td>
             <td><?php echo $webResource->frequency; ?></td>
-            <td><?php echo $webResource->nextCheck; ?></td>
+            <td><?php echo $this->date($webResource->nextCheck, Coda_View_Helper_Date::DATETIME); ?></td>
+            <td><?php echo $this->date($webResource->lastUpdated, Coda_View_Helper_Date::DATETIME); ?></td>
             <td><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'index', 'webresourceid' => $webResource->id)); ?>">Web Urls</a></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 <?php endif;?>
+
+<?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
