@@ -4,8 +4,9 @@ class God_Model_Curl
     protected $_rawdata;
     protected $_timeout;
     protected $_statusCode;
+    protected $_lasturl;
 
-    public function Curl($url, $referer = null, $binary = false, $timeout = 30)
+    public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false)
     {
         $this->_timeout = $timeout;
         $ch = curl_init ($url);
@@ -16,10 +17,13 @@ class God_Model_Curl
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
         //curl_setopt($ch, CURLOPT_VERIFYHOST, 0);
         $referer ? curl_setopt($ch, CURLOPT_REFERER, $referer): '';
+        $followredir? curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1): '';
 
         $this->_rawdata = curl_exec($ch);
 
         $this->_statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $this->lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
         return $this->_rawdata;
     }
@@ -27,6 +31,11 @@ class God_Model_Curl
     public function statusCode()
     {
         return $this->_statusCode;
+    }
+
+    public function lastUrl()
+    {
+        return $this->_lasturl;
     }
 
     public function image($displayWidth = null) {
