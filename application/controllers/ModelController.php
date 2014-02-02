@@ -44,6 +44,7 @@ class ModelController extends Coda_Controller
         $form = new God_Form_Model();
         $form->submit->setLabel('Save');
         $this->view->form = $form;
+
         if ($this->getRequest()->isPost()) {
             $formData = $this->getRequest()->getPost();
             if ($form->isValid($formData)) {
@@ -58,7 +59,9 @@ class ModelController extends Coda_Controller
             } else {
                 $form->populate($formData);
             }
-        } else {
+        }
+
+        else {
             $model = Doctrine_Core::getTable('God_Model_Model')
                 ->createQuery('m')
                 ->innerJoin('m.names n')

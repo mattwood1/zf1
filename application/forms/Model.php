@@ -9,10 +9,10 @@ class God_Form_Model extends Zend_Form
 
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel('Name')
-        ->setRequired(true)
-        ->addFilter('StripTags')
-        ->addFilter('StringTrim')
-        ->addValidator('NotEmpty');
+            ->setRequired(true)
+            ->addFilter('StripTags')
+            ->addFilter('StringTrim')
+            ->addValidator('NotEmpty');
 
         $active = new Zend_Form_Element_Select('active');
         $active->setLabel('Active')

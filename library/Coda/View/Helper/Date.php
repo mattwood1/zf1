@@ -1,7 +1,7 @@
 <?php
 class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
 {
-    const SHORT     = 'd-m-Y';
+    const SHORT     = 'd/m/Y';
     const TIME      = 'H:i';
     const DATETIME  = 'd/m/Y H:i';
     const SHORTTEXT = 'j M Y';

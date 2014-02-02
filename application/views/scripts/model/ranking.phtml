@@ -33,7 +33,7 @@
             <div>
                 <input type="checkbox" id="search<?php echo $model->ID; ?>" name="search"<?php echo $model->search ? ' checked="checked"' : ''; ?> />
                 <label for="search<?php echo $model->ID; ?>">Search</label>
-                <?php echo date("d-m-Y", strtotime($model->datesearched)); ?>
+                <?php echo $this->date($model->datesearched); ?>
             </div>
             <!-- Stats
             <a href="weblinks.php?action=0&model={$link.id}">WL = {$link.weblinks}</a>
