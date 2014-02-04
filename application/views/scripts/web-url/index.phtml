@@ -72,6 +72,11 @@ function renderpath ($url, $path) {
         return $path;
     }
 
+    if (preg_match("~(\/).~", $path)) {
+        $urlParts = parse_url($url);
+        return $urlParts['scheme'].'://'.$urlParts['host'].$path;
+    }
+
     return $url.$path;
 
 }

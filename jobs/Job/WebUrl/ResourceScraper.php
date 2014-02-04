@@ -36,13 +36,6 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
                 $webResource->frequency = '+'.$hours.' hours';
 
             } else {
-                $webResource->checksum = md5(serialize($links));
-                $webResource->lastUpdated = date('c');
-
-                preg_match("~^\+([\d]+)\shours~", $webResource->frequency, $timeMatch);
-                $hours = ceil($timeMatch[1]/2);
-                $webResource->frequency = '+'.$hours.' hours';
-
                 foreach ($links as $link) {
                     $webURLTable = new God_Model_WebURLTable;
                     if (!preg_match("~^http:\/\/~", $link["href"])) {
@@ -52,8 +45,13 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
                         $webURLTable->insertLink($link["href"], $webResource->id);
                     } catch (Exception $e) {
                     }
-
                 }
+
+                preg_match("~^\+([\d]+)\shours~", $webResource->frequency, $timeMatch);
+                $hours = ceil($timeMatch[1]/2);
+                $webResource->frequency = '+'.$hours.' hours';
+                $webResource->checksum = md5(serialize($links));
+                $webResource->lastUpdated = date("Y-m-d H:i:s");
             }
 
             // Update the time
