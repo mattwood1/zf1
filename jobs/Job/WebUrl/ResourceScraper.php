@@ -42,7 +42,7 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
                         $link["href"] = $domain.$link["href"];
                     }
                     try {
-                        $webURLTable->insertLink($link["href"], $webResource->id);
+                        $webURLTable->insertLink($link["href"], $webResource);
                     } catch (Exception $e) {
                     }
                 }
@@ -51,7 +51,6 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
                 $hours = ceil($timeMatch[1]/2);
                 $webResource->frequency = '+'.$hours.' hours';
                 $webResource->checksum = md5(serialize($links));
-                $webResource->lastUpdated = date("Y-m-d H:i:s");
             }
 
             // Update the time

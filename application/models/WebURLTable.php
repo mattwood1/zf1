@@ -32,13 +32,13 @@ class God_Model_WebURLTable extends Doctrine_Record
         return $this->_query;
     }
 
-    public function insertLink($url, $webReourceId = null) {
+    public function insertLink($url, God_Model_WebResource $webResource) {
         $urlQuery = $this->getURL($url);
         $urlData = $this->getQuery()->execute();
 
         if (!$urlData->toArray()) {
             $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create(array(
-                    'webResourceId' => $webReourceId,
+                    'webResourceId' => $webResource->id,
                     'url' => $url,
                     'httpStatusCode' => 0,
                     'action' => God_Model_WebURLTable::NEW_URL,
@@ -53,6 +53,9 @@ class God_Model_WebURLTable extends Doctrine_Record
             $webUrl->linkModelNameToUrl();
 
             $webUrl->save();
+
+            $webResource->lastUpdated = date("Y-m-d H:i:s");
+            $webResource->save();
         }
     }
 }
