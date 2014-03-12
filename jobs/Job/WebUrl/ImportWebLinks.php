@@ -11,7 +11,7 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
         $webLinkTable = new God_Model_WebLinkTable;
         $webLinkQuery = $webLinkTable->getInstance()
             ->createQuery('wl')
-            ->limit(500);
+            ->limit(800);
         $webLinks = $webLinkQuery->execute();
 
         foreach ($webLinks as $webLink) {
