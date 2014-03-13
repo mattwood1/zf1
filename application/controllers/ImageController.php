@@ -59,9 +59,9 @@ class ImageController extends Coda_Controller
                 $image = false;
             }
 
-            if (!$image) {
+            if (!$image || strstr($image, 'Warning')) {
                 $curl = new God_Model_Curl;
-                $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 2);
+                $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 4);
 
                 ob_start();
                 echo $curl->image($this->_request->getParam('width'));
