@@ -8,29 +8,32 @@ class Job_Model_CheckWebUrls extends Job_Abstract
 {
     public function run()
     {
-        $modelTable = new God_Model_ModelTable;
-        $modelsQuery = $modelTable->getInstance()
-            ->createQuery('m')
-            ->where('datesearched < ?', date("Y-m-d", strtotime("-7 days")) )
-            ->andWhere('active = ?', 1)
-            ->andWhere('search = ?', 1)
-            ->andWhere('ranking > ?', 0)
-            ->orderBy('datesearched asc')
+        $modelNameTable = new God_Model_ModelNameTable;
+        $modelNamesQuery = $modelNameTable->getInstance()
+            ->createQuery('mn')
+            ->where('mn.datesearched < ?', date("Y-m-d", strtotime("-1 month")) )
+            ->leftJoin('mn.model m')
+            ->andWhere('m.active = ?', 1)
+            ->andWhere('m.search = ?', 1)
+            ->andWhere('m.ranking > ?', 0)
+            ->orderBy('mn.datesearched asc')
             ->limit(1);
-        $models = $modelsQuery->execute();
+        $modelNames = $modelNamesQuery->execute();
 
-        foreach ($models as $model) {
-// var_dump($model->toArray());
+        foreach ($modelNames as $modelName) {
+var_dump($modelName->toArray());
+/*
             foreach ($model->names as $modelName) {
 // var_dump($modelName->toArray());
                 foreach ($modelName->webUrls as $modelNameWeburls) {
 // var_dump($modelNameWeburls->toArray());
                     foreach ($modelNameWeburls->webUrl as $modelNameWebUrl) {
-                        var_dump($modelNameWebUrl->toArray());
+//                        var_dump($modelNameWebUrl->toArray());
                     }
-                    var_dump(count($modelNameWeburls->webUrl->toArray()));
+//                    var_dump(count($modelNameWeburls->webUrl->toArray()));
                 }
             }
+*/
         }
     }
 }
