@@ -85,7 +85,7 @@ class God_Model_WebURL extends Doctrine_Record
         foreach ($modelNames as $modelName) {
             $name = str_replace(" ", "[\s\-\_]", $modelName->name);
 
-            if (preg_match("~((?:[\-\/])" . $name . "(?:[\-\/$]))~i", $this->url)) { // ~(" . $name . ")~i is pants
+            if (preg_match("~((?:[\-\/])" . $name . "(?:[\-\/\_$]))~i", $this->url)) { // ~(" . $name . ")~i is pants
                 $this->linked = -5;                // Name Match found
                 $this->action = God_Model_WebURLTable::GET_THUMBNAILS; // Set to get thumbs
 
