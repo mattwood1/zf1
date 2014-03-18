@@ -31,6 +31,8 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                         $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
 
                         $webUrl->linked = $newWebUrl->id;
+                        $newWebUrl->dateCreated = $webUrl->dateCreated;
+                        $newWebUrl->save();
                     } else {
                         $webUrl->httpStatusCode = $curl->statusCode();
                         $domXPath = new God_Model_DomXPath($html);
