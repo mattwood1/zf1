@@ -24,7 +24,16 @@ class ImageController extends Coda_Controller
     {
         $this->_height('thumb');
         $image = new God_Model_Image();
-        return $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
+
+        $cache = Zend_Cache::factory('Core', 'Memcached');
+        $cachekey = md5($this->_request->getParam('id'));
+
+        $thumb = $cache->load($cachekey);
+        if (!$thumb) {
+            $thumb = $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
+            $cache->save($thumb, $cachekey);
+        }
+        return $thumb;
     }
 
     public function mediumAction()
