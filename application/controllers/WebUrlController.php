@@ -26,6 +26,8 @@ class WebUrlController extends Coda_Controller
             ->where('mn.model_id = ?', $this->_request->getParam('modelid'));
         }
 
+        $webUrlQuery->andWhere('wu.linked < 0');
+
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
         $webUrls = $paginator->execute();
 

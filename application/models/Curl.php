@@ -23,7 +23,7 @@ class God_Model_Curl
 
         $this->_statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $this->lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+        $this->_lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
         return $this->_rawdata;
     }

@@ -24,11 +24,18 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                 if ($webResource && $webResource->xpathfilter) {
 
                     $curl = new God_Model_Curl();
-                    $html = $curl->Curl($webUrl->url);
-                    $webUrl->httpStatusCode = $curl->statusCode();
+                    $html = $curl->Curl($webUrl->url, null, false, 30, true); // Follow 301
 
-                    $domXPath = new God_Model_DomXPath($html);
-                    $links = $domXPath->evaluate($webResource->xpathfilter);
+                    if ($webUrl->url != $curl->lastUrl()) {
+                        $webURLTable = new God_Model_WebURLTable;
+                        $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
+
+                        $webUrl->linked = $newWebUrl->id;
+                    } else {
+                        $webUrl->httpStatusCode = $curl->statusCode();
+                        $domXPath = new God_Model_DomXPath($html);
+                        $links = $domXPath->evaluate($webResource->xpathfilter);
+                    }
                 }
 
                 if ($links) {

@@ -56,6 +56,10 @@ class God_Model_WebURLTable extends Doctrine_Record
 
             $webResource->lastUpdated = date("Y-m-d H:i:s");
             $webResource->save();
+
+            $urlData = $webUrl;
         }
+
+        return $urlData;
     }
 }
