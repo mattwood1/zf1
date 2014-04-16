@@ -19,10 +19,10 @@
             <td><?php echo $url->httpStatusCode; ?></td>
             <td>
                 <select>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::GET_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
+                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
+                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
+                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
+                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
                 </select>
             <?php echo $url->action; ?>
 

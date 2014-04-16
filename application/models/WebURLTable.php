@@ -5,15 +5,34 @@ class God_Model_WebURLTable extends Doctrine_Record
 
     // Discarded links need following up
 
-    const FROM              = -7;
-    const SEARCH            = -6;
+    //const FROM              = -7; // PHASE OUT THESE CONSTANTS FOR CLARITY
+    //const SEARCH            = -6;
     const PARENT_LINKED     = -5;
-    const DISCARDED         = -1;  // Link has been manually discarded
-    const NEW_URL           = 0;
-    const GET_THUMBNAILS    = 1;
-    const GOT_THUMBNAILS    = 2;
-    const THUMBNAIL_ISSUE   = 3;
-    const READY_TO_DOWNLOAD = 6;
+    //const DISCARDED         = -1;  // Link has been manually discarded
+    //const NEW_URL           = 0;
+    //const GET_THUMBNAILS    = 1;
+    //const GOT_THUMBNAILS    = 2;
+    //const THUMBNAIL_ISSUE   = 3;
+    //const READY_TO_DOWNLOAD = 6;
+
+    // Link Codes
+    const LINK_NOT_LINKED   = 0;
+    const LINK_TO_BE_LINKED = -1;
+    const LINK_ATTEMPTED    = -2;
+    const LINK_FOUND        = -5;
+
+    // Action Codes
+    const ACTION_FROM              = -7;
+    const ACTION_SEARCH            = -6;
+    const ACTION_DISCARDED         = -1;
+    const ACTION_NEW_URL           = 0;
+    const ACTION_GET_THUMBNAILS    = 1;
+    const ACTION_GOT_THUMBNAILS    = 2;
+    const ACTION_THUMBNAIL_ISSUE   = 3;
+    const ACTION_GET_IMAGES        = 4;
+    const ACTION_GOT_IMAGES        = 5;
+    const ACTION_READY_TO_DOWNLOAD = 6;
+    const ACTION_DOWNLOADED        = 10;
 
     public static function getInstance()
     {
@@ -41,7 +60,7 @@ class God_Model_WebURLTable extends Doctrine_Record
                     'webResourceId' => $webResource->id,
                     'url' => $url,
                     'httpStatusCode' => 0,
-                    'action' => God_Model_WebURLTable::NEW_URL,
+                    'action' => God_Model_WebURLTable::ACTION_NEW_URL,
                     'thumbnails' => null,
                     'links' => null,
                     'images' => null,

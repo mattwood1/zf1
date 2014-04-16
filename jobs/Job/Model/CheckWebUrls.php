@@ -22,6 +22,13 @@ class Job_Model_CheckWebUrls extends Job_Abstract
 
         foreach ($modelNames as $modelName) {
 var_dump($modelName->toArray());
+
+            /*
+             * SELECT * FROM `webUrls` WHERE (
+             * MATCH(url) AGAINST ('wendy')            Loop through name parts
+             * AND MATCH(url) AGAINST ('fiore')
+             * ) AND (linked = -2)
+             */
 /*
             foreach ($model->names as $modelName) {
 // var_dump($modelName->toArray());

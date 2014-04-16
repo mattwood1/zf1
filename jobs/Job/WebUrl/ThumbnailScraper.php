@@ -11,7 +11,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
         $webUrlsTable = new God_Model_WebURLTable;
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
-            ->where('action = ?', God_Model_WebURLTable::GET_THUMBNAILS)
+            ->where('action = ?', God_Model_WebURLTable::ACTION_GOT_THUMBNAILS)
             ->limit(500);
         $webUrls = $webUrlsQuery->execute();
 
@@ -47,12 +47,12 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                     }
                     $webUrl->thumbnails = serialize($img);
                     $webUrl->links = serialize($href);
-                    $webUrl->action = God_Model_WebURLTable::GOT_THUMBNAILS;
+                    $webUrl->action = God_Model_WebURLTable::ACTION_GOT_THUMBNAILS;
 
 
                 } else {
                     // Mark the webUrl as bad
-                    $webUrl->action = God_Model_WebURLTable::THUMBNAIL_ISSUE;
+                    $webUrl->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
                 }
 
                 $webUrl->save();
