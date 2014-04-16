@@ -21,7 +21,7 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
             $webUrlTable->getURL($webLink->url);
             $webUrl = $webUrlTable->getQuery()->execute();
 
-//var_dump($webUrl[0]->id, $webUrl[0]->url);
+//var_dump($webUrl[0]->id, $webUrl[0]->url, $webLink->url);
 
             // If not found create it
             if (!$webUrl[0]->url) {
@@ -45,8 +45,10 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
             } elseif (preg_match("~^" . preg_quote($webUrl[0]->url) . "$~i", addslashes($webLink->url))) { // else check it and delete.
                 $webLink->delete();
 //var_dump('Deleted 2');
+            } elseif ($webUrl[0]->url === $webLink->url) {
+                $webLink->delete();
             }
-//var_dump('Match -> ', preg_match("~^" . preg_quote($webUrl[0]->url) . "$~i", addslashes($webLink->url)));
+//var_dump('Match -> ', preg_match("~^" . preg_quote($webUrl[0]->url) . "$~i", preg_quote($webLink->url)));
         }
 
     }

@@ -58,6 +58,8 @@ class God_Model_WebURLTable extends Doctrine_Record
             $webResource->save();
 
             $urlData = $webUrl;
+        } else {
+            return $urlData[0];
         }
 
         return $urlData;

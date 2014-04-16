@@ -19,20 +19,17 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
             foreach ($webUrls as $webUrl) {
                 $webResourceTable = new God_Model_WebResourceTable;
                 $webResource = $webResourceTable->getInstance()->findOneBy('id', $webUrl->webResourceId);
-
                 $links = array();
                 if ($webResource && $webResource->xpathfilter) {
 
                     $curl = new God_Model_Curl();
                     $html = $curl->Curl($webUrl->url, null, false, 30, true); // Follow 301
-
                     if ($webUrl->url != $curl->lastUrl()) {
                         $webURLTable = new God_Model_WebURLTable;
                         $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
-
-                        $webUrl->linked = $newWebUrl->id;
                         $newWebUrl->dateCreated = $webUrl->dateCreated;
                         $newWebUrl->save();
+                        $webUrl->linked = $newWebUrl->id;
                     } else {
                         $webUrl->httpStatusCode = $curl->statusCode();
                         $domXPath = new God_Model_DomXPath($html);

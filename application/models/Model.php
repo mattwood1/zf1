@@ -180,12 +180,6 @@ class God_Model_Model extends Doctrine_Record
 
                         } // else file is not a directory
                     }
-
-                    if ($this->ranking == 0) {
-                        $this->ranking = 1;
-                        $this->save();
-                    }
-
                 } // End While
             }
         }
