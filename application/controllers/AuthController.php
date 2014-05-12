@@ -19,12 +19,6 @@ class AuthController extends Coda_Controller
             // process authentication
             $result = $this->_performLogin($form->getValues());
             if ($result) {
-                // login sucessful
-                //$zfDate = new Zend_Date();
-                //$user = Doctrine_Core::getTable('God_Model_User')->findOneBy('id', $result->id);
-                //$user->dateLoggedIn = $zfDate->get(Zend_Date::ISO_8601);
-                //$user->save();
-                //_dexit($result);
                 $this->gotoRoute(array('controller' => 'index', 'action' => 'index'));
             }
         }

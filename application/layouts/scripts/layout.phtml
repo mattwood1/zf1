@@ -2,7 +2,6 @@
     $this->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $this->headTitle()->setSeparator(' - ');
     $this->headTitle('Goddesses');
-    $load = sys_getloadavg();
     echo $this->doctype();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -12,6 +11,7 @@
         <?php echo $this->headLink()
                 ->appendStylesheet('//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
                 ->appendStylesheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
+                ->appendStylesheet('//netdna.bootstrapcdn.com/bootswatch/3.1.1/simplex/bootstrap.min.css')
                 ->appendStylesheet($this->baseUrl().'/css/site.css'); ?>
         <?php echo $this->headScript()
                 ->appendFile('//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'); ?>
@@ -20,17 +20,12 @@
     </head>
     <body>
         <div id="content">
-            <div class="left" style="float:left;">
-            <?php echo $load[0].','.$load[1].','.$load[2]; ?>
-            </div>
-            <div class="right">
-                <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>">Log out</a>
-                <?php endif;?>
-            </div>
-            <h1><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true);?>">Goddesses</a></h1>
+            <?php echo $this->partial('partials/navigation.phtml'); ?>
             <h2><?php echo $this->title; ?></h2>
             <?php echo $this->layout()->content; ?>
+            <footer>
+                <?php echo $this->partial('partials/footer.phtml'); ?>
+            </footer>
         </div>
     </body>
 </html>
