@@ -13,9 +13,10 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                <li><a href="gallery.html">Ranking</a></li>
-                <li><a href="modal.html">Stats</a></li>
-                <li><a href="modal.html">Web Resources</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null), null, true);?>">Add new model</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking'), null, true); ?>">Ranking</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'stats'), null, true); ?>">Stats</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>">Web Resources</a></li>
                 <!--
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
@@ -32,6 +33,8 @@
                 -->
                 <?php endif; ?>
             </ul>
+            
+            <!-- Right Links -->
             <ul class="nav navbar-nav navbar-right">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
                 <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>">Log out</a></li>
@@ -39,6 +42,19 @@
                 <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'login'),null ,true); ?>">Log in</a></li>
                 <?php endif;?>
             </ul>
+            
+            <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
+            <!-- Search -->
+            <form action="<?php echo $this->url(array('controller' => 'index', 'action' => 'search'),null,true); ?>" method="post" id="search" class="navbar-form navbar-left" role="search" style="margin-top: 4px;">
+                <div class="row">
+                <div class="form-group">
+                    <input type="text" name="keyword" value="<?php echo $this->keyword; ?>" class="form-control input-sm" placeholder="Keyword">
+                    <button type="submit" class="btn btn-sm">Search</button>
+                </div>
+                </div>
+            </form>
+            <?php endif; ?>
+            
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
 </div>

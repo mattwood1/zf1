@@ -6,8 +6,6 @@
 
 <?php echo $this->photoset->name; ?>
 
-<pre><?php // var_dump($this->photoset->toArray());?></pre>
-
 <form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
 
     <?php if (is_array($this->files)): ?>
