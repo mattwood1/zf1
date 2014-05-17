@@ -29,6 +29,11 @@ class ImageController extends Coda_Controller
         $cachekey = md5($this->_request->getParam('id'));
 
         $thumb = $cache->load($cachekey);
+        
+        if ($this->_request->getParam('ignorecache') == 1) {
+            $image = false;
+        }
+            
         if (!$thumb) {
             $thumb = $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
             $cache->save($thumb, $cachekey);
@@ -97,9 +102,9 @@ class ImageController extends Coda_Controller
         $this->_browserDetection();
         $this->_orientation();
         if ($this->_orientation == "portrait") {
-            $this->_height = floor($this->{'_'.$width.'Width'}*$this->_ratio);
+            $this->_height = ceil($this->{'_'.$width.'Width'}*$this->_ratio);
         } else {
-            $this->_height = floor($this->{'_'.$width.'Width'}/$this->_ratio);
+            $this->_height = ceil($this->{'_'.$width.'Width'}/$this->_ratio);
         }
     }
 
@@ -109,7 +114,7 @@ class ImageController extends Coda_Controller
             case stristr($_SERVER['HTTP_USER_AGENT'], 'Mobile'):
                 $this->_largeWidth = 320;
                 $this->_mediumWidth = 150;
-                $this->_thumbWidth = 100;
+                $this->_thumbWidth = 99.9;
                 $this->_largeWidth = floor($this->_largeWidth*2);
                 break;
         }

@@ -122,14 +122,6 @@ li.autoThumb {
     background: darkred;
 }
 
-.pagination {
-    clear: both;
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    padding: 20px 0;
-}
-
 ul#ranking {
     padding: 0;
     list-style: none;
@@ -152,7 +144,7 @@ ul#ranking li div.image {
     background: black;
 }
 
-@media only screen and (min-width: 320px) and (max-width: 810px) {
+@media only screen and (min-width: 320px) and (max-width: 790px) {
     /* iPhone, Android rules here */
     body {
         background: black;
@@ -167,13 +159,6 @@ ul#ranking li div.image {
     button {
         color: black;
     }
-    #content {
-        width: 100%;
-        margin: 0 auto;
-    
-        /* Debug Devices Width */
-        /*background: blue;*/
-    }
     #banner a {
         color: rgb(179,179,179);
     }
@@ -181,11 +166,6 @@ ul#ranking li div.image {
     a {
         color: rgb(179,179,179);
     }
-    /*
-    a:hover {
-        color: white;
-    }
-    */
     a img {
         border: 0px;
     }
@@ -251,11 +231,18 @@ ul#ranking li div.image {
         border: 1px solid transparent;
         border-radius: 4px;
     }
+    
 }
 
 .container {
     padding-left: 0;
     padding-right: 0;
+}
+
+.thumbnail {
+    border: 0;
+    border-radius: auto;
+    padding: 0;
 }
 
 .thumbnail img {
