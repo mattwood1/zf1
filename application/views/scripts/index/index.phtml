@@ -1,8 +1,3 @@
-<style>
-    a.thumbnail {
-        height:211px;
-    }
-</style>
 <div id="filter" class="clearfix">
     <a href="<?php echo $this->url(array('order' => 'ranking'));?>">Ranking</a>
     <a href="<?php echo $this->url(array('order' => 'name'));?>">Name</a>
@@ -11,12 +6,14 @@
 <?php if ($this->models->toArray()): ?>
 <div class="row">
     <?php foreach($this->models as $model): ?>
-    <div class="col-xs-6 col-sm-3 col-md-2">
+    <div class="col-xs-4 col-sm-3 col-md-2">
         <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>" class="thumbnail">
-            <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
-            <div class="name">
-                <?php echo $model->getName() ;?>
-                (<?php echo $this->escape($model->ranking)?>)
+            <div class="image">
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
+                <div class="name">
+                    <?php echo $model->getName() ;?><br />
+                    (<?php echo $this->escape($model->ranking)?>)
+                </div>
             </div>
         </a>
     </div>

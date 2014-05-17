@@ -177,13 +177,15 @@ ul#ranking li div.image {
     #banner a {
         color: rgb(179,179,179);
     }
+    
     a {
         color: rgb(179,179,179);
     }
+    /*
     a:hover {
         color: white;
     }
-    
+    */
     a img {
         border: 0px;
     }
@@ -249,4 +251,29 @@ ul#ranking li div.image {
         border: 1px solid transparent;
         border-radius: 4px;
     }
+}
+
+.container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.thumbnail img {
+    width: 100%;
+}
+
+.thumbnail div.image {
+    position: relative;
+}
+
+a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
+    text-decoration: none;
+}
+
+.thumbnail div.name {
+    position: absolute;
+    bottom: 0px;
+    background: rgba(100,100,100,0.8);
+    width: 100%;
+    text-align: center;
 }
