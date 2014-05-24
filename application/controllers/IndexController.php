@@ -23,7 +23,6 @@ class IndexController extends Coda_Controller
         $paginator = new Doctrine_Pager($modelTable->getQuery(), $this->_getParam('page', 1), 18);
         $models = $paginator->execute();
 
-        $this->view->title = 'Goddesses';
         $this->view->paginator = $paginator;
         $this->view->models = $models;
     }
