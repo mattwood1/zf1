@@ -17,20 +17,6 @@
                 <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking'), null, true); ?>">Ranking</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'stats'), null, true); ?>">Stats</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>">Web Resources</a></li>
-                <!--
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-                -->
                 <?php endif; ?>
             </ul>
             
@@ -45,14 +31,16 @@
             
             <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
             <!-- Search -->
-            <form action="<?php echo $this->url(array('controller' => 'index', 'action' => 'search'),null,true); ?>" method="post" id="search" class="navbar-form navbar-left" role="search" style="margin-top: 4px;">
-                <div class="row">
-                <div class="form-group">
-                    <input type="text" name="keyword" value="<?php echo $this->keyword; ?>" class="form-control input-sm" placeholder="Keyword">
-                    <button type="submit" class="btn btn-sm">Search</button>
-                </div>
-                </div>
-            </form>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <form class="navbar-form" role="search" method="get" id="search-form" name="search-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" placeholder="Search" id="query" name="query" value="">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-primary btn-sm"><span class="fa fa-search"></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <?php endif; ?>
             
         </div><!--/.nav-collapse -->
