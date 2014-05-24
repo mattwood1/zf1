@@ -7,49 +7,50 @@
 </ul>
 
 <div class="row">
-    <div class="col-md-8 col-xs-12 col-md-offset-2">
+    <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1">
         <?php
             foreach ($this->modelKeys as $modelKey):
                 $model = $this->models[$modelKey];
                 $photoset = $model->getRandomPhotoset();
         ?>
-        <div class="col-md-6">
+        <div class="col-xs-6">
             <div class="thumbnail">
                 <a href="<?php echo $this->url(array('controller'=>'gallery', 'action'=>'view', 'id'=>$model->ID, 'photoset' => $photoset->id)); ?>">
                     <div class="image">
                         <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'medium', 'id'=>rawurlencode($photoset->thumbnail), 'page' => null)); ?>" />
                     </div>
                 </a>
+                <div class="caption">
+                    <strong class="block">
+                        <a href="<?php echo $this->url(array('action' => 'view', 'id' => $model->ID)); ?>"><?php echo $model->getName(); ?></a>
+                    </strong>
 
-                <strong class="block">
-                    <a href="<?php echo $this->url(array('action' => 'view', 'id' => $model->ID)); ?>"><?php echo $model->getName(); ?></a>
-                </strong>
-
-                <div>
-                    <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
-                </div>
-                <div>
-                    Rank = <?php echo $model->ranking; ?> (<?php echo count($this->models->toArray()); ?>)
-                </div>
-                <div>
-                    Photosets = <?php echo count($model->photosets); ?>
-                </div>
-                <form action="<?php echo $this->url(array('action' => 'ranking')); ?>" method="post">
                     <div>
-                        <input type="checkbox" id="search<?php echo $model->ID; ?>" name="search"<?php echo $model->search ? ' checked="checked"' : ''; ?> />
-                        <label for="search<?php echo $model->ID; ?>">Search</label>
-                        <?php echo $this->date($model->datesearched); ?>
+                        <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
                     </div>
-                    <!-- Stats
-                    <a href="weblinks.php?action=0&model={$link.id}">WL = {$link.weblinks}</a>
-                    <a href="weblinks.php?action=2&model={$link.id}">WT = {$link.webthumbs}</a>
-                    <a href="weblinks.php?action=6&model={$link.id}">WI = {$link.webimages}</a>
-                     -->
-                    <input type="hidden" name="model_id" value="<?php echo $model->ID; ?>" />
-                    <button type="submit" class="btn btn-primary btn-block">God Like!</button>
-                </form>
+                    <div>
+                        Rank = <?php echo $model->ranking; ?> (<?php echo count($this->models->toArray()); ?>)
+                    </div>
+                    <div>
+                        Photosets = <?php echo count($model->photosets); ?>
+                    </div>
+                    <form action="<?php echo $this->url(array('action' => 'ranking')); ?>" method="post">
+                        <div>
+                            <input type="checkbox" id="search<?php echo $model->ID; ?>" name="search"<?php echo $model->search ? ' checked="checked"' : ''; ?> />
+                            <label for="search<?php echo $model->ID; ?>">Search</label>
+                            <?php echo $this->date($model->datesearched); ?>
+                        </div>
+                        <!-- Stats
+                        <a href="weblinks.php?action=0&model={$link.id}">WL = {$link.weblinks}</a>
+                        <a href="weblinks.php?action=2&model={$link.id}">WT = {$link.webthumbs}</a>
+                        <a href="weblinks.php?action=6&model={$link.id}">WI = {$link.webimages}</a>
+                         -->
+                        <input type="hidden" name="model_id" value="<?php echo $model->ID; ?>" />
+                        <button type="submit" class="btn btn-primary btn-block">God Like!</button>
+                    </form>
 
-                <?php //var_dump($model->getWebLinkStats()->toArray() ); ?>
+                    <?php //var_dump($model->getWebLinkStats()->toArray() ); ?>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
