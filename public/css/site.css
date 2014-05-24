@@ -250,6 +250,7 @@ ul#ranking li div.image {
     border: 0;
     border-radius: 0;
     padding: 0;
+    margin-bottom: 10px;
 }
 
 .thumbnail img {
@@ -281,4 +282,15 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 .page-header {
     margin-top: 0px;
     margin-bottom: 10px;
+}
+
+/* Pagination */
+.pagination {
+    margin: 5px 0 10px;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #cccccc;
+    padding: 5px 10px;
 }

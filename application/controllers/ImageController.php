@@ -59,7 +59,9 @@ class ImageController extends Coda_Controller
     {
         // action body
         // TODO: needs a view image/full.phtml
-        $this->view->image = $this->_getParam('id');
+        //$this->view->image = $this->_getParam('id');
+        $image = new God_Model_Image();
+        return $image->process($this->_getParam('id'));
     }
 
     public function externalAction()

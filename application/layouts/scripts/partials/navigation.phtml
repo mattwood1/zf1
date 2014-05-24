@@ -32,9 +32,9 @@
             <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
             <!-- Search -->
             <div class="col-xs-12 col-sm-4 col-md-4">
-                <form class="navbar-form" role="search" method="get" id="search-form" name="search-form">
+                <form class="navbar-form" role="search" id="search-form" name="search-form" action="<?php echo $this->url(array('controller' => 'index', 'action' => 'search'),null,true); ?>" method="post">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" placeholder="Search" id="query" name="query" value="">
+                        <input type="text" class="form-control input-sm" placeholder="Search" id="query" name="keyword" autocomplete="off" value="<?php echo $this->keyword; ?>">
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-primary btn-sm"><span class="fa fa-search"></span></button>
                         </div>

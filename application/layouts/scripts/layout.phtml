@@ -21,7 +21,7 @@
     </head>
     <body>
         <div class="container">
-            <?php echo $this->partial('partials/navigation.phtml'); ?>
+            <?php echo $this->partial('partials/navigation.phtml', array('keyword' => $this->keyword)); ?>
             <?php echo $this->title ? '<div class="page-header"><h2>' . $this->title . '</h2></div>' : ''; ?>
             <?php echo $this->layout()->content; ?>
             <footer>
