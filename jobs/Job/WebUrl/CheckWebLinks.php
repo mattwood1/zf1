@@ -19,12 +19,12 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
 
         foreach ($webUrls as $webUrl) {
             if (preg_match("~(\/search\/)~i", $webUrl->url)) {
-                $webUrl->action = God_Model_WebURLTable::ACTION_SEARCH;
-                $webUrl->linked = -10;
+                $webUrl->action = God_Model_WebURLTable::ACTION_CRAWL_FOR_LINKS;
+                $webUrl->linked = God_Model_WebURLTable::LINK_SEARCH;
             }
             if (preg_match("~(%3Ffrom%3D)~i", $webUrl->url)) {
-                $webUrl->action = God_Model_WebURLTable::ACTION_FROM;
-                $webUrl->linked = -10;
+                $webUrl->action = God_Model_WebURLTable::ACTION_NEW_URL;
+                $webUrl->linked = God_Model_WebURLTable::LINK_FROM;
             }
 
             // These will need following up.

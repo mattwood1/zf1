@@ -20,11 +20,13 @@ class God_Model_WebURLTable extends Doctrine_Record
     const LINK_TO_BE_LINKED = -1;
     const LINK_ATTEMPTED    = -2;
     const LINK_FOUND        = -5;
+    const LINK_SEARCH       = -6;
+    const LINK_FROM         = -7;
 
     // Action Codes
     const ACTION_FROM              = -7;
     const ACTION_SEARCH            = -6;
-    const ACTION_DISCARDED         = -1;
+    const ACTION_CRAWL_FOR_LINKS   = -1;
     const ACTION_NEW_URL           = 0;
     const ACTION_GET_THUMBNAILS    = 1;
     const ACTION_GOT_THUMBNAILS    = 2;
