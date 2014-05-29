@@ -27,7 +27,7 @@
                         </strong>
 
                         <div>
-                            <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? 'text-danger' : ''; ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
+                            <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? '' : 'text-danger'; ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
                         </div>
                         <div>
                             Rank = <?php echo $model->ranking; ?> (<?php echo count($this->models->toArray()); ?>)
