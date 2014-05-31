@@ -272,6 +272,10 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
     text-align: center;
 }
 
+.thumbnail .autothumb div.name {
+    background: rgba(100,0,0,0.8);
+}
+
 /* Search */
 .navbar .input-sm, .navbar .btn-sm {
     margin: 3px 0;
