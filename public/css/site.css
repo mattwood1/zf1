@@ -150,10 +150,7 @@ ul#ranking li div.image {
     a {
         color: rgb(179,179,179);
     }
-    a img {
-        border: 0px;
-    }
-    
+
     ul#ranking {
         width: 100%;
     }
@@ -165,10 +162,6 @@ ul#ranking li div.image {
     ul#ranking li div.image {
         width: 150px;
         height: 200px
-    }
-    
-    img {
-        border: 3px solid black;
     }
     
     img.autoThumb {
@@ -255,6 +248,12 @@ ul#ranking li div.image {
 
 .thumbnail img {
     width: 100%;
+}
+
+.thumbnail label {
+    display: block;
+    margin-bottom: 0px;
+    font-weight: auto;
 }
 
 .thumbnail div.image {
