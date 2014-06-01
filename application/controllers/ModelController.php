@@ -91,9 +91,19 @@ class ModelController extends Coda_Controller
 
         // Get model ranking stats
         $rankingStats = $modelTable->getRankingStats(2, true);
-
-        // Choose a random model stat
-        $rankingStatsKey = array_rand($rankingStats, 1);
+        
+        // Random decision to show top or standard method
+        $modes = array('standard', 'top');
+        switch ($modes[array_rand($modes, 1)]) {
+            case 'standard':
+                // Choose a random model stat
+                $rankingStatsKey = array_rand($rankingStats, 1);
+                break;
+            case 'top':
+                $maxs = array_keys($rankingStats, max($rankingStats));
+                $rankingStatsKey = $maxs[0];
+                break;
+        }
 
         // Get models where ranking = the chosen stat
         $models = $modelTable->getModelsByRanking($rankingStatsKey);
