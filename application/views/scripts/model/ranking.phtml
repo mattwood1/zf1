@@ -30,7 +30,7 @@
                             <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? '' : 'text-danger'; ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
                         </div>
                         <div class="pull-left">
-                            <i class="fa fa-star-o"></i> <?php echo $model->ranking; ?> <span class="badge"><?php echo count($this->models->toArray()); ?></span>&nbsp;
+                            <i class="fa fa-thumbs-o-up"></i> <?php echo $model->ranking; ?> <span class="badge"><i class="fa fa-star"></i> <?php echo count($this->models->toArray()); ?></span>&nbsp;
                         </div>
                         <div class=""pull-left">
                             <i class="fa fa-picture-o"></i> <?php echo count($model->photosets); ?>&nbsp;
