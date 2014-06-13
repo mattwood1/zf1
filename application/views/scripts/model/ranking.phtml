@@ -2,10 +2,6 @@
     $this->titleonly = 'Ranking';
     $this->headTitle($this->titleonly);
 ?>
-<ul id="menu" class="clearfix">
-    <li><a href="<?php echo $this->url(array('action' => 'ranking'));?>">Try Again</a></li>
-</ul>
-
 <div class="row">
     <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1">
 	<div class="row">
@@ -16,18 +12,21 @@
             ?>
             <div class="col-xs-6">
                 <div class="thumbnail">
-                    <a href="<?php echo $this->url(array('controller'=>'gallery', 'action'=>'view', 'id'=>$model->ID, 'photoset' => $photoset->id)); ?>">
-                        <div class="image">
+                    <div class="image medium">
+                        <a href="<?php echo $this->url(array('controller'=>'gallery', 'action'=>'view', 'id'=>$model->ID, 'photoset' => $photoset->id)); ?>">
                             <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'medium', 'id'=>rawurlencode($photoset->thumbnail), 'page' => null)); ?>" />
+                        </a>
+                        <div class="name">
+                            <a href="<?php echo $this->url(array('action' => 'view', 'id' => $model->ID)); ?>"><?php echo $model->getName(); ?></a>
                         </div>
-                    </a>
+                    </div>
                     <div class="caption">
                         <strong class="block">
-                            <a href="<?php echo $this->url(array('action' => 'view', 'id' => $model->ID)); ?>"><?php echo $model->getName(); ?></a>
+                            
                         </strong>
 
-                        <div>
-                            <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? '' : 'text-danger'; ?>"><?php echo $photoset->manual_thumbnail ? 'Manual' : 'Auto'; ?> Thumbnail</a>
+                        <div class="pull-right">
+                             <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? 'text-success' : 'text-danger'; ?>"><i class="fa fa-flag"></i></a>
                         </div>
                         <div class="pull-left">
                             <i class="fa fa-thumbs-o-up"></i> <?php echo $model->ranking; ?> <span class="badge"><i class="fa fa-star"></i> <?php echo count($this->models->toArray()); ?></span>&nbsp;
@@ -60,3 +59,7 @@
 	</div>
     </div>
 </div>
+
+<ul id="menu" class="clearfix">
+    <li><a href="<?php echo $this->url(array('action' => 'ranking'));?>">Try Again</a></li>
+</ul>

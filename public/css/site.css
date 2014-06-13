@@ -255,24 +255,34 @@ ul#ranking li div.image {
     font-weight: auto;
 }
 
-.thumbnail div.image {
+.thumbnail .image {
     position: relative;
 }
 
-a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
+a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.thumbnail.active {
     text-decoration: none;
 }
 
-.thumbnail div.name {
+.thumbnail .name {
     position: absolute;
     bottom: 0px;
     background: rgba(100,100,100,0.8);
     width: 100%;
     text-align: center;
+    color: #FFFFFF;
 }
 
-.thumbnail .autothumb div.name {
+.thumbnail .name a {
+    color: #FFFFFF;
+}
+
+.thumbnail .autothumb .name {
     background: rgba(100,0,0,0.8);
+}
+
+.thumbnail .image.medium .name {
+    font-size: 25px;
+    line-height: 45px;
 }
 
 /* Search */
@@ -295,4 +305,8 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
 footer {
     border-top: 1px solid #cccccc;
     padding: 5px 10px;
+}
+
+.nav>li>a {
+    padding: 10px 10px;
 }

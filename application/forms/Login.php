@@ -18,6 +18,8 @@ class God_Form_Login extends Twitter_Bootstrap_Form_Horizontal
                 "placeholder" => "Your password"
         ))
 
-        ->addElement("submit", "login", array("label" => "Login"));
+        ->addElement("submit", "login", array(
+            "label" => "Log in"
+        ));
     }
 }

@@ -10,11 +10,12 @@
     <?php foreach($this->models as $model): ?>
     <div class="col-xs-4 col-sm-3 col-md-2">
         <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>" class="thumbnail">
-            <div class="image">
+            <div class="image thumb">
                 <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
                 <div class="name">
                     <?php echo $model->getName() ;?><br />
-                    (<?php echo $this->escape($model->ranking)?>)
+                    <i class="fa fa-thumbs-o-up"></i> <?php echo $this->escape($model->ranking)?>
+                    <i class="fa fa-picture-o"></i> <?php echo count($model->photosets); ?>
                 </div>
             </div>
         </a>
