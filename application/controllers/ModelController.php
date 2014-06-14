@@ -94,7 +94,8 @@ class ModelController extends Coda_Controller
         
         // Random decision to show top or standard method
         $modes = array('standard', 'top');
-        switch ($modes[array_rand($modes, 1)]) {
+        $mode = $modes[array_rand($modes, 1)];
+        switch ($mode) {
             case 'standard':
                 // Choose a random model stat
                 $rankingStatsKey = array_rand($rankingStats, 1);
@@ -108,6 +109,7 @@ class ModelController extends Coda_Controller
         // Get models where ranking = the chosen stat
         $models = $modelTable->getModelsByRanking($rankingStatsKey);
 
+        $this->view->mode = $mode;
         $this->view->models = $models;
         $this->view->modelKeys = array_rand($models->toArray(), 2);
     }

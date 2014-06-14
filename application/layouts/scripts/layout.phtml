@@ -25,7 +25,7 @@
             <?php echo $this->title ? '<div class="page-header"><h2>' . $this->title . '</h2></div>' : ''; ?>
             <?php echo $this->layout()->content; ?>
             <footer>
-                <?php echo $this->partial('partials/footer.phtml'); ?>
+                <?php echo $this->partial('partials/footer.phtml', array('mode' => $this->mode)); ?>
             </footer>
         </div>
     </body>
