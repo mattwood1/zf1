@@ -5,10 +5,15 @@
 
 <?php $this->photosets[0]->model->getName(); ?>
 
-<div>
-    <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID));?>">Edit</a>
-</div>
-
+<ul class="nav nav-pills">
+    <li class="active">
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id' => $this->model->ID), null, true);?>">Gallery</a>
+    </li>
+    <li>
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID), null, true);?>">Edit</a>
+    </li>
+</ul>
+            
 <?php if ($this->photosets): ?>
 <div class="row">
 

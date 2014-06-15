@@ -22,7 +22,7 @@
     <body>
         <div class="container">
             <?php echo $this->partial('partials/navigation.phtml', array('keyword' => $this->keyword)); ?>
-            <?php echo $this->title ? '<div class="page-header"><h2>' . $this->title . '</h2></div>' : ''; ?>
+            <?php echo $this->title ? '<div class="page-header"><h2>' . $this->title . ' <small>' . $this->subtitle . '</small></h2></div>' : ''; ?>
             <?php echo $this->layout()->content; ?>
             <footer>
                 <?php echo $this->partial('partials/footer.phtml', array('mode' => $this->mode)); ?>

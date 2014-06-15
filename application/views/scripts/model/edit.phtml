@@ -4,6 +4,15 @@ $this->headTitle($this->model->getName());
 $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->model->ID), null, true) . '">' . $this->model->getName(). '</a>';
 ?>
 
+<ul class="nav nav-pills">
+    <li>
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id' => $this->model->ID), null, true);?>">Gallery</a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID), null, true);?>">Edit</a>
+    </li>
+</ul>
+
 <form action="<?php echo $this->url(array('action' => 'edit')); ?>" method="post">
     <input type="checkbox" name="active" value="1" id="active" <?php echo $this->model->isActive() ? ' checked="checked"' : ''; ?> />
     <label for="active">Active</label>

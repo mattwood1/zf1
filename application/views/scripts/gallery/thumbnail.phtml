@@ -1,10 +1,18 @@
 <?php
     $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->photoset->model->ID), null, true) . '">' . $this->photoset->model->getName() . '</a>';
+    $this->subtitle = $this->photoset->name;
     $this->headTitle($this->photoset->name);
     $this->headTitle($this->photoset->model->getName());
 ?>
 
-<?php echo $this->photoset->name; ?>
+<ul class="nav nav-pills">
+    <li>
+        <a href="<?php echo $this->url(array('action' => 'view'));?>">Images</a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url(array('action' => 'thumbnail'));?>">Change Thumbnail</a>
+    </li>
+</ul>
 
 <form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post" class="form-inline" role="form">
 

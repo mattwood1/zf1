@@ -1,16 +1,17 @@
 <?php
     $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->photoset->model->ID), null, true) . '">' . $this->photoset->model->getName(). '</a>';
+    $this->subtitle = $this->photoset->name;
     $this->headTitle($this->photoset->name);
     $this->headTitle($this->photoset->model->getName());
 ?>
-
-<ul id="menu" class="clearfix">
+<ul class="nav nav-pills">
+    <li class="active">
+        <a href="<?php echo $this->url(array('action' => 'view'));?>">Images</a>
+    </li>
     <li>
         <a href="<?php echo $this->url(array('action' => 'thumbnail'));?>">Change Thumbnail</a>
     </li>
 </ul>
-
-<?php echo $this->photoset->name; ?>
 
 <?php if ($this->files): ?>
 <div class="row">
