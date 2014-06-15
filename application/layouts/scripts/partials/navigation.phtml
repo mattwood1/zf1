@@ -13,7 +13,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null), null, true);?>">Add new model</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null), null, true);?>">Add Model</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking'), null, true); ?>">Ranking</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'stats'), null, true); ?>">Stats</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>">Web Resources</a></li>

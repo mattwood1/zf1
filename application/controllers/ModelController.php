@@ -33,8 +33,7 @@ class ModelController extends Coda_Controller
     public function addAction()
     {
         // add body
-        $form = new God_Form_Model();
-        $form->submit->setLabel('Add');
+        $form = new God_Form_AddModel();
         $this->view->form = $form;
     }
 
