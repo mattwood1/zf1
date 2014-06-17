@@ -191,6 +191,8 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
 
 .thumbnail .name a {
     color: #FFFFFF;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 .thumbnail .autothumb .name {
@@ -200,6 +202,14 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
 .thumbnail .image.medium .name {
     font-size: 25px;
     line-height: 30px;
+    display: table;
+    height: 60px;
+}
+
+/* Nav bar toggle */
+.navbar-toggle {
+    font-size: 21px;
+    padding: 0 7px;
 }
 
 /* Search */
@@ -313,6 +323,7 @@ footer {
     .thumbnail .image.medium .name {
         font-size: 20px;
         line-height: 25px;
+        height: 50px;
     }
     
 }
