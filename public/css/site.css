@@ -183,14 +183,14 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
 .thumbnail .name {
     position: absolute;
     bottom: 0px;
-    background: rgba(100,100,100,0.8);
+    background: rgba(100,100,100,0.5);
     width: 100%;
     text-align: center;
     color: #FFFFFF;
 }
 
 .thumbnail .name a {
-    color: #FFFFFF;
+    color: #EEEEEE;
     vertical-align: middle;
     display: table-cell;
 }
@@ -200,16 +200,17 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
 }
 
 .thumbnail .image.medium .name {
-    font-size: 25px;
-    line-height: 30px;
+    font-size: 20px;
+    line-height: 20px;
     display: table;
-    height: 60px;
+    height: 50px;
+    padding: 5px;
 }
 
 /* Nav bar toggle */
 .navbar-toggle {
     font-size: 21px;
-    padding: 0 7px;
+    padding: 1px 7px;
 }
 
 /* Search */
@@ -319,11 +320,13 @@ footer {
         border: 1px solid transparent;
         border-radius: 4px;
     }
-    
+    /*
     .thumbnail .image.medium .name {
-        font-size: 20px;
-        line-height: 25px;
-        height: 50px;
+        font-size: 15px;
+        line-height: 20px;
+        height: 40px;
+        padding: 5px;
     }
+    */
     
 }
