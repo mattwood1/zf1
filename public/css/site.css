@@ -193,6 +193,7 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
     color: #EEEEEE;
     vertical-align: middle;
     display: table-cell;
+    height: 40px;
 }
 
 .thumbnail .autothumb .name {

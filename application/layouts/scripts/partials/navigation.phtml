@@ -9,24 +9,24 @@
                 <span class="icon-bar"></span>-->
                 <i class="fa fa-bars"></i>
             </button>
-        <a class="navbar-brand" href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'),null ,true); ?>"><i class="fa fa-leaf"></i> Goddesses</a>
+        <a class="navbar-brand" href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'),null ,true); ?>"><i class="fa fa-code"></i> Goddesses</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null), null, true);?>">Add Model</a></li>
-                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking'), null, true); ?>">Ranking</a></li>
-                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'stats'), null, true); ?>">Stats</a></li>
-                <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>">Web Resources</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add', 'page' => null, 'search' => null, 'order' => null), null, true);?>"><i class="fa fa-plus fa-fw"></i> Add Model</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'ranking'), null, true); ?>"><i class="fa fa-random fa-fw"></i> Ranking</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'stats'), null, true); ?>"><i class="fa fa-bar-chart-o fa-fw"></i> Stats</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>"><i class="fa fa-chain fa-fw"></i> Web Resources</a></li>
                 <?php endif; ?>
             </ul>
             
             <!-- Right Links -->
             <ul class="nav navbar-nav navbar-right">
                 <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-                <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>">Log out <i class="fa fa-sign-out"></i></a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'),null ,true); ?>"><i class="fa fa-sign-out fa-fw"></i> Log out</a></li>
                 <?php else: ?>
-                <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'login'),null ,true); ?>">Log in <i class="fa fa-sign-in"></i></a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'login'),null ,true); ?>"><i class="fa fa-sign-in fa-fw"></i> Log in</a></li>
                 <?php endif;?>
             </ul>
             
