@@ -97,6 +97,11 @@ class ModelController extends Coda_Controller
         
         // Random decision to show top or standard method
         $modes = array('standard', 'top');
+        
+        if (date("h", mktime()) > 21) {
+            $modes = array_merge($modes, array("top", "top", "top", "top", "top", "top", "top", "top"));
+        }
+        
         $mode = $modes[array_rand($modes, 1)];
         switch ($mode) {
             case 'standard':
