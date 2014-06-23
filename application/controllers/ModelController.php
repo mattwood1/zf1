@@ -81,9 +81,13 @@ class ModelController extends Coda_Controller
     {
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
-            $model->ranking++;
-            $model->search = (bool)$this->_request->getParam('search');
-            $model->save();
+            
+            // Check the ranking value to prevent mis clicks and multi clicks
+            if ($model->ranking == $this->_request->gerParam('model_ranking')) {
+                $model->ranking++;
+                $model->search = (bool)$this->_request->getParam('search');
+                $model->save();
+            }
         }
 
         $modelTable = new God_Model_ModelTable;
