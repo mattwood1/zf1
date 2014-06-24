@@ -83,7 +83,7 @@ class ModelController extends Coda_Controller
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
             
             // Check the ranking value to prevent mis clicks and multi clicks
-            if ($model->ranking == $this->_request->gerParam('model_ranking')) {
+            if ($model->ranking == $this->_request->getParam('model_ranking')) {
                 $model->ranking++;
                 $model->search = (bool)$this->_request->getParam('search');
                 $model->save();
@@ -98,8 +98,8 @@ class ModelController extends Coda_Controller
         // Random decision to show top or standard method
         $modes = array('standard', 'top');
         
-        if (date("h", mktime()) > 21) {
-            $modes = array_merge($modes, array("top", "top", "top", "top", "top", "top", "top", "top"));
+        if (date("H", mktime()) > 21) {
+            unset($modes[0]);
         }
         
         $mode = $modes[array_rand($modes, 1)];
