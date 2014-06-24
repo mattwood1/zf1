@@ -19,11 +19,10 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_query = $this->getInstance()
             ->createQuery('m')
             ->innerJoin('m.names n')
+            ->innerJoin('m.photosets p')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
             ->andWhere('n.default = ?', 1)
-
-            ->innerJoin('m.photosets p')
             ->andWhere('p.active = ?',1);
 
         $this->_getOrder();
