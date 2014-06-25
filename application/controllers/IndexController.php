@@ -51,6 +51,5 @@ class IndexController extends Coda_Controller
     {
         // delete body
     }
-
 }
 

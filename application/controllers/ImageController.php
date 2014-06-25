@@ -4,7 +4,7 @@ class ImageController extends Coda_Controller
 {
     protected $_largeWidth = 800;
     protected $_mediumWidth = 400; // Desktop 400, BlackBerry 150
-    protected $_thumbWidth = 150;
+    protected $_thumbWidth = 190;
     protected $_height = 200;
     protected $_ratio = 1.333;
     protected $_quality = 100; // percent
