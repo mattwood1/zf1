@@ -8,3 +8,10 @@
 $(window).bind("load", function() { 
     $('.image').equalHeights();
 });
+
+$(window).resize(function(){
+    $('.image').each(function(){
+        $(this).css("height", "auto")
+    });
+    $('.image').equalHeights();
+});

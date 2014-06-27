@@ -194,7 +194,7 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
     vertical-align: middle;
     display: table-cell;
     height: 40px;
-    padding: 10px;
+    padding: 5px 10px;
 }
 
 .thumbnail .autothumb .name {
@@ -321,13 +321,12 @@ footer {
         border: 1px solid transparent;
         border-radius: 4px;
     }
-    /*
-    .thumbnail .image.medium .name {
-        font-size: 15px;
-        line-height: 20px;
-        height: 40px;
-        padding: 5px;
-    }
-    */
     
+    .thumbnail .image.medium {
+        height: 228px;
+    }
+    
+    .navbar {
+        margin-bottom: 10px;
+    }
 }
