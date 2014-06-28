@@ -97,8 +97,10 @@ class ModelController extends Coda_Controller
         
         // Random decision to show top or standard method
         $modes = array('standard', 'top');
-        
-        if ( date("H", mktime())%2 ) {
+
+        // Only use 'top' on even hours
+        $hour = (int)date("G", mktime());
+        if ( (bool)$hour%2 ) {
             unset($modes[0]);
         }
         
