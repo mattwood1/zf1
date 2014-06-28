@@ -98,7 +98,7 @@ class ModelController extends Coda_Controller
         // Random decision to show top or standard method
         $modes = array('standard', 'top');
         
-        if (date("H", mktime()) > 21) {
+        if ( date("H", mktime())%2 ) {
             unset($modes[0]);
         }
         
