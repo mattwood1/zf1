@@ -100,9 +100,10 @@ class ModelController extends Coda_Controller
 
         // Only use 'top' on even hours
         $hour = (int)date("G", mktime());
-        if ( (bool)$hour%2 ) {
+        if ( $hour%2 == 0 ) {
             unset($modes[0]);
         }
+        
         
         $mode = $modes[array_rand($modes, 1)];
         switch ($mode) {
