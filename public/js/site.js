@@ -4,14 +4,21 @@
  * and open the template in the editor.
  */
 
-
-$(window).bind("load", function() { 
-    $('.image').equalHeights();
-});
+$(function(){
+    $('img').each(function(){
+        $(this).load(function(){
+            resetEqualHeights();
+        });
+    }); 
+ });
 
 $(window).resize(function(){
+    resetEqualHeights();
+});
+
+function resetEqualHeights() {
     $('.image').each(function(){
         $(this).css("height", "auto")
     });
     $('.image').equalHeights();
-});
+}
