@@ -2,13 +2,13 @@
 /**
  * This job is responsible for Updating Models WebUrls based on the datesearched field
  *
- * Scheduled to run at 1am every day
+ * Scheduled to run every minute
  */
 class Job_Model_CheckWebUrls extends Job_Abstract
 {
     public function run()
     {
-        $modelNameTable = new God_Model_ModelNameTable;
+        $modelNameTable = new God_Model_ModelNameTable();
         $modelNamesQuery = $modelNameTable->getInstance()
             ->createQuery('mn')
             ->where('mn.datesearched < ?', date("Y-m-d", strtotime("-1 month")) )
@@ -21,26 +21,29 @@ class Job_Model_CheckWebUrls extends Job_Abstract
         $modelNames = $modelNamesQuery->execute();
 
         foreach ($modelNames as $modelName) {
-var_dump($modelName->toArray());
-
-            /*
-             * SELECT * FROM `webUrls` WHERE (
-             * MATCH(url) AGAINST ('wendy')            Loop through name parts
-             * AND MATCH(url) AGAINST ('fiore')
-             * ) AND (linked = -2)
-             */
-/*
-            foreach ($model->names as $modelName) {
-// var_dump($modelName->toArray());
-                foreach ($modelName->webUrls as $modelNameWeburls) {
-// var_dump($modelNameWeburls->toArray());
-                    foreach ($modelNameWeburls->webUrl as $modelNameWebUrl) {
-//                        var_dump($modelNameWebUrl->toArray());
-                    }
-//                    var_dump(count($modelNameWeburls->webUrl->toArray()));
-                }
+            _d($modelName);
+            $webUrlsTable = new God_Model_WebURLTable();
+            $webUrlsQuery = $webUrlsTable->getInstance()
+                ->createQuery('wu');
+            foreach (explode(" ", $modelName->name) as $namepart) {
+                $webUrlsQuery->where('MATCH (`url`) against ("' . $namepart . '")');
             }
-*/
+            $webUrls = $webUrlsQuery->execute();
+            
+            foreach ($webUrls as $webUrl) {
+                $webResouceTable = new God_Model_WebResourceTable();
+
+                $webResource = God_Model_WebResourceTable::getInstance()->findOneById($webUrl->webResourceId);
+                if (!$webResource) {
+                    _dexit($webUrl->url, $webUrl->webResourceId);
+                }
+                        
+                $webUrlsTable->insertLink($webUrl->url, $webResource);
+            }
+            
+            $modelName->datesearched = date("Y-m-d H:i:s");
+            $modelName->model->datesearched = date("Y-m-d H:i:s");
+            $modelName->save();
         }
     }
 }
