@@ -75,12 +75,12 @@ class God_Model_Image {
 			exit();
 		}
 
-		define('MEMORY_TO_ALLOCATE',	'100M');
-		define('DEFAULT_QUALITY',		100);
-		define('CURRENT_DIR',			dirname(__FILE__));
-		define('CACHE_DIR_NAME',		'/imagecache/');
-		define('CACHE_DIR',				CURRENT_DIR . CACHE_DIR_NAME);
-		define('DOCUMENT_ROOT',			$_SERVER['DOCUMENT_ROOT']);
+		define('MEMORY_TO_ALLOCATE',	'200M');
+		define('DEFAULT_QUALITY',	100);
+		define('CURRENT_DIR',		dirname(__FILE__));
+		define('CACHE_DIR_NAME',	'/imagecache/');
+		define('CACHE_DIR',		CURRENT_DIR . CACHE_DIR_NAME);
+		define('DOCUMENT_ROOT',		$_SERVER['DOCUMENT_ROOT']);
 
 		// Images must be local files, so for convenience we strip the domain if it's there
 		$image			= preg_replace('/^(s?f|ht)tps?:\/\/[^\/]+/i', '', (string) $file);
