@@ -11,7 +11,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
         $modelNameTable = new God_Model_ModelNameTable();
         $modelNamesQuery = $modelNameTable->getInstance()
             ->createQuery('mn')
-            ->where('mn.datesearched < ?', date("Y-m-d", strtotime("-1 month")) )
+            ->where('mn.datesearched < ?', date("Y-m-d", strtotime("-1 week")) )
             ->leftJoin('mn.model m')
             ->andWhere('m.active = ?', 1)
             ->andWhere('m.search = ?', 1)
