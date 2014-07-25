@@ -62,10 +62,10 @@
 
 <?php foreach ($this->webUrls as $url): ?>
 <div class="row">
-    <div class="col-md-1 col-sm-1 col-xs-1"><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url->id), 'default', true); ?>"><?php echo $url->id; ?></a></div>
-    <div class="col-md-4 col-sm-5 col-xs-4"><?php echo $url->url; ?> <a href="<?php echo $url->url; ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
-    <div class="col-md-1 col-sm-1 col-xs-1"><?php echo $url->httpStatusCode; ?></div>
-    <div class="col-md-2 col-sm-2 col-xs-3">
+    <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url->id), 'default', true); ?>"><?php echo $url->id; ?></a></div>
+    <div class="col-md-4 col-sm-5 col-xs-10"><?php echo $url->url; ?> <a href="<?php echo $url->url; ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
+    <div class="col-md-1 col-sm-1 col-xs-2"><?php echo $url->httpStatusCode; ?></div>
+    <div class="col-md-2 col-sm-2 col-xs-5">
         <select>
             <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
             <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
@@ -74,7 +74,7 @@
         </select>
         <span class="hidden-sm hidden-xs"><?php echo $url->action; ?></span>
     </div>
-    <div class="col-md-2 col-sm-2 col-xs-2">
+    <div class="col-md-2 col-sm-2 col-xs-5">
         <?php if ($url->ModelNameWebURL): ?>
         <ul class="list-unstyled">
         <?php foreach ($url->ModelNameWebURL as $modelNameLink): ?>
@@ -84,7 +84,7 @@
         <?php endif; ?>
     </div>
     <div class="col-md-1 hidden-sm hidden-xs"><?php echo $url->linked; ?></div>
-    <div class="col-md-1 col-sm-1 col-xs-1"><?php echo $this->date($url->dateCreated, Coda_View_Helper_Date::DATETIME); ?></div>
+    <div class="col-md-1 col-sm-1 col-xs-12"><?php echo $this->date($url->dateCreated, Coda_View_Helper_Date::DATETIME); ?></div>
     
     <?php
         $thumbnails = unserialize($url->thumbnails);
@@ -92,7 +92,7 @@
     ?>
     <div class="col-md-12">
         <?php foreach($thumbnails as $thumbnail): ?>
-        <a href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
+        <a class="col-xs-3" href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
             <img src="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>&width=80" />
         </a>
         <?php endforeach; ?>
