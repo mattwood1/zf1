@@ -92,7 +92,7 @@
     ?>
     <div class="col-md-12">
         <?php foreach($thumbnails as $thumbnail): ?>
-        <a class="col-xs-3" href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
+        <a class="col-lg-1 col-sm-2 col-xs-3" href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
             <img src="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>&width=80" />
         </a>
         <?php endforeach; ?>
