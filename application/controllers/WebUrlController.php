@@ -31,7 +31,7 @@ class WebUrlController extends Coda_Controller
             $webUrlQuery
             ->innerJoin('wu.ModelNameWebURL mnwu')
             ->innerJoin('mnwu.modelName mn')
-            ->whereIn('mn.model_id', $modelIds);
+            ->whereIn('mn.id', $modelIds);
         }
 
         $webUrlQuery->andWhere('wu.linked < 0');
