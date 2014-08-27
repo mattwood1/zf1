@@ -25,7 +25,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
             $webUrlsTable = new God_Model_WebURLTable();
             $webUrlsQuery = $webUrlsTable->getInstance()
                 ->createQuery('wu');
-            //$webUrlsQuery->where('linked != ?', God_Model_WebURLTable::LINK_FOUND);
+            $webUrlsQuery->where('linked <= 0');
             foreach (explode(" ", $modelName->name) as $namepart) {
                 $webUrlsQuery->andWhere('MATCH (`url`) against ("' . $namepart . '")');
             }

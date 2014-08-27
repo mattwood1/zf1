@@ -1,0 +1,18 @@
+<?php
+    $this->title = "Models";
+    $this->headTitle($this->title);
+?>
+    <p>
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'add'));?>">Add a new model</a>
+    </p>
+
+    <ul>
+    <?php foreach($this->models as $model): ?>
+        <li>
+            <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id'=>$model->ID)); ?>">
+                <?php echo $this->escape($model->name); ?>
+            </a>
+            (<?php echo $this->escape($model->ranking)?>)
+        </li>
+    <?php endforeach; ?>
+    </ul>

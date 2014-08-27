@@ -1,0 +1,28 @@
+<?php $this->title = 'Goddesses'; ?>
+
+<div id="filter" class="clearfix">
+    <a href="<?php echo $this->url(array('order' => 'ranking'));?>">Ranking</a>
+    <a href="<?php echo $this->url(array('order' => 'name'));?>">Name</a>
+</div>
+
+<?php if ($this->models->toArray()): ?>
+<div class="row">
+    <?php foreach($this->models as $model): ?>
+    <div class="col-xs-4 col-sm-3 col-md-2">
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>" class="thumbnail">
+            <div class="image">
+                <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
+                <div class="name">
+                    <?php echo $model->getName() ;?><br />
+                    (<?php echo $this->escape($model->ranking)?>)
+                </div>
+            </div>
+        </a>
+    </div>
+    <?php endforeach; ?>
+</div>
+<?php else: ?>
+    <p>No Results</p>
+<?php endif; ?>
+
+<?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>

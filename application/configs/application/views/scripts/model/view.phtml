@@ -1,0 +1,31 @@
+<?php
+    $this->title = $this->photosets[0]->model->getName();
+    $this->headTitle($this->photosets[0]->model->getName());
+?>
+
+<?php $this->photosets[0]->model->getName(); ?>
+
+<div>
+    <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID));?>">Edit</a>
+</div>
+
+<?php if ($this->photosets): ?>
+<div class="row">
+
+    <?php foreach ($this->photosets as $photoset): ?>
+    <div class="col-xs-4 col-sm-3 col-md-2">
+        <a href="<?php echo $photoset->manual_thumbnail ? $this->url(array('controller'=>'gallery', 'action'=>'view', 'photoset' => $photoset->id), null, true) : $this->url(array('controller'=>'gallery', 'action'=>'thumbnail', 'photoset' => $photoset->id), null, true); ?>" class="thumbnail">
+            <div class="image <?php echo $photoset->manual_thumbnail ? '' : 'autothumb' ?>">
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail))); ?>" />
+                <div class="name">
+                    <?php echo $photoset->name ;?>
+                </div>
+            </div>
+        </a>
+    </div>
+    <?php endforeach; ?>
+        
+</div>
+<?php endif; ?>
+
+<?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>

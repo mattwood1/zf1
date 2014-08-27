@@ -1,0 +1,30 @@
+<?php if ($this->paginator->haveToPaginate()): ?>
+<?php stristr($_SERVER['HTTP_USER_AGENT'], 'Mobile') ? $chunk = 3 : $chunk = 5; ?>
+<?php $pagerRange = $this->paginator->getRange('Sliding', array('chunk' => $chunk))->rangeAroundPage(); ?>
+<div class="text-center">
+<ul class="pagination">
+
+    <?php if ($this->paginator->getFirstPage() != $this->paginator->getPage()): ?>
+    <li><a href="<?php echo $this->url(array('page' => $this->paginator->getPreviousPage())); ?>">&lt;</a></li>
+    <?php if ($this->paginator->getPage() > ceil($chunk/2)): ?>
+    <li><a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>"><?php echo $this->paginator->getFirstPage(); ?>...</a></li>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php foreach ($pagerRange as $page): ?>
+        <?php if ($page != $this->paginator->getPage()): ?>
+    <li><a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a></li>
+        <?php else: ?>
+    <li class="active"><a><?php echo $page; ?></a></li>
+        <?php endif; ?>
+    <?php endforeach; ?>
+
+    <?php if ($this->paginator->getLastPage() != $this->paginator->getPage()): ?>
+        <?php if ($this->paginator->getLastPage() >= ($this->paginator->getPage() + ceil($chunk/2))): ?>
+    <li><a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">...<?php echo $this->paginator->getLastPage(); ?></a></li>
+        <?php endif; ?>
+    <li><a href="<?php echo $this->url(array('page' => $this->paginator->getNextPage())); ?>">&gt;</a></li>
+    <?php endif; ?>
+
+</ul></div>
+<?php endif; ?>

@@ -33,7 +33,8 @@ class ModelController extends Coda_Controller
     public function addAction()
     {
         // add body
-        $form = new God_Form_AddModel();
+        $form = new God_Form_Model();
+        $form->submit->setLabel('Add');
         $this->view->form = $form;
     }
 
@@ -81,13 +82,9 @@ class ModelController extends Coda_Controller
     {
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
-            
-            // Check the ranking value to prevent mis clicks and multi clicks
-            if ($model->ranking == $this->_request->getParam('model_ranking')) {
-                $model->ranking++;
-                $model->search = (bool)$this->_request->getParam('search');
-                $model->save();
-            }
+            $model->ranking++;
+            $model->search = (bool)$this->_request->getParam('search');
+            $model->save();
         }
 
         $modelTable = new God_Model_ModelTable;
@@ -96,17 +93,8 @@ class ModelController extends Coda_Controller
         $rankingStats = $modelTable->getRankingStats(2, true);
         
         // Random decision to show top or standard method
-        $modes = array('standard', 'top', 'bottom');
-
-        // Only use 'top' and 'botom' on even hours
-        $hour = (int)date("G", mktime());
-        if ( $hour%2 == 0 ) {
-            $modes = array('top', 'bottom');
-        }
-        
-        
-        $mode = $modes[array_rand($modes, 1)];
-        switch ($mode) {
+        $modes = array('standard', 'top');
+        switch ($modes[array_rand($modes, 1)]) {
             case 'standard':
                 // Choose a random model stat
                 $rankingStatsKey = array_rand($rankingStats, 1);
@@ -115,22 +103,11 @@ class ModelController extends Coda_Controller
                 $maxs = array_keys($rankingStats, max($rankingStats));
                 $rankingStatsKey = $maxs[0];
                 break;
-            case 'bottom':
-                $maxs = array_keys($rankingStats, max($rankingStats));
-                $bottomRankingStats = $rankingStats;
-		foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-                    if ( $bottomKey >= ($maxs[0]-2) || $bottomStat >= ($rankingStats[$maxs[0]]-2) ) {
-                        unset($bottomRankingStats[$bottomKey]);
-                    }
-                }
-                $rankingStatsKey = array_rand($bottomRankingStats,1 );;
-                break;
         }
 
         // Get models where ranking = the chosen stat
         $models = $modelTable->getModelsByRanking($rankingStatsKey);
 
-        $this->view->mode = $mode;
         $this->view->models = $models;
         $this->view->modelKeys = array_rand($models->toArray(), 2);
     }
