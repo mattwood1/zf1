@@ -93,17 +93,41 @@ class ModelController extends Coda_Controller
         $modelTable = new God_Model_ModelTable;
 
         // Get model ranking stats
-        $rankingStats = $modelTable->getRankingStats(2, true);
+        $modes = array();
         
-        // Random decision to show top or standard method
-        $modes = array('standard', 'top', 'bottom');
-
+        $rankingStats = $modelTable->getRankingStats(2, true);
+        $topHigh = max(array_keys($modelTable->getRankingStats(1, true))); // 180
+        $topLow = $topHigh - floor(($topHigh / 100) * 10); // 168
+        $highArray = array_keys($rankingStats, max($rankingStats));
+        $high = $highArray[0];
+        
+        $modes = array('standard', 'high');
+        
+        $topRankingStats = $rankingStats;
+        foreach (array_keys($topRankingStats) as $topKey) {
+            if ($topKey < $topLowRange) {
+                unset($topRankingStats[$topKey]);
+            }
+        }
+        if ($topRankingStats) {
+            $modes[] = 'top';
+        }
+        
+        $bottomRankingStats = $rankingStats;
+        foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
+            if ( $bottomKey >= ($high-2) || $bottomStat >= ($rankingStats[$high]-2) ) {
+                unset($bottomRankingStats[$bottomKey]);
+            }
+        }
+        if ($bottomRankingStats) {
+            $modes[] = 'bottom';
+        }
+        
         // Only use 'top' and 'botom' on even hours
         $hour = (int)date("G", mktime());
         if ( $hour%2 == 0 ) {
-            $modes = array('top', 'bottom');
+            $modes = array('high', 'bottom');
         }
-        
         
         $mode = $modes[array_rand($modes, 1)];
         switch ($mode) {
@@ -112,18 +136,13 @@ class ModelController extends Coda_Controller
                 $rankingStatsKey = array_rand($rankingStats, 1);
                 break;
             case 'top':
-                $maxs = array_keys($rankingStats, max($rankingStats));
-                $rankingStatsKey = $maxs[0];
+                $rankingStatsKey = array_rand($topRankingStats, 1);
+                break;
+            case 'high':
+                $rankingStatsKey = $high;
                 break;
             case 'bottom':
-                $maxs = array_keys($rankingStats, max($rankingStats));
-                $bottomRankingStats = $rankingStats;
-		foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-                    if ( $bottomKey >= ($maxs[0]-2) || $bottomStat >= ($rankingStats[$maxs[0]]-2) ) {
-                        unset($bottomRankingStats[$bottomKey]);
-                    }
-                }
-                $rankingStatsKey = array_rand($bottomRankingStats,1 );;
+                $rankingStatsKey = array_rand($bottomRankingStats,1 );
                 break;
         }
 

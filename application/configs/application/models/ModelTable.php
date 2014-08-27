@@ -60,7 +60,7 @@ class God_Model_ModelTable extends Doctrine_Record
 
         return $ranking;
     }
-
+    
     public function getModelsByRanking($ranking)
     {
         $this->getModels();
