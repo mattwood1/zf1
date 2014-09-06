@@ -81,7 +81,7 @@ class ModelController extends Coda_Controller
     {
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
-            
+
             // Check the ranking value to prevent mis clicks and multi clicks
             if ($model->ranking == $this->_request->getParam('model_ranking')) {
                 $model->ranking++;
@@ -94,55 +94,76 @@ class ModelController extends Coda_Controller
 
         // Get model ranking stats
         $modes = array();
-        
+
         $rankingStats = $modelTable->getRankingStats(2, true);
-        $topHigh = max(array_keys($modelTable->getRankingStats(1, true))); // 180
-        $topLow = $topHigh - floor(($topHigh / 100) * 10); // 168
+        $topHigh = max(array_keys($modelTable->getRankingStats(1, true)));
+        $topLow = $topHigh - floor(($topHigh / 100) * 10);
         $highArray = array_keys($rankingStats, max($rankingStats));
         $high = $highArray[0];
-        
-        $modes = array('standard', 'high');
-        
+
+        $modes = array('random', 'high-ordered');
+
         $topRankingStats = $rankingStats;
         foreach (array_keys($topRankingStats) as $topKey) {
-            if ($topKey < $topLowRange) {
+            if ($topKey < $topLow) {
                 unset($topRankingStats[$topKey]);
             }
         }
         if ($topRankingStats) {
-            $modes[] = 'top';
+            $modes[] = 'top-random';
+            $modes[] = 'top-ordered';
         }
-        
+
         $bottomRankingStats = $rankingStats;
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-            if ( $bottomKey >= ($high-2) || $bottomStat >= ($rankingStats[$high]-2) ) {
+            if ( $bottomKey >= ($high-2) || $bottomStat >= ($rankingStats[$high]-1) ) {
                 unset($bottomRankingStats[$bottomKey]);
             }
         }
         if ($bottomRankingStats) {
-            $modes[] = 'bottom';
+            $modes[] = 'bottom-random';
+            $modes[] = 'bottom-ordered';
         }
-        
+
         // Only use 'top' and 'botom' on even hours
         $hour = (int)date("G", mktime());
         if ( $hour%2 == 0 ) {
-            $modes = array('high', 'bottom');
+            foreach (array('random', 'top-random', 'bottom-random') as $remove) {
+                $key = array_search($remove, $modes);
+                if($key !== false) {
+                    unset($modes[$key]);
+                }
+            }
+        } else {
+            foreach (array('top-ordered', 'bottom-ordered') as $remove) {
+                $key = array_search($remove, $modes);
+                if($key !== false) {
+                    unset($modes[$key]);
+                }
+            }
         }
-        
+
         $mode = $modes[array_rand($modes, 1)];
         switch ($mode) {
-            case 'standard':
-                // Choose a random model stat
+            case 'random':
                 $rankingStatsKey = array_rand($rankingStats, 1);
                 break;
-            case 'top':
+            case 'top-random':
                 $rankingStatsKey = array_rand($topRankingStats, 1);
                 break;
-            case 'high':
+            case 'top-ordered':
+                $ordered = array_keys($topRankingStats);
+                $rankingStatsKey = $ordered[0];
+                break;
+            case 'high-ordered':
                 $rankingStatsKey = $high;
                 break;
-            case 'bottom':
+            case 'bottom-random':
                 $rankingStatsKey = array_rand($bottomRankingStats,1 );
+                break;
+            case 'bottom-ordered':
+                $ordered = array_keys($bottomRankingStats);
+                $rankingStatsKey = $ordered[0];
                 break;
         }
 
@@ -204,4 +225,3 @@ class ModelController extends Coda_Controller
     }
 
 }
-

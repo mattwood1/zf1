@@ -16,10 +16,12 @@ class WebUrlController extends Coda_Controller
             ->orderBy('wu.dateCreated DESC');
 
         if ($this->_request->getParam('webresourceid')) {
+            $this->view->webresource = God_Model_WebResourceTable::getInstance()->find($this->_request->getParam('webresourceid'));
             $webUrlQuery->where('wu.webResourceId = ?', $this->_request->getParam('webresourceid'));
         }
 
         if ($this->_request->getParam('modelid')) {
+            $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
             $modelNames = God_Model_ModelNameTable::getInstance()->createQuery('mn')
                 ->select('ID')
                 ->where('model_id = ?', $this->_request->getParam('modelid'))

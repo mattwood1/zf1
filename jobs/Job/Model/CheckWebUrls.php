@@ -17,7 +17,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
             ->andWhere('m.search = ?', 1)
             ->andWhere('m.ranking > ?', 0)
             ->orderBy('mn.datesearched asc')
-            ->limit(10);
+            ->limit(1);
         $modelNames = $modelNamesQuery->execute();
 
         foreach ($modelNames as $modelName) {
@@ -27,10 +27,10 @@ class Job_Model_CheckWebUrls extends Job_Abstract
                 ->createQuery('wu');
             $webUrlsQuery->where('linked <= 0');
             foreach (explode(" ", $modelName->name) as $namepart) {
-                $webUrlsQuery->andWhere('MATCH (`url`) against ("' . $namepart . '")');
+                $webUrlsQuery->andWhere('MATCH (`url`) against (?)', "' . $namepart . '");
             }
             $webUrls = $webUrlsQuery->execute();
-            
+
             foreach ($webUrls as $webUrl) {
                 $webResouceTable = new God_Model_WebResourceTable();
 
@@ -38,8 +38,8 @@ class Job_Model_CheckWebUrls extends Job_Abstract
                 if (!$webResource) {
                     _dexit($webUrl->url, $webUrl->webResourceId);
                 }
-                _d($webUrl->url);    
-                
+                _d($webUrl->url);
+
                 $modelNameWebUrl = God_Model_ModelNameWebURLTable::getInstance()->createQuery('mnwu')
                     ->where('model_name_id = ?', $modelName->ID)
                     ->andWhere('webUrl_id = ?', $webUrl->id)
@@ -54,7 +54,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
                 $webUrl->linked = God_Model_WebURLTable::LINK_FOUND;
                 $webUrl->save();
             }
-            
+
             $modelName->datesearched = date("Y-m-d H:i:s");
             $modelName->model->datesearched = date("Y-m-d H:i:s");
             $modelName->save();

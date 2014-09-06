@@ -1,18 +1,12 @@
 <?php
     $this->title = $this->photosets[0]->model->getName();
+    $this->subtitle = 'Gallery';
     $this->headTitle($this->photosets[0]->model->getName());
 ?>
 
 <?php $this->photosets[0]->model->getName(); ?>
 
-<ul class="nav nav-pills">
-    <li class="active">
-        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id' => $this->model->ID), null, true);?>">Gallery</a>
-    </li>
-    <li>
-        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID), null, true);?>">Edit</a>
-    </li>
-</ul>
+<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->photosets[0]->model, 'active' => 'view')); ?>
             
 <?php if ($this->photosets): ?>
 <div class="row">
