@@ -19,13 +19,18 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_query = $this->getInstance()
             ->createQuery('m')
             ->innerJoin('m.names n')
-            ->innerJoin('m.photosets p')
+            ->leftJoin('m.photosets p')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
-            ->andWhere('n.default = ?', 1)
-            ->andWhere('p.active = ?',1);
+            ->andWhere('n.default = ?', 1);
+            //->andWhere('p.active = ?',1);
 
         $this->_getOrder();
+    }
+    
+    public function getActivePhotosets()
+    {
+        $this->_query->andWhere('p.active = ?', 1);
     }
 
     /**
@@ -37,6 +42,7 @@ class God_Model_ModelTable extends Doctrine_Record
     public function getRankingStats($minimum = null, $checkPhotosets = false)
     {
         $this->getModels();
+        $this->getActivePhotosets();
         if ($checkPhotosets) {
             $this->_query
                 ->select('m.*');
@@ -63,8 +69,10 @@ class God_Model_ModelTable extends Doctrine_Record
     public function getModelsByRanking($ranking)
     {
         $this->getModels();
+        $this->getActivePhotosets();
         $this->_query
                 ->andWhere('m.ranking = ?', $ranking)
+                ->orderBy('m.date DESC')
                 ;
 
         return $this->_query->execute();

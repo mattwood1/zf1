@@ -1,14 +1,14 @@
 <?php
-    $this->title = $this->photosets[0]->model->getName();
+    $this->title = $this->model->getName();
     $this->subtitle = 'Gallery';
-    $this->headTitle($this->photosets[0]->model->getName());
+    $this->headTitle($this->model->getName());
 ?>
 
-<?php $this->photosets[0]->model->getName(); ?>
+<?php $this->model->getName(); ?>
 
-<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->photosets[0]->model, 'active' => 'view')); ?>
+<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'view')); ?>
             
-<?php if ($this->photosets): ?>
+<?php if ($this->photosets->toArray()): ?>
 <div class="row">
 
     <?php foreach ($this->photosets as $photoset): ?>
@@ -25,6 +25,8 @@
     <?php endforeach; ?>
         
 </div>
+<?php else: ?>
+No Photosets
 <?php endif; ?>
 
 <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>

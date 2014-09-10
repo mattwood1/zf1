@@ -10,10 +10,12 @@ class ModelController extends Coda_Controller
 
     public function viewAction()
     {
-        // add body
+        $model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('id'));
+        
+//         add body
         $query = Doctrine_Core::getTable('God_Model_Photoset')
             ->createQuery('p')
-            ->innerJoin('p.model m')
+            ->leftJoin('p.model m')
             ->innerJoin('m.names n')
 
             ->where('m.ID = ?', $this->_request->getParam('id'))
@@ -21,12 +23,13 @@ class ModelController extends Coda_Controller
             ->andWhere('n.default = ?', 1)
             ->andWhere('p.active = ?', 1)
             ->orderBy('p.name asc');
-
+        
         $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
         $photosets = $paginator->execute();
 
         $this->view->paginator = $paginator;
+        $this->view->model = $model;
         $this->view->photosets = $photosets;
     }
 
@@ -172,7 +175,7 @@ class ModelController extends Coda_Controller
 
         $this->view->mode = $mode;
         $this->view->models = $models;
-        $this->view->modelKeys = array_rand($models->toArray(), 2);
+        $this->view->modelKeys = array_slice(array_keys($models->toArray()), 0 , 2);
     }
 
     public function statsAction()
