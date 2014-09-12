@@ -12,6 +12,9 @@ class ModelController extends Coda_Controller
     {
         $model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('id'));
         
+        // TODO: It would be good to have a function $model->getPhotosets with pagination
+        // Needs to return a query instance.
+        
 //         add body
         $query = Doctrine_Core::getTable('God_Model_Photoset')
             ->createQuery('p')
@@ -172,10 +175,17 @@ class ModelController extends Coda_Controller
 
         // Get models where ranking = the chosen stat
         $models = $modelTable->getModelsByRanking($rankingStatsKey);
+        
+        $modelArrayKeys = array_keys($models->toArray());
+        $modelKeys[] = $modelArrayKeys[0];
+        unset($modelArrayKeys[0]);
+        shuffle($modelArrayKeys);
+        $modelKeys[] = $modelArrayKeys[0];
+        shuffle($modelKeys);
 
         $this->view->mode = $mode;
         $this->view->models = $models;
-        $this->view->modelKeys = array_slice(array_keys($models->toArray()), 0 , 2);
+        $this->view->modelKeys = $modelKeys;
     }
 
     public function statsAction()

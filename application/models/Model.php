@@ -59,6 +59,11 @@ class God_Model_Model extends Doctrine_Record
                 'length'             => '25'
         ));
 
+        $this->hasColumn('rankDate', 'timestamp', 25, array(
+                'type'               => 'timestamp',
+                'length'             => '25'
+        ));
+
         $this->hasColumn('photosetsChecked', 'date', 25, array(
                 'type'               => 'date',
                 'length'             => '25'
