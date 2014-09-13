@@ -85,6 +85,9 @@ class ModelController extends Coda_Controller
 
     public function rankingAction()
     {
+        $factor = 10;
+        $hour = (int)date("G", mktime());
+        
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
 
@@ -100,10 +103,17 @@ class ModelController extends Coda_Controller
 
         // Get model ranking stats
         $modes = array();
+        
+        // TODO: I was thinking the needs to be in a model
+        // class ModelRanking extends Model
+        // it would hold the data that is worked out below
+        // and would be easily called on.
+        // It could be used to figure out which models need 
+        // to be reset to keep the data flowing.
 
         $rankingStats = $modelTable->getRankingStats(2, true);
         $topHigh = max(array_keys($modelTable->getRankingStats(1, true)));
-        $topLow = $topHigh - floor(($topHigh / 100) * 10);
+        $topLow = $topHigh - floor(($topHigh / 100) * $factor);
         $highArray = array_keys($rankingStats, max($rankingStats));
         $high = $highArray[0];
 
@@ -122,7 +132,16 @@ class ModelController extends Coda_Controller
 
         $bottomRankingStats = $rankingStats;
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-            if ( $bottomKey >= ($high-2) || $bottomStat >= ($rankingStats[$high]-1) ) {
+            
+            $offset = 1;
+            
+            $highMinus = max($rankingStats)-$offset;
+            
+            if ( $hour%2 == 0 ) {
+                $offset = (ceil($highMinus / 100 ) * $factor);
+            }
+            
+            if ( ($bottomKey < $high) || ($bottomStat < $highMinus) ) {
                 unset($bottomRankingStats[$bottomKey]);
             }
         }
@@ -132,7 +151,6 @@ class ModelController extends Coda_Controller
         }
 
         // Only use 'top' and 'botom' on even hours
-        $hour = (int)date("G", mktime());
         if ( $hour%2 == 0 ) {
             foreach (array('random', 'top-random', 'bottom-random') as $remove) {
                 $key = array_search($remove, $modes);
