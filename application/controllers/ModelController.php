@@ -133,15 +133,11 @@ class ModelController extends Coda_Controller
         $bottomRankingStats = $rankingStats;
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
             
-            $offset = 1;
+            $offset = ceil(($high-1) / 100 ) * $factor;
             
-            $highMinus = max($rankingStats)-$offset;
+            $highCount = $rankingStats[$high];
             
-            if ( $hour%2 == 0 ) {
-                $offset = (ceil($highMinus / 100 ) * $factor);
-            }
-            
-            if ( ($bottomKey < $high) || ($bottomStat < $highMinus) ) {
+            if ( ($bottomKey < $high) || ($bottomStat < ($high-$offset)) ) {
                 unset($bottomRankingStats[$bottomKey]);
             }
         }
@@ -166,7 +162,7 @@ class ModelController extends Coda_Controller
                 }
             }
         }
-
+        
         $mode = $modes[array_rand($modes, 1)];
         switch ($mode) {
             case 'random':
