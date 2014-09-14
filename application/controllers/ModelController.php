@@ -94,6 +94,7 @@ class ModelController extends Coda_Controller
             // Check the ranking value to prevent mis clicks and multi clicks
             if ($model->ranking == $this->_request->getParam('model_ranking')) {
                 $model->ranking++;
+                $model->rankDate = date("Y-m-d h:i:s", mktime());
                 $model->search = (bool)$this->_request->getParam('search');
                 $model->save();
             }
