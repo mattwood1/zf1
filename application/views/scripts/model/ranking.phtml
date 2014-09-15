@@ -6,8 +6,8 @@
     <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1">
 	<div class="row">
             <?php
-                foreach ($this->modelKeys as $modelKey):
-                    $model = $this->models[$modelKey];
+                foreach ($this->models as $model):
+//                    $model = $this->models[$modelKey];
                     $photoset = $model->getRandomPhotoset();
             ?>
             <div class="col-xs-6">
@@ -29,7 +29,7 @@
                              <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? 'text-success' : 'text-danger'; ?>"><i class="<?php echo $photoset->manual_thumbnail ? 'fa fa-check' : 'fa fa-times'; ?>"></i></a>
                         </div>
                         <div class="pull-left">
-                            <i class="fa fa-thumbs-o-up"></i> <?php echo $model->ranking; ?> <span class="badge"><i class="fa fa-star"></i> <?php echo count($this->models->toArray()); ?></span>&nbsp;
+                            <i class="fa fa-thumbs-o-up"></i> <?php echo $model->ranking; ?> <span class="badge"><i class="fa fa-star"></i> <?php echo $this->modelCount; ?></span>&nbsp;
                         </div>
                         <div class=""pull-left">
                             <i class="fa fa-picture-o"></i> <?php echo count($model->photosets); ?>&nbsp;

@@ -85,9 +85,7 @@ class ModelController extends Coda_Controller
 
     public function rankingAction()
     {
-        $factor = 10;
-        $hour = (int)date("G", mktime());
-        
+        $model = null;
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
 
@@ -100,107 +98,11 @@ class ModelController extends Coda_Controller
             }
         }
 
-        $modelTable = new God_Model_ModelTable;
+        $modelRanking = new God_Model_ModelRanking($model);
 
-        // Get model ranking stats
-        $modes = array();
-        
-        // TODO: I was thinking the needs to be in a model
-        // class ModelRanking extends Model
-        // it would hold the data that is worked out below
-        // and would be easily called on.
-        // It could be used to figure out which models need 
-        // to be reset to keep the data flowing.
-
-        $rankingStats = $modelTable->getRankingStats(2, true);
-        $topHigh = max(array_keys($modelTable->getRankingStats(1, true)));
-        $topLow = $topHigh - floor(($topHigh / 100) * $factor);
-        $highArray = array_keys($rankingStats, max($rankingStats));
-        $high = $highArray[0];
-
-        $modes = array('random', 'high-ordered');
-
-        $topRankingStats = $rankingStats;
-        foreach (array_keys($topRankingStats) as $topKey) {
-            if ($topKey < $topLow) {
-                unset($topRankingStats[$topKey]);
-            }
-        }
-        if ($topRankingStats) {
-            $modes[] = 'top-random';
-            $modes[] = 'top-ordered';
-        }
-
-        $bottomRankingStats = $rankingStats;
-        foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-            
-            $offset = ceil(($high-1) / 100 ) * $factor;
-            
-            $highCount = $rankingStats[$high];
-            
-            if ( ($bottomKey < $high) || ($bottomStat < ($high-$offset)) ) {
-                unset($bottomRankingStats[$bottomKey]);
-            }
-        }
-        if ($bottomRankingStats) {
-            $modes[] = 'bottom-random';
-            $modes[] = 'bottom-ordered';
-        }
-
-        // Only use 'top' and 'botom' on even hours
-        if ( $hour%2 == 0 ) {
-            foreach (array('random', 'top-random', 'bottom-random') as $remove) {
-                $key = array_search($remove, $modes);
-                if($key !== false) {
-                    unset($modes[$key]);
-                }
-            }
-        } else {
-            foreach (array('top-ordered', 'bottom-ordered') as $remove) {
-                $key = array_search($remove, $modes);
-                if($key !== false) {
-                    unset($modes[$key]);
-                }
-            }
-        }
-        
-        $mode = $modes[array_rand($modes, 1)];
-        switch ($mode) {
-            case 'random':
-                $rankingStatsKey = array_rand($rankingStats, 1);
-                break;
-            case 'top-random':
-                $rankingStatsKey = array_rand($topRankingStats, 1);
-                break;
-            case 'top-ordered':
-                $ordered = array_keys($topRankingStats);
-                $rankingStatsKey = $ordered[0];
-                break;
-            case 'high-ordered':
-                $rankingStatsKey = $high;
-                break;
-            case 'bottom-random':
-                $rankingStatsKey = array_rand($bottomRankingStats,1 );
-                break;
-            case 'bottom-ordered':
-                $ordered = array_keys($bottomRankingStats);
-                $rankingStatsKey = $ordered[0];
-                break;
-        }
-
-        // Get models where ranking = the chosen stat
-        $models = $modelTable->getModelsByRanking($rankingStatsKey);
-        
-        $modelArrayKeys = array_keys($models->toArray());
-        $modelKeys[] = $modelArrayKeys[0];
-        unset($modelArrayKeys[0]);
-        shuffle($modelArrayKeys);
-        $modelKeys[] = $modelArrayKeys[0];
-        shuffle($modelKeys);
-
-        $this->view->mode = $mode;
-        $this->view->models = $models;
-        $this->view->modelKeys = $modelKeys;
+        $this->view->mode = $modelRanking->getMode();
+        $this->view->models = $modelRanking->getRankingModels();
+        $this->view->modelCount = $modelRanking->getModelCount();
     }
 
     public function statsAction()

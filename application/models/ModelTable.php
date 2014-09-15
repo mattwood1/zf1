@@ -72,7 +72,7 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->getActivePhotosets();
         $this->_query
                 ->andWhere('m.ranking = ?', $ranking)
-                ->orderBy('m.date, m.id')
+                ->orderBy('m.rankDate, m.id')
                 ;
 
         return $this->_query->execute();
