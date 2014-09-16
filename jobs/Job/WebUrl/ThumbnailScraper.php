@@ -17,6 +17,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
 
         if ($webUrls) {
             foreach ($webUrls as $webUrl) {
+                $webURLTable = new God_Model_WebURLTable;
                 $webResourceTable = new God_Model_WebResourceTable;
                 $webResource = $webResourceTable->getInstance()->findOneBy('id', $webUrl->webResourceId);
                 $links = array();
@@ -25,7 +26,6 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                     $curl = new God_Model_Curl();
                     $html = $curl->Curl($webUrl->url, null, false, 30, true); // Follow 301
                     if ($webUrl->url != $curl->lastUrl()) {
-                        $webURLTable = new God_Model_WebURLTable;
                         $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
                         $newWebUrl->dateCreated = $webUrl->dateCreated;
                         $newWebUrl->save();
@@ -34,6 +34,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                         $webUrl->httpStatusCode = $curl->statusCode();
                         $domXPath = new God_Model_DomXPath($html);
                         $links = $domXPath->evaluate($webResource->xpathfilter);
+                        $allLinks = $domXPath->evaluate("//a");
                     }
                 }
 
@@ -44,18 +45,25 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                     foreach ($links as $link) {
                         $img[] = $link['img'];
                         $href[] = $link['href'];
+                        if ($key = array_search($link['href'], $allLinks)) {
+                            unset($allLinks[$key]);
+                        }
                     }
                     $webUrl->thumbnails = serialize($img);
                     $webUrl->links = serialize($href);
                     $webUrl->action = God_Model_WebURLTable::ACTION_GOT_THUMBNAILS;
-
-
                 } else {
                     // Mark the webUrl as bad
                     $webUrl->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
                 }
 
                 $webUrl->save();
+                
+                if ($allLinks) {
+                    foreach ($allLinks as $allLink) {
+                        $webURLTable->insertLink($allLink['href'], $webResource);
+                    }
+                }
             }
         }
     }
