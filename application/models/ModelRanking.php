@@ -74,7 +74,6 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     private function _calculateRandom()
     {
-        return;
         if ($this->_rankingStats) {
             $this->_rankingCalc['random'] = array_rand($this->_rankingStats, 1);
             $this->_modes[] = 'random';
