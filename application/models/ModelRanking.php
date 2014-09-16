@@ -34,17 +34,18 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     public function getRankingModels()
     {
         $this->_models = $this->getModelsByRanking($this->_rankingStatsKey);
+        $models = clone($this->_models); // copy models as it is modified.
         
         // Prevent model flow
         if ($this->_ignoreModel && $this->getModelCount() > 2) {
-            foreach ($this->_models as $modelKey => $model) {
+            foreach ($models as $modelKey => $model) {
                 if ($model->ID == $this->_ignoreModel->ID) {
-                    unset($this->_models[$modelKey]);
+                    unset($models[$modelKey]);
                 }
             }
         }
         
-        $modelArrayKeys = array_keys($this->_models->toArray());
+        $modelArrayKeys = array_keys($models->toArray());
         $modelKeys[] = $modelArrayKeys[0];
         unset($modelArrayKeys[0]);
         shuffle($modelArrayKeys);
@@ -52,7 +53,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         shuffle($modelKeys);
         
         foreach ($modelKeys as $modelKey) {
-            $modelArray[] = $this->_models[$modelKey];
+            $modelArray[] = $models[$modelKey];
         }
         
         return $modelArray;
@@ -60,7 +61,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     public function getModelCount()
     {
-        return count($this->_models->toArray());
+        return count($this->_models);
     }
 
     private function _calculateArrays()
@@ -73,6 +74,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     private function _calculateRandom()
     {
+        return;
         if ($this->_rankingStats) {
             $this->_rankingCalc['random'] = array_rand($this->_rankingStats, 1);
             $this->_modes[] = 'random';
