@@ -19,7 +19,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $this->_ignoreModel = $ignoreModel;
         
         $this->_topHigh = max(array_keys($this->getRankingStats(1, true)));
-        $$this->_topLow = $this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor);
+        $this->_topLow = $this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor);
         
         $this->_calculateArrays();
         $this->_filterModes();
@@ -103,31 +103,37 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
             $ordered = array_keys($topRankingStats);
             $this->_rankingCalc['top-random'] = array_rand($topRankingStats, 1);
             $this->_rankingCalc['top-ordered'] = $ordered[0];
-            $modes[] = 'top-random';
-            $modes[] = 'top-ordered';
+            $this->_modes[] = 'top-random';
+            $this->_modes[] = 'top-ordered';
         }
     }
     
     private function _calculateBottom()
     {
         $bottomRankingStats = $this->_rankingStats;
+        $offset = (ceil(($this->_rankingStats[$this->_highKey]) / 100 ) * $this->_factor) -1;
+
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
             
-            $offset = ceil(($this->_highKey-1) / 100 ) * $this->_factor;
-            
-//            $highCount = $this->_rankingStats[$this->_highKey];
-            
-            if ( ($bottomKey < $this->_highKey) || ($bottomStat < ($this->_highKey-$offset)) ) {
+            if ( $bottomKey >= $this->_highKey ) {
                 unset($bottomRankingStats[$bottomKey]);
+                continue;
             }
+
+            if ( $bottomStat > $this->_rankingStats[$this->_highKey] - $offset ) {
+                unset($bottomRankingStats[$bottomKey]);
+                continue;
+            }
+            
         }
+
         
         if ($bottomRankingStats) {
             $ordered = array_keys($bottomRankingStats);
             $this->_rankingCalc['bottom-random'] = array_rand($bottomRankingStats,1 );
             $this->_rankingCalc['bottom-ordered'] = $ordered[0];
-            $modes[] = 'bottom-random';
-            $modes[] = 'bottom-ordered';
+            $this->_modes[] = 'bottom-random';
+            $this->_modes[] = 'bottom-ordered';
         }
     }
     
