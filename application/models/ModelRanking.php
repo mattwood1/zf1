@@ -111,8 +111,6 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _calculateBottom()
     {
         $bottomRankingStats = $this->_rankingStats;
-        $offset = (ceil(($this->_rankingStats[$this->_highKey]) / 100 ) * $this->_factor) -1;
-
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
             
             if ( $bottomKey >= $this->_highKey ) {
@@ -120,13 +118,12 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 continue;
             }
 
-            if ( $bottomStat > $this->_rankingStats[$this->_highKey] - $offset ) {
+            if ( $bottomStat > $this->_rankingStats[$this->_highKey] ) {
                 unset($bottomRankingStats[$bottomKey]);
                 continue;
             }
             
         }
-
         
         if ($bottomRankingStats) {
             $ordered = array_keys($bottomRankingStats);
