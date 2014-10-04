@@ -149,7 +149,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _filterModes()
     {
         $hour = (int)date("G", mktime());
-        $hour =2;
+        $hour = $hour < 14 ? $hour = 2 : $hour;
         if ( $hour%2 == 0 ) {
             foreach (array('random', 'top-random', 'bottom-random') as $remove) {
                 $key = array_search($remove, $this->_modes);
