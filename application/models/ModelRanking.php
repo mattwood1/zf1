@@ -111,9 +111,18 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _calculateBottom()
     {
         $bottomRankingStats = $this->_rankingStats;
+        
+        $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
+        if ($highBlock) {
+            $highBlockKey = $highBlock[0];
+        } else {
+            $bottomRankingStats = array();
+            return;
+        }
+        
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
             
-            if ( $bottomKey >= $this->_highKey ) {
+            if ( $bottomKey >= ($highBlockKey -1) ) {
                 unset($bottomRankingStats[$bottomKey]);
                 continue;
             }
@@ -140,6 +149,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _filterModes()
     {
         $hour = (int)date("G", mktime());
+        $hour =2;
         if ( $hour%2 == 0 ) {
             foreach (array('random', 'top-random', 'bottom-random') as $remove) {
                 $key = array_search($remove, $this->_modes);
