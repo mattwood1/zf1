@@ -8,6 +8,8 @@ $load = sys_getloadavg();
         <?php endif; ?>
     </div>
     <div class="pull-right">
-        <?php echo $this->mode; ?>
+        <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
+            <?php echo $this->mode; ?>
+        <?php endif; ?>
     </div>
 </div>

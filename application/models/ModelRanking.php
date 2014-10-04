@@ -31,6 +31,11 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         return $this->_mode;
     }
     
+    public function getModes()
+    {
+        return $this->_modes;
+    }
+    
     public function getRankingModels()
     {
         $this->_models = $this->getModelsByRanking($this->_rankingStatsKey);

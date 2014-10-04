@@ -99,7 +99,8 @@ class ModelController extends Coda_Controller
         }
 
         $modelRanking = new God_Model_ModelRanking($model);
-        
+
+        $this->view->modes = $modelRanking->getModes();
         $this->view->mode = $modelRanking->getMode();
         $this->view->models = $modelRanking->getRankingModels();
         $this->view->modelCount = $modelRanking->getModelCount();
