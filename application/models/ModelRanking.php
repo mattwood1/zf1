@@ -116,18 +116,50 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _calculateBottom()
     {
         $bottomRankingStats = $this->_rankingStats;
-        
-        $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
-        if ($highBlock) {
-            $highBlockKey = $highBlock[0];
+       
+        if (count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])) > 1) {
+            //_d('More than 1 highkey');
+            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
+            if ($highBlock[0] >= $this->_highKey) {
+                $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1);
+            }
+            $highBlockKey = $highBlock[0] - 1;
         } else {
-            $bottomRankingStats = array();
-            return;
+            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1);
+            if ($highBlock[0] >= $this->_highKey) {
+                //_d('HighBlock above highkey');
+                $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
+                $highBlockKey = $highBlock[0] - 1;
+            } else {
+                //_d('highblock normal');
+                if (array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2)) {
+                    //_d('Moving block');
+                    $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
+                }
+                $highBlockKey = $highBlock[0] - 2;
+            }
         }
+/*
+_d(
+        $this->_highKey, 
+        count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])),
+        $highBlockKey,
+        $highBlock
+);
+*/
         
+//        if ($highBlock) {
+//            $highBlockKey = $highBlock[0];
+//        } else {
+//            $bottomRankingStats = array();
+//            return;
+//        }
+        
+        
+
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
             
-            if ( $bottomKey >= ($highBlockKey -1) ) {
+            if ( $bottomKey >= ($highBlockKey) ) {
                 unset($bottomRankingStats[$bottomKey]);
                 continue;
             }
