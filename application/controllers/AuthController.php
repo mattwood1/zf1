@@ -19,7 +19,11 @@ class AuthController extends Coda_Controller
             // process authentication
             $result = $this->_performLogin($form->getValues());
             if ($result) {
-                $this->gotoRoute(array('controller' => 'index', 'action' => 'index'));
+                if ($_SESSION['requestUrl']) {
+                    $this->_helper->redirector->gotoUrl($_SESSION['requestUrl']);
+                } else {
+                    $this->gotoRoute(array('controller' => 'index', 'action' => 'index'));
+                }
             }
         }
 
