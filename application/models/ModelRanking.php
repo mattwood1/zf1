@@ -13,6 +13,8 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private $_topHigh;
     private $_topLow;
     private $_highKey;
+    private $_highTop;
+    private $_highBottom;
 
     public function __construct($ignoreModel = null) {
         $this->_rankingStats = $this->getRankingStats(2, true);
@@ -20,6 +22,56 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
         $this->_topHigh = max(array_keys($this->getRankingStats(1, true)));
         $this->_topLow = $this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor);
+        
+        $this->_highKey = reset(array_keys($this->_rankingStats, max($this->_rankingStats)));
+        
+        if (count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])) > 1) {
+            //_d('More than 1 highkey');
+            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
+            if ($highBlock[0] >= $this->_highKey) {
+                //_d('Get this too');
+                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1));
+                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
+            }
+            $highBlockKey = $highBlock[0] - 1;
+        } else {
+            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
+            $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1));
+            if (!empty($highBlock) && $highBlock[0] >= $this->_highKey) {
+                //_d('HighBlock above highkey');
+                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
+                $highBlockKey = $highBlock[0] - 1;
+            } else {
+                //_d('highblock normal');
+                if (array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2)) {
+                    //_d('Moving block');
+                    $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
+                    $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-3));
+                }
+                if (!empty($highBlock)) {
+                    $highBlockKey = $highBlock[0] - 2;
+                } else {
+                    $highBlockKey = 0;
+                }
+            }
+        }
+
+        sort($highBlock);
+
+        // reversed array to check sequential numbers
+        $reversedHighBlock = array_reverse($highBlock, true);
+        $reversed = reset($reversedHighBlock);
+        foreach ($reversedHighBlock as $key => $count) {
+            if ($reversed != $count) {
+                unset($highBlock[$key]);
+            }
+            $reversed--;
+        }
+        
+        $this->_highTop = end($highBlock);
+        $this->_highBottom = reset($highBlock);
+        
+       // _d($highBlock, $this->_highBottom, $this->_highTop);
         
         $this->_calculateArrays();
         $this->_filterModes();
@@ -87,9 +139,6 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     private function _calculateHigh()
     {
-        $highArray = array_keys($this->_rankingStats, max($this->_rankingStats));
-        $this->_highKey = $highArray[0];
-        
         if ($this->_highKey) {
             $this->_rankingCalc['high-ordered'] = $this->_highKey;
             $this->_modes[] = 'high-ordered';
@@ -116,51 +165,19 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private function _calculateBottom()
     {
         $bottomRankingStats = $this->_rankingStats;
-       
-        if (count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])) > 1) {
-            //_d('More than 1 highkey');
-            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
-            if ($highBlock[0] >= $this->_highKey) {
-                $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1);
-            }
-            $highBlockKey = $highBlock[0] - 1;
-        } else {
-            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1);
-            if ($highBlock[0] >= $this->_highKey) {
-                //_d('HighBlock above highkey');
-                $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
-                $highBlockKey = $highBlock[0] - 1;
-            } else {
-                //_d('highblock normal');
-                if (array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2)) {
-                    //_d('Moving block');
-                    $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2);
-                }
-                $highBlockKey = $highBlock[0] - 2;
-            }
-        }
-/*
-_d(
-        $this->_highKey, 
-        count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])),
-        $highBlockKey,
-        $highBlock
-);
-*/
-        
-//        if ($highBlock) {
-//            $highBlockKey = $highBlock[0];
-//        } else {
-//            $bottomRankingStats = array();
-//            return;
-//        }
-        
-        
-
         foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-            
-            if ( $bottomKey >= ($highBlockKey) ) {
+/*
+_d(array(
+	'bottomKey' =>$bottomKey,
+        'next bottom count' => (array_key_exists($bottomKey+1, $bottomRankingStats) && $bottomRankingStats[$bottomKey+1]),
+        'highkey - 1' => $this->_rankingStats[$this->_highKey]-1
+));
+*/
+            if (
+                $bottomKey >= ($this->_highBottom)
+             || (array_key_exists($bottomKey+1, $bottomRankingStats) && $bottomRankingStats[$bottomKey+1] >= ($this->_rankingStats[$this->_highKey]-1) ) ) {
                 unset($bottomRankingStats[$bottomKey]);
+// _d('Unset Key ' . $bottomKey);
                 continue;
             }
 
@@ -186,7 +203,7 @@ _d(
     private function _filterModes()
     {
         $hour = (int)date("G", mktime());
-        $hour = $hour < 14 ? $hour = 2 : $hour;
+        $hour = $hour < 24 ? $hour = 2 : $hour;
         if ( $hour%2 == 0 ) {
             foreach (array('random', 'top-random', 'bottom-random') as $remove) {
                 $key = array_search($remove, $this->_modes);
