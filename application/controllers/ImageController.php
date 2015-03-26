@@ -79,7 +79,7 @@ class ImageController extends Coda_Controller
                 $curl = new God_Model_Curl;
                 $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 4, true);
 
-                if ($this->_request->getParam('url') != $curl->_lasturl) {
+                if ($this->_request->getParam('url') != $curl->lasturl()) {
                     // TODO: This needs work
                     // Find image url and update the path.
                     // Can't do this because the data is serialized
