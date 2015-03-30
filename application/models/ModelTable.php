@@ -5,6 +5,7 @@ class God_Model_ModelTable extends Doctrine_Record
     protected $_query;
     protected $_order;
     protected $_search = '';
+    protected $_ranking;
 
     const ORDER_RANKING = 'ranking';
     const ORDER_NAME = 'name';
@@ -41,29 +42,34 @@ class God_Model_ModelTable extends Doctrine_Record
      */
     public function getRankingStats($minimum = null, $checkPhotosets = false)
     {
-        $this->getModels();
-        $this->getActivePhotosets();
-        if ($checkPhotosets) {
-            $this->_query
-                ->select('m.*');
-        }
+        if (!$this->_ranking) { // Only process once per request. It won't have changed.
+            $this->getModels();
+            $this->getActivePhotosets();
+            if ($checkPhotosets) {
+                $this->_query
+                    ->select('m.*');
+            }
 
-        $ranking = array();
-        foreach ($this->_query->execute() as $model) {
-            @$ranking[$model->ranking]++; // @ to suppress warnings.
-        }
+            $ranking = array();
+            // 26 seconds to process models, 7 seconds for an array.
+            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
+                @$ranking[$model['ranking']]++; // @ to suppress warnings.
+            }
 
-        if ($minimum) {
-            foreach ($ranking as $rank => $number) {
-                if ($number < $minimum) {
-                    unset($ranking[$rank]);
+            if ($minimum) {
+                foreach ($ranking as $rank => $number) {
+                    if ($number < $minimum) {
+                        unset($ranking[$rank]);
+                    }
                 }
             }
+
+            ksort($ranking);
+            
+            $this->_ranking = $ranking;
         }
 
-        ksort($ranking);
-
-        return $ranking;
+        return $this->_ranking;
     }
 
     public function getModelsByRanking($ranking)

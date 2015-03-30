@@ -1,6 +1,7 @@
 <?php
 class Coda_Debug extends Zend_Debug
 {
+    static $profile;
 }
 
 function _d()
