@@ -11,7 +11,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     // Initialises the doctrine orm framework
-    protected function _initDoctrine ()
+    protected function _initDoctrine()
     {
         // read doctrine configuration
         $config = $this->getOption('doctrine');
@@ -38,6 +38,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $connection->setAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM, true);
         $connection->setCharset('utf8');
         return $connection;
+    }
+    
+    protected function _initZFDebug()
+    {
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+        $autoloader->registerNamespace('ZFDebug');
+
+        $options = array(
+            'plugins' => array('Variables',
+//                               'Database' => array('adapter' => $db),
+                               'File' => array('basePath' => '/path/to/project'),
+//                               'Cache' => array('backend' => $cache->getBackend()),
+                               'Exception')
+        );
+        $debug = new ZFDebug_Controller_Plugin_Debug($options);
+
+        $this->bootstrap('frontController');
+        $frontController = $this->getResource('frontController');
+        $frontController->registerPlugin($debug);
     }
 
     /**
