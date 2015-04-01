@@ -5,7 +5,7 @@ class God_Model_ModelTable extends Doctrine_Record
     protected $_query;
     protected $_order;
     protected $_search = '';
-    protected $_ranking = array(); // Array of rankings where minimum is the key
+    protected $_ranking = array(); // Array of all rankings
 
     const ORDER_RANKING = 'ranking';
     const ORDER_NAME = 'name';
@@ -42,34 +42,33 @@ class God_Model_ModelTable extends Doctrine_Record
      */
     public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
-        if (!array_key_exists($minimum, $this->_ranking)) { // Only process once per request. It won't have changed.
-            $this->getModels();
-            $this->getActivePhotosets();
-            if ($checkPhotosets) {
-                $this->_query
-                    ->select('m.*');
-            }
-
-            $ranking = array();
-            // 26 seconds to process models, 7 seconds for an array.
-            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
-                @$ranking[$model['ranking']]++; // @ to suppress warnings.
-            }
-
-            if ($minimum) {
-                foreach ($ranking as $rank => $number) {
-                    if ($number < $minimum) {
-                        unset($ranking[$rank]);
-                    }
-                }
-            }
-
-            ksort($ranking);
-            
-            $this->_ranking[$minimum] = $ranking;
+        $this->getModels();
+        $this->getActivePhotosets();
+        if ($checkPhotosets) {
+            $this->_query
+                ->select('m.*');
         }
 
-        return $this->_ranking[$minimum];
+        if (!$this->_ranking) {
+            // 26 seconds to process models, 7 seconds for an array.
+            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
+                @$this->_ranking[$model['ranking']]++; // @ to suppress warnings.
+            }
+        }
+
+        $ranking = $this->_ranking;
+        
+        if ($minimum) {
+            foreach ($ranking as $rank => $number) {
+                if ($number < $minimum) {
+                    unset($ranking[$rank]);
+                }
+            }
+        }
+
+        ksort($ranking);
+
+        return $ranking;
     }
 
     public function getModelsByRanking($ranking)
