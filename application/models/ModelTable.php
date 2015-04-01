@@ -5,7 +5,7 @@ class God_Model_ModelTable extends Doctrine_Record
     protected $_query;
     protected $_order;
     protected $_search = '';
-    protected $_ranking;
+    protected $_ranking = array(); // Array of rankings where minimum is the key
 
     const ORDER_RANKING = 'ranking';
     const ORDER_NAME = 'name';
@@ -40,9 +40,9 @@ class God_Model_ModelTable extends Doctrine_Record
      * @param boolean $checkPhotosets
      * @return ranking['rank'] => count
      */
-    public function getRankingStats($minimum = null, $checkPhotosets = false)
+    public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
-        if (!$this->_ranking) { // Only process once per request. It won't have changed.
+        if (!array_key_exists($minimum, $this->_ranking)) { // Only process once per request. It won't have changed.
             $this->getModels();
             $this->getActivePhotosets();
             if ($checkPhotosets) {
@@ -66,10 +66,10 @@ class God_Model_ModelTable extends Doctrine_Record
 
             ksort($ranking);
             
-            $this->_ranking = $ranking;
+            $this->_ranking[$minimum] = $ranking;
         }
 
-        return $this->_ranking;
+        return $this->_ranking[$minimum];
     }
 
     public function getModelsByRanking($ranking)

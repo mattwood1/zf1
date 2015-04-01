@@ -153,6 +153,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 unset($topRankingStats[$topKey]);
             }
         }
+        
         if ($topRankingStats) {
             $ordered = array_keys($topRankingStats);
             $this->_rankingCalc['top-random'] = array_rand($topRankingStats, 1);
