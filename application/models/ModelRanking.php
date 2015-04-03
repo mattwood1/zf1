@@ -16,66 +16,54 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     private $_highTop;
     private $_highBottom;
 
+    private $_bottomRankingStats;
+    private $_highRankingStats;
+    private $_topRankingStats;
+        
+    
     public function __construct($ignoreModel = null) {
         $this->_rankingStats = $this->getRankingStats(2, true);
         $this->_ignoreModel = $ignoreModel;
         
         $this->_topHigh = max(array_keys($this->getRankingStats(1, true)));
-        $this->_topLow = $this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor);
+        $this->_topLow = (int)($this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor));
         
         $this->_highKey = reset(array_keys($this->_rankingStats, max($this->_rankingStats)));
+        $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
+        $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev]))-1;
+        $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey - 1]));
         
-        if (count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])) > 1) {
-            //_d('More than 1 highkey');
-            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
-            if ($highBlock[0] >= $this->_highKey) {
-                //_d('Get this too');
-                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1));
-                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
-            }
-            $highBlockKey = $highBlock[0] - 1;
-        } else {
-            $highBlock = array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]);
-            $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-1));
-            if (!empty($highBlock) && $highBlock[0] >= $this->_highKey) {
-                //_d('HighBlock above highkey');
-                $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
-                $highBlockKey = $highBlock[0] - 1;
-            } else {
-                //_d('highblock normal');
-                if (array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2)) {
-                    //_d('Moving block');
-                    $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-2));
-                    $highBlock = array_merge($highBlock, array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]-3));
-                }
-                if (!empty($highBlock)) {
-                    $highBlockKey = $highBlock[0] - 2;
-                } else {
-                    $highBlockKey = 0;
-                }
+        foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
+            // Bottom
+            if ($rankingStatKey < $this->_highBottom) {
+                $this->_bottomRankingStats[$rankingStatKey] = $rankingStat;
+            } elseif ($rankingStatKey >= $this->_highBottom && $rankingStatKey <= $this->_highTop) {
+                $this->_highRankingStats[$rankingStatKey] = $rankingStat;
+            } elseif ($rankingStatKey >= $this->_topLow) {
+                $this->_topRankingStats[$rankingStatKey] = $rankingStat;
             }
         }
-
-        sort($highBlock);
-
-        // reversed array to check sequential numbers
-        $reversedHighBlock = array_reverse($highBlock, true);
-        $reversed = reset($reversedHighBlock);
-        foreach ($reversedHighBlock as $key => $count) {
-            if ($reversed != $count) {
-                unset($highBlock[$key]);
-            }
-            $reversed--;
-        }
-        
-        $this->_highTop = end($highBlock);
-        $this->_highBottom = reset($highBlock);
-        
-       // _d($highBlock, $this->_highBottom, $this->_highTop);
         
         $this->_calculateArrays();
         $this->_filterModes();
         $this->_chooseMode();
+        
+        if (@$_GET['test']) {
+            _d(array('$this->_rankingStats' => $this->_rankingStats));
+            _d(array('modes' => $this->_modes));
+            
+            _d(array('Top High' => $this->_topHigh, 'Top Low' => $this->_topLow));
+            _d(array('High Key' => $this->_highKey));
+            _d(array('High Top' => $this->_highTop, 'High Bottom' => $this->_highBottom));
+            
+            _d(array(
+                'bottom' => $this->_bottomRankingStats,
+                'high' => $this->_highRankingStats,
+                'top' => $this->_topRankingStats
+            ));
+            
+            exit;
+        }
     }
     
     public function getMode()
@@ -147,16 +135,9 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     private function _calculateTop()
     {
-        $topRankingStats = $this->_rankingStats;
-        foreach (array_keys($topRankingStats) as $topKey) {
-            if ($topKey < $this->_topLow) {
-                unset($topRankingStats[$topKey]);
-            }
-        }
-        
-        if ($topRankingStats) {
-            $ordered = array_keys($topRankingStats);
-            $this->_rankingCalc['top-random'] = array_rand($topRankingStats, 1);
+        if ($this->_topRankingStats) {
+            $ordered = array_keys($this->_topRankingStats);
+            $this->_rankingCalc['top-random'] = array_rand($this->_topRankingStats, 1);
             $this->_rankingCalc['top-ordered'] = $ordered[0];
             $this->_modes[] = 'top-random';
             $this->_modes[] = 'top-ordered';
@@ -165,33 +146,9 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
     
     private function _calculateBottom()
     {
-        $bottomRankingStats = $this->_rankingStats;
-        foreach ($bottomRankingStats as $bottomKey => $bottomStat) {
-/*
-_d(array(
-	'bottomKey' =>$bottomKey,
-        'next bottom count' => (array_key_exists($bottomKey+1, $bottomRankingStats) && $bottomRankingStats[$bottomKey+1]),
-        'highkey - 1' => $this->_rankingStats[$this->_highKey]-1
-));
-*/
-            if (
-                $bottomKey >= ($this->_highBottom)
-             || (array_key_exists($bottomKey+1, $bottomRankingStats) && $bottomRankingStats[$bottomKey+1] >= ($this->_rankingStats[$this->_highKey]-1) ) ) {
-                unset($bottomRankingStats[$bottomKey]);
-// _d('Unset Key ' . $bottomKey);
-                continue;
-            }
-
-            if ( $bottomStat > $this->_rankingStats[$this->_highKey] ) {
-                unset($bottomRankingStats[$bottomKey]);
-                continue;
-            }
-            
-        }
-        
-        if ($bottomRankingStats) {
-            $ordered = array_keys($bottomRankingStats);
-            $this->_rankingCalc['bottom-random'] = array_rand($bottomRankingStats,1 );
+        if ($this->_bottomRankingStats) {
+            $ordered = array_keys($this->_bottomRankingStats);
+            $this->_rankingCalc['bottom-random'] = array_rand($this->_bottomRankingStats,1 );
             $this->_rankingCalc['bottom-ordered'] = $ordered[0];
             $this->_modes[] = 'bottom-random';
             $this->_modes[] = 'bottom-ordered';

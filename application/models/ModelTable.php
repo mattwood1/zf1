@@ -42,14 +42,15 @@ class God_Model_ModelTable extends Doctrine_Record
      */
     public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
-        $this->getModels();
-        $this->getActivePhotosets();
-        if ($checkPhotosets) {
-            $this->_query
-                ->select('m.*');
-        }
-
         if (!$this->_ranking) {
+            
+            $this->getModels();
+            $this->getActivePhotosets();
+            if ($checkPhotosets) {
+                $this->_query
+                    ->select('m.*');
+            }
+            
             // 26 seconds to process models, 7 seconds for an array.
             foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
                 @$this->_ranking[$model['ranking']]++; // @ to suppress warnings.
@@ -58,6 +59,21 @@ class God_Model_ModelTable extends Doctrine_Record
 
         $ranking = $this->_ranking;
         
+        if (@$_GET['test'] == 1) {
+            $ranking = array(
+                1 => 1,
+                2 => 2,
+                3 => 8,
+                4 => 10,
+                5 => 15,
+                6 => 6,
+                7 => 10,
+                8 => 11,
+                9 => 1,
+                10 => 1
+            );
+        }
+        
         if ($minimum) {
             foreach ($ranking as $rank => $number) {
                 if ($number < $minimum) {
@@ -65,7 +81,7 @@ class God_Model_ModelTable extends Doctrine_Record
                 }
             }
         }
-
+        
         ksort($ranking);
 
         return $ranking;
