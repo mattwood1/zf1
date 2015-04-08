@@ -85,6 +85,7 @@ class ModelController extends Coda_Controller
 
     public function rankingAction()
     {
+        ini_set('max_execution_time', 120);
         $model = null;
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));

@@ -62,13 +62,13 @@ class God_Model_ModelTable extends Doctrine_Record
         if (@$_GET['test'] == 1) {
             $ranking = array(
                 1 => 1,
-                2 => 2,
-                3 => 8,
-                4 => 10,
-                5 => 15,
-                6 => 6,
+                2 => 1,
+                3 => 1,
+                4 => 11,
+                5 => 11,
+                6 => 10,
                 7 => 10,
-                8 => 11,
+                8 => 10,
                 9 => 1,
                 10 => 1
             );

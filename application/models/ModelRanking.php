@@ -29,9 +29,24 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $this->_topLow = (int)($this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor));
         
         $this->_highKey = reset(array_keys($this->_rankingStats, max($this->_rankingStats)));
-        $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
-        $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev]))-1;
-        $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey - 1]));
+        
+        if (array_key_exists($this->_highKey -1, $this->_rankingStats)) {
+            $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
+        } else {
+            $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
+        }
+        
+        if (array_key_exists($highBottomPrev, $this->_rankingStats)) {
+            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev]))-1;
+        } else {
+            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev+1]));
+        }
+                
+        if (array_key_exists($this->_highKey - 1, $this->_rankingStats)) {
+            $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey - 1]));
+        } else {
+            $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]));
+        }
         
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             // Bottom
