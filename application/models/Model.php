@@ -213,12 +213,20 @@ class God_Model_Model extends Doctrine_Record
     public function getRandomPhotoset()
     {
         if ($this->photosets) { // TODO: Needs to be $this->photosets->getActive()
-            $key = array_rand($this->photosets->toArray(), 1);
-            $photoset = $this->photosets[$key];
+            
+            $photosets = clone($this->photosets);
+            $photosetKeys = array();
+            
+            foreach ($photosets as $photosetKey => $photoset) {
+                if ($photoset->active == 0) {
+                    unset($photosets[$photosetKey]);
+                } else {
+                    $photosetKeys[$photosetKey] = $photosetKey;
+                }
+            }
+            $key = array_rand($photosetKeys, 1);
 
-            if ($photoset->active == 0) $this->getRandomPhotoset(); // Makes this redundant
-
-            return $photoset;
+            return $this->photosets[$key];
         }
         return null;
     }
