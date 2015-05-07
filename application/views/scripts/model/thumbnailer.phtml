@@ -1,0 +1,33 @@
+<?php $this->title = 'Thumbnailer'; ?>
+
+<?php if ($this->thumbnails): ?>
+
+<div class="row">
+
+<?php
+foreach ($this->thumbnails as $model):
+    foreach ($model->photosets as $photoset):
+?>
+
+<div class="col-xs-4 col-sm-3 col-md-2">
+    <a href="">
+        <div class="image thumb">
+        
+            <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail, 'page' => null)); ?>" />
+            
+            <div class="name">
+                <?php echo $model->getName(); ?><br />
+                <i class="fa fa-thumbs-o-up"></i> <?php echo $this->escape($model->ranking)?>
+            </div>
+        </div>
+    </a>
+</div>
+
+<?php
+    endforeach;
+endforeach;
+?>
+
+</div>
+
+<?php endif; ?>

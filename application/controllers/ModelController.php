@@ -111,6 +111,19 @@ class ModelController extends Coda_Controller
         $modelTable = new God_Model_ModelTable();
         $this->view->rankings = $modelTable->getRankingStats();
     }
+    
+    public function thumbnailerAction()
+    {
+        $modeltable = new God_Model_ModelTable();
+        $modeltable->setOrder(God_Model_ModelTable::ORDER_RANKING);
+        $modeltable->getModels();
+        
+        $query = $modeltable->getQuery();
+        $query->andWhere('p.manual_thumbnail = ?', 0);
+        $query->andWhere('p.active = ?', 1);
+        
+        $this->view->thumbnails = $query->execute();
+    }
 
     /*
      * Potentially redundant
