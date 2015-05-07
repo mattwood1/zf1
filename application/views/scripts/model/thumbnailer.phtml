@@ -13,7 +13,7 @@ foreach ($this->thumbnails as $model):
     <a href="">
         <div class="image thumb">
         
-            <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail, 'page' => null)); ?>" />
+            <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail), 'page' => null)); ?>" />
             
             <div class="name">
                 <?php echo $model->getName(); ?><br />
