@@ -111,6 +111,28 @@ class ModelController extends Coda_Controller
         $modelTable = new God_Model_ModelTable();
         $this->view->rankings = $modelTable->getRankingStats();
     }
+    
+    public function thumbnailerAction()
+    {
+        $query = Doctrine_Core::getTable('God_Model_Photoset')
+            ->createQuery('p')
+            ->leftJoin('p.model m')
+            ->innerJoin('m.names n')
+
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking > -1')
+            ->andWhere('n.default = ?', 1)
+            ->andWhere('p.active = ?', 1)
+            ->andWhere('p.manual_thumbnail = ?', 0)
+            ->orderBy('m.ranking desc, p.name asc');
+    
+        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
+
+        $photosets = $paginator->execute();
+
+        $this->view->paginator = $paginator;
+        $this->view->photosets = $photosets;
+    }
 
     /*
      * Potentially redundant
