@@ -114,15 +114,24 @@ class ModelController extends Coda_Controller
     
     public function thumbnailerAction()
     {
-        $modeltable = new God_Model_ModelTable();
-        $modeltable->setOrder(God_Model_ModelTable::ORDER_RANKING);
-        $modeltable->getModels();
-        
-        $query = $modeltable->getQuery();
-        $query->andWhere('p.manual_thumbnail = ?', 0);
-        $query->andWhere('p.active = ?', 1);
-        
-        $this->view->thumbnails = $query->execute();
+        $query = Doctrine_Core::getTable('God_Model_Photoset')
+            ->createQuery('p')
+            ->leftJoin('p.model m')
+            ->innerJoin('m.names n')
+
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking > -1')
+            ->andWhere('n.default = ?', 1)
+            ->andWhere('p.active = ?', 1)
+            ->andWhere('p.manual_thumbnail = ?', 0)
+            ->orderBy('m.ranking desc, p.name asc');
+    
+        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
+
+        $photosets = $paginator->execute();
+
+        $this->view->paginator = $paginator;
+        $this->view->photosets = $photosets;
     }
 
     /*
