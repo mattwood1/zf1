@@ -16,18 +16,28 @@ class WebUrlController extends Coda_Controller
             ->orderBy('wu.dateCreated DESC');
 
         if ($this->_request->getParam('webresourceid')) {
+            $this->view->webresource = God_Model_WebResourceTable::getInstance()->find($this->_request->getParam('webresourceid'));
             $webUrlQuery->where('wu.webResourceId = ?', $this->_request->getParam('webresourceid'));
         }
 
         if ($this->_request->getParam('modelid')) {
+            $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
+            $modelNames = God_Model_ModelNameTable::getInstance()->createQuery('mn')
+                ->select('ID')
+                ->where('model_id = ?', $this->_request->getParam('modelid'))
+                ->execute();
+            foreach ($modelNames as $modelName) {
+                $modelIds[] = $modelName->ID;
+            }
+            
             $webUrlQuery
             ->innerJoin('wu.ModelNameWebURL mnwu')
             ->innerJoin('mnwu.modelName mn')
-            ->where('mn.model_id = ?', $this->_request->getParam('modelid'));
+            ->whereIn('mn.id', $modelIds);
         }
 
         $webUrlQuery->andWhere('wu.linked < 0');
-
+        
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
         $webUrls = $paginator->execute();
 

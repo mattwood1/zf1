@@ -1,21 +1,5 @@
 @CHARSET "UTF-8";
 
-body,html {
-    margin: 0;
-    font-family: Verdana,sans-serif;
-}
-h1 {
-    font-size: 1.4em;
-    color: #000000;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    width: 40%;
-}
-h2 {
-    font-size: 1.2em;
-    color: #000000;
-    margin: 0 0 10px 0;
-}
 a {
     color: #000000;
 }
@@ -82,11 +66,12 @@ form #submitbutton {
     float: left;
     margin-right: 1em;
 }
-
+/*
 #content {
     max-width: 930px;
     margin: 0 auto;
 }
+*/
 
 #photosets {
     list-style: none;
@@ -121,14 +106,6 @@ li.autoThumb {
     background: darkred;
 }
 
-.pagination {
-    clear: both;
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    padding: 20px 0;
-}
-
 ul#ranking {
     padding: 0;
     list-style: none;
@@ -151,14 +128,127 @@ ul#ranking li div.image {
     background: black;
 }
 
-@media only screen and (min-width: 320px) and (max-width: 810px) {
+.container {
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+}
+
+.row, .form-horizontal .form-group {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, 
+.col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, 
+.col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, 
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, 
+.col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, 
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, 
+.col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, 
+.col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, 
+.col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, 
+.col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, 
+.col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, 
+.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.thumbnail {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.thumbnail img {
+    width: 100%;
+}
+
+.thumbnail label {
+    display: block;
+    margin-bottom: 0px;
+    font-weight: auto;
+}
+
+.thumbnail .image {
+    position: relative;
+}
+
+a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.thumbnail.active {
+    text-decoration: none;
+}
+
+.thumbnail .name {
+    position: absolute;
+    bottom: 0px;
+    background: rgba(100,100,100,0.5);
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.thumbnail .name a {
+    color: #EEEEEE;
+    vertical-align: middle;
+    display: table-cell;
+    height: 40px;
+    padding: 5px 10px;
+}
+
+.thumbnail .autothumb .name {
+    background: rgba(100,0,0,0.8);
+}
+
+.thumbnail .image.medium .name {
+    font-size: 20px;
+    line-height: 20px;
+    display: table;
+    height: 50px;
+}
+
+/* Nav bar toggle */
+.navbar-toggle {
+    font-size: 21px;
+    padding: 1px 7px;
+}
+
+/* Search */
+.navbar .input-sm, .navbar .btn-sm {
+    margin: 3px 0;
+}
+
+/* Page Title */
+.page-header {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+/* Pagination */
+.pagination {
+    margin: 5px 0 10px;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #cccccc;
+    padding: 5px 10px;
+}
+
+.nav>li>a {
+    padding: 10px 10px;
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 790px) {
     /* iPhone, Android rules here */
     body {
         background: black;
         color: rgb(179,179,179);
         font-family: Helvetica;
         font-size:12px;
-        width: 312px;
+        /*width: 312px;*/
     }
     h2 {
         color: rgb(179,179,179);
@@ -166,27 +256,14 @@ ul#ranking li div.image {
     button {
         color: black;
     }
-    #content {
-        width: 100%;
-        margin: 0 auto;
-    
-        /* Debug Devices Width */
-        /*background: blue;*/
-    }
     #banner a {
         color: rgb(179,179,179);
     }
+    
     a {
         color: rgb(179,179,179);
     }
-    a:hover {
-        color: white;
-    }
-    
-    a img {
-        border: 0px;
-    }
-    
+
     ul#ranking {
         width: 100%;
     }
@@ -200,10 +277,6 @@ ul#ranking li div.image {
         height: 200px
     }
     
-    img {
-        border: 3px solid black;
-    }
-    
     img.autoThumb {
         border: 3px solid red;
     }
@@ -213,6 +286,11 @@ ul#ranking li div.image {
         margin: 0 2px 0px 0;
         width: 100px;
         height: 160px;
+    }
+    
+    #photosets li img {
+        width: 100px;
+        /*height: 160px;*/
     }
     
     #photosets li div.image, #photosets li label.image {
@@ -242,5 +320,13 @@ ul#ranking li div.image {
         background-image: none;
         border: 1px solid transparent;
         border-radius: 4px;
+    }
+    
+    .thumbnail .image.medium {
+        height: 228px;
+    }
+    
+    .navbar {
+        margin-bottom: 10px;
     }
 }

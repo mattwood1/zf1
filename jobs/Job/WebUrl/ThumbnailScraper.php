@@ -12,12 +12,13 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
             ->where('action = ?', God_Model_WebURLTable::ACTION_GET_THUMBNAILS)
-            ->orderBy('`dateCreated` DESC')
-            ->limit(500);
+            ->orderBy('id ASC')
+            ->limit(10);
         $webUrls = $webUrlsQuery->execute();
 
         if ($webUrls) {
             foreach ($webUrls as $webUrl) {
+                $webURLTable = new God_Model_WebURLTable;
                 $webResourceTable = new God_Model_WebResourceTable;
                 $webResource = $webResourceTable->getInstance()->findOneBy('id', $webUrl->webResourceId);
                 $links = array();
@@ -26,7 +27,6 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                     $curl = new God_Model_Curl();
                     $html = $curl->Curl($webUrl->url, null, false, 30, true); // Follow 301
                     if ($webUrl->url != $curl->lastUrl()) {
-                        $webURLTable = new God_Model_WebURLTable;
                         $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
                         $newWebUrl->dateCreated = $webUrl->dateCreated;
                         $newWebUrl->save();
@@ -35,6 +35,21 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                         $webUrl->httpStatusCode = $curl->statusCode();
                         $domXPath = new God_Model_DomXPath($html);
                         $links = $domXPath->evaluate($webResource->xpathfilter);
+                        $imageLinks = $domXPath->evaluate(str_replace("/img", "", $webResource->xpathfilter));
+                        $allLinks = $domXPath->evaluate("//a");
+                    }
+                }
+                
+                $imageLinkHref = array();
+                if ($imageLinks) {
+                    foreach ($imageLinks as $imageLink) {
+                        $imageLinkHref[] = $imageLink['href'];
+                    }
+                }
+                
+                if ($allLinks) {
+                    foreach ($allLinks as $allLink) {
+                        $allLinkHref[] = $allLink['href'];
                     }
                 }
 
@@ -46,17 +61,35 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                         $img[] = $link['img'];
                         $href[] = $link['href'];
                     }
+                    
+                    
                     $webUrl->thumbnails = serialize($img);
                     $webUrl->links = serialize($href);
                     $webUrl->action = God_Model_WebURLTable::ACTION_GOT_THUMBNAILS;
-
-
                 } else {
                     // Mark the webUrl as bad
                     $webUrl->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
                 }
 
                 $webUrl->save();
+                /*
+                if ($allLinkHref) {
+                    foreach ($allLinkHref as $allLink) {
+                        if (array_search($allLink, $imageLinkHref)) continue;
+                        if (preg_match("~.*.jpg|.*.png|javascript|facebook|twitter|tumblr|reddit|plus.google|stumbleupon|digg.com|cqcounter|ccbill|mailto:\#respond|\#comment~i", $allLink)) {
+                            continue;
+                        }
+                        if (preg_match("~^\?.*|^\/.*~", $allLink)) {
+                            $urlparse = parse_url($webUrl->url);
+                            $allLink = $urlparse['scheme'].'://'.$urlparse['host'].$urlparse['path'].$allLink;
+                            $allLink = str_replace("//", "/", $allLink);
+                        }
+                        _d($webUrl->url);
+                        _d('adding '.$allLink);
+                        $webURLTable->insertLink($allLink, $webResource, God_Model_WebURLTable::ACTION_GET_THUMBNAILS);
+                    }
+                }
+                 */
             }
         }
     }

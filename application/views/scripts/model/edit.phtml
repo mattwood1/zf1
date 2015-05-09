@@ -2,7 +2,10 @@
 $this->headTitle('Edit');
 $this->headTitle($this->model->getName());
 $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->model->ID), null, true) . '">' . $this->model->getName(). '</a>';
+$this->subtitle = 'Edit';
 ?>
+
+<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'edit')); ?>
 
 <form action="<?php echo $this->url(array('action' => 'edit')); ?>" method="post">
     <input type="checkbox" name="active" value="1" id="active" <?php echo $this->model->isActive() ? ' checked="checked"' : ''; ?> />
@@ -30,9 +33,6 @@ $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' 
     <?php // Last Google search date ?>
 
     <?php // WebLink Stats for this model ?>
-
-    <h4>WebUrls</h4>
-    <div><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'index', 'modelid' => $this->model->ID));?>">See WebUrls</a></div>
 
     <p><input type="submit" name="submit" value="Update" /></p>
 

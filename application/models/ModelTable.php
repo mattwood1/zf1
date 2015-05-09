@@ -5,6 +5,7 @@ class God_Model_ModelTable extends Doctrine_Record
     protected $_query;
     protected $_order;
     protected $_search = '';
+    protected $_ranking = array(); // Array of all rankings
 
     const ORDER_RANKING = 'ranking';
     const ORDER_NAME = 'name';
@@ -19,14 +20,18 @@ class God_Model_ModelTable extends Doctrine_Record
         $this->_query = $this->getInstance()
             ->createQuery('m')
             ->innerJoin('m.names n')
+            ->leftJoin('m.photosets p')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
-            ->andWhere('n.default = ?', 1)
-
-            ->innerJoin('m.photosets p')
-            ->andWhere('p.active = ?',1);
+            ->andWhere('n.default = ?', 1);
+            //->andWhere('p.active = ?',1);
 
         $this->_getOrder();
+    }
+    
+    public function getActivePhotosets()
+    {
+        $this->_query->andWhere('p.active = ?', 1);
     }
 
     /**
@@ -35,19 +40,40 @@ class God_Model_ModelTable extends Doctrine_Record
      * @param boolean $checkPhotosets
      * @return ranking['rank'] => count
      */
-    public function getRankingStats($minimum = null, $checkPhotosets = false)
+    public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
-        $this->getModels();
-        if ($checkPhotosets) {
-            $this->_query
-                ->select('m.*');
+        if (!$this->_ranking) {
+            
+            $this->getModels();
+            $this->getActivePhotosets();
+            if ($checkPhotosets) {
+                $this->_query
+                    ->select('m.*');
+            }
+            
+            // 26 seconds to process models, 7 seconds for an array.
+            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
+                @$this->_ranking[$model['ranking']]++; // @ to suppress warnings.
+            }
         }
 
-        $ranking = array();
-        foreach ($this->_query->execute() as $model) {
-            @$ranking[$model->ranking]++; // @ to suppress warnings.
+        $ranking = $this->_ranking;
+        
+        if (@$_GET['test'] == 1) {
+            $ranking = array(
+                1 => 1,
+                2 => 1,
+                3 => 1,
+                4 => 11,
+                5 => 11,
+                6 => 10,
+                7 => 10,
+                8 => 10,
+                9 => 1,
+                10 => 1
+            );
         }
-
+        
         if ($minimum) {
             foreach ($ranking as $rank => $number) {
                 if ($number < $minimum) {
@@ -55,7 +81,7 @@ class God_Model_ModelTable extends Doctrine_Record
                 }
             }
         }
-
+        
         ksort($ranking);
 
         return $ranking;
@@ -64,8 +90,10 @@ class God_Model_ModelTable extends Doctrine_Record
     public function getModelsByRanking($ranking)
     {
         $this->getModels();
+        $this->getActivePhotosets();
         $this->_query
                 ->andWhere('m.ranking = ?', $ranking)
+                ->orderBy('m.rankDate, m.id')
                 ;
 
         return $this->_query->execute();

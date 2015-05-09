@@ -17,12 +17,14 @@ class IndexController extends Coda_Controller
         $modelTable->getModels();
 
         if ($this->_request->getParam('search')) {
-            $modelTable->setSearch($this->_request->getParam('search'));
+            $this->keyword = $this->_request->getParam('search');
+            $modelTable->setSearch($this->keyword);
+            $this->view->keyword = $this->keyword;
         }
 
         $paginator = new Doctrine_Pager($modelTable->getQuery(), $this->_getParam('page', 1), 18);
         $models = $paginator->execute();
-
+        
         $this->view->paginator = $paginator;
         $this->view->models = $models;
     }
@@ -49,6 +51,5 @@ class IndexController extends Coda_Controller
     {
         // delete body
     }
-
 }
 

@@ -1,62 +1,68 @@
+<?php if ($this->model) : ?>
+    <?php
+        $this->title = $this->model->getName();
+        $this->headTitle($this->model->getName());
+    ?>
+    <?php $this->model->getName(); ?>
+
+    <?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'weburl')); ?>
+<?php endif; ?>
+
+<?php if ($this->webresource): ?>
+    <?php
+        $this->title = $this->webresource->website;
+        $this->headTitle($this->webresource->website);
+    ?>
+<?php endif; ?>
+
+<?php
+    $this->subtitle = 'Web Urls';
+    $this->headTitle('Web Urls');
+?>
+
 <?php if ($this->webUrls): ?>
-<table>
-    <thead>
-        <tr>
-            <th>id</th>
-            <th>url</th>
-            <th>status</th>
-            <th>action</th>
-            <th>Names</th>
-            <th>linked</th>
-            <th>date</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($this->webUrls as $url): ?>
-        <tr>
-            <td><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url->id), 'default', true); ?>"><?php echo $url->id; ?></a></td>
-            <td><?php echo $url->url; ?></td>
-            <td><?php echo $url->httpStatusCode; ?></td>
-            <td>
-                <select>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
-                    <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
-                </select>
-            <?php echo $url->action; ?>
 
-            </td>
-            <td>
-            <?php if ($url->ModelNameWebURL): ?>
-                <ul>
-                <?php foreach ($url->ModelNameWebURL as $modelNameLink): ?>
-                    <li><a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $modelNameLink->modelName->model->ID), 'default', true); ?>"><?php echo $modelNameLink->modelName->model->getName();?></a></li>
-                <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-            </td>
-            <td><?php echo $url->linked; ?></td>
-            <td><?php echo $this->date($url->dateCreated, Coda_View_Helper_Date::DATETIME); ?></td>
-        </tr>
-        <?php
-            $thumbnails = unserialize($url->thumbnails);
-            if ($thumbnails):
-        ?>
-        <tr>
-            <td colspan="7">
-            <?php foreach($thumbnails as $thumbnail): ?>
-            <a href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
-                <img src="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>&width=80" />
-            </a>
-            <?php endforeach; ?>
-            </td>
-        </tr>
+<?php foreach ($this->webUrls as $url): ?>
+<div class="row">
+    <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url->id), 'default', true); ?>"><?php echo $url->id; ?></a></div>
+    <div class="col-md-4 col-sm-5 col-xs-10"><?php echo $url->url; ?> <a href="<?php echo $url->url; ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
+    <div class="col-md-1 col-sm-1 col-xs-2"><?php echo $url->httpStatusCode; ?></div>
+    <div class="col-md-2 col-sm-2 col-xs-5">
+        <select>
+            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
+            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
+            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
+            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
+        </select>
+        <span class="hidden-sm hidden-xs"><?php echo $url->action; ?></span>
+    </div>
+    <div class="col-md-2 col-sm-2 col-xs-5">
+        <?php if ($url->ModelNameWebURL): ?>
+        <ul class="list-unstyled">
+        <?php foreach ($url->ModelNameWebURL as $modelNameLink): ?>
+            <li><a href="<?php echo $this->url(array('controller'=>'web-url', 'action'=>'index', 'modelid' => $modelNameLink->modelName->model->ID), 'default', true); ?>"><?php echo $modelNameLink->modelName->model->getName();?></a></li>
+        <?php endforeach; ?>
+        </ul>
         <?php endif; ?>
-
-    <?php endforeach; ?>
-    </tbody>
-</table>
+    </div>
+    <div class="col-md-1 hidden-sm hidden-xs"><?php echo $url->linked; ?></div>
+    <div class="col-md-1 col-sm-1 col-xs-12"><?php echo $this->date($url->dateCreated, Coda_View_Helper_Date::DATETIME); ?></div>
+    
+    <?php
+        $thumbnails = unserialize($url->thumbnails);
+        if ($thumbnails):
+    ?>
+    <div class="col-md-12">
+        <?php foreach($thumbnails as $thumbnail): ?>
+        <a class="col-lg-1 col-sm-2 col-xs-3" href="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>">
+            <img src="/image/external?referer=<?php echo $url->url; ?>&url=<?php echo renderpath($url->url, $thumbnail); ?>&width=80" />
+        </a>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+    
+</div>
+<?php endforeach; ?>
 
 <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
 

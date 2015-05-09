@@ -10,10 +10,15 @@ class ModelController extends Coda_Controller
 
     public function viewAction()
     {
-        // add body
+        $model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('id'));
+        
+        // TODO: It would be good to have a function $model->getPhotosets with pagination
+        // Needs to return a query instance.
+        
+//         add body
         $query = Doctrine_Core::getTable('God_Model_Photoset')
             ->createQuery('p')
-            ->innerJoin('p.model m')
+            ->leftJoin('p.model m')
             ->innerJoin('m.names n')
 
             ->where('m.ID = ?', $this->_request->getParam('id'))
@@ -21,20 +26,20 @@ class ModelController extends Coda_Controller
             ->andWhere('n.default = ?', 1)
             ->andWhere('p.active = ?', 1)
             ->orderBy('p.name asc');
-
+        
         $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
         $photosets = $paginator->execute();
 
         $this->view->paginator = $paginator;
+        $this->view->model = $model;
         $this->view->photosets = $photosets;
     }
 
     public function addAction()
     {
         // add body
-        $form = new God_Form_Model();
-        $form->submit->setLabel('Add');
+        $form = new God_Form_AddModel();
         $this->view->form = $form;
     }
 
@@ -80,32 +85,53 @@ class ModelController extends Coda_Controller
 
     public function rankingAction()
     {
+        $model = null;
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
-            $model->ranking++;
-            $model->search = (bool)$this->_request->getParam('search');
-            $model->save();
+
+            // Check the ranking value to prevent mis clicks and multi clicks
+            if ($model->ranking == $this->_request->getParam('model_ranking')) {
+                $model->ranking++;
+                $model->rankDate = date("Y-m-d h:i:s", mktime());
+                $model->search = (bool)$this->_request->getParam('search');
+                $model->save();
+            }
         }
 
-        $modelTable = new God_Model_ModelTable;
+        $modelRanking = new God_Model_ModelRanking($model);
 
-        // Get model ranking stats
-        $rankingStats = $modelTable->getRankingStats(2, true);
-
-        // Choose a random model stat
-        $rankingStatsKey = array_rand($rankingStats, 1);
-
-        // Get models where ranking = the chosen stat
-        $models = $modelTable->getModelsByRanking($rankingStatsKey);
-
-        $this->view->models = $models;
-        $this->view->modelKeys = array_rand($models->toArray(), 2);
+        $this->view->modes = $modelRanking->getModes();
+        $this->view->mode = $modelRanking->getMode();
+        $this->view->models = $modelRanking->getRankingModels();
+        $this->view->modelCount = $modelRanking->getModelCount();
     }
 
     public function statsAction()
     {
-        $modelTable = new God_Model_ModelTable;
+        $modelTable = new God_Model_ModelTable();
         $this->view->rankings = $modelTable->getRankingStats();
+    }
+    
+    public function thumbnailerAction()
+    {
+        $query = Doctrine_Core::getTable('God_Model_Photoset')
+            ->createQuery('p')
+            ->leftJoin('p.model m')
+            ->innerJoin('m.names n')
+
+            ->where('m.active = ?', 1)
+            ->andWhere('m.ranking > -1')
+            ->andWhere('n.default = ?', 1)
+            ->andWhere('p.active = ?', 1)
+            ->andWhere('p.manual_thumbnail = ?', 0)
+            ->orderBy('m.ranking desc, n.name asc, p.name asc');
+    
+        $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
+
+        $photosets = $paginator->execute();
+
+        $this->view->paginator = $paginator;
+        $this->view->photosets = $photosets;
     }
 
     /*
@@ -152,4 +178,3 @@ class ModelController extends Coda_Controller
     }
 
 }
-

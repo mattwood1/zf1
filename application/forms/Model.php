@@ -1,5 +1,5 @@
 <?php
-class God_Form_Model extends Zend_Form
+class God_Form_Model extends Twitter_Bootstrap_Form_Vertical
 {
     public function init()
     {

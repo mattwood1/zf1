@@ -1,37 +1,32 @@
 <?php
-    $this->title = $this->photosets[0]->model->getName();
-    $this->headTitle($this->photosets[0]->model->getName());
+    $this->title = $this->model->getName();
+    $this->subtitle = 'Gallery';
+    $this->headTitle($this->model->getName());
 ?>
 
-<?php $this->photosets[0]->model->getName(); ?>
+<?php $this->model->getName(); ?>
 
-<div>
-    <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'edit', 'id' => $this->photosets[0]->model->ID));?>">Edit</a>
-</div>
+<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'view')); ?>
+            
+<?php if ($this->photosets->toArray()): ?>
+<div class="row">
 
-<?php if ($this->photosets): ?>
-    <ul id="photosets" class="clearfix">
-
-        <?php foreach ($this->photosets as $photoset): ?>
-        <li class="<?php echo $photoset->manual_thumbnail ? '' : 'autoThumb'; ?>">
-
-                <div class="image">
-                    <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'view', 'photoset' => $photoset->id),null, true); ?>">
-                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail))); ?>" />
-                    </a>
-                </div>
+    <?php foreach ($this->photosets as $photoset): ?>
+    <div class="col-xs-4 col-sm-3 col-md-2">
+        <a href="<?php echo $photoset->manual_thumbnail ? $this->url(array('controller'=>'gallery', 'action'=>'view', 'photoset' => $photoset->id), null, true) : $this->url(array('controller'=>'gallery', 'action'=>'thumbnail', 'photoset' => $photoset->id), null, true); ?>" class="thumbnail">
+            <div class="image <?php echo $photoset->manual_thumbnail ? '' : 'autothumb' ?>">
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail))); ?>" />
                 <div class="name">
-                    <?php if (! $photoset->manual_thumbnail): ?>
-                        <div class="right">
-                            <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'photoset' => $photoset->id), null, true); ?>">Thumb</a>
-                        </div>
-                    <?php endif; ?>
-                    <div class="text"><?php echo $photoset->name; ?></div>
+                    <?php echo $photoset->name ;?>
                 </div>
-
-        </li>
-        <?php endforeach; ?>
-    </ul>
+            </div>
+        </a>
+    </div>
+    <?php endforeach; ?>
+        
+</div>
+<?php else: ?>
+No Photosets
 <?php endif; ?>
 
 <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>

@@ -1,32 +1,49 @@
 <?php
     $this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->photoset->model->ID), null, true) . '">' . $this->photoset->model->getName() . '</a>';
+    $this->subtitle = $this->photoset->name;
     $this->headTitle($this->photoset->name);
     $this->headTitle($this->photoset->model->getName());
 ?>
 
-<?php echo $this->photoset->name; ?>
+<ul class="nav nav-pills">
+    <li>
+        <a href="<?php echo $this->url(array('action' => 'view'));?>">Images</a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url(array('action' => 'thumbnail'));?>">Change Thumbnail</a>
+    </li>
+</ul>
 
-<pre><?php // var_dump($this->photoset->toArray());?></pre>
-
-<form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post">
+<form action="<?php echo $this->url(array('action' => 'thumbnail')); ?>" method="post" class="form-inline" role="form">
 
     <?php if (is_array($this->files)): ?>
-        <ul id="photosets" class="clearfix">
-            <?php foreach ($this->files as $file):?>
-            <li class="<?php echo $this->photoset->thumbnail != $file['uri'] ? '' : 'autoThumb'; ?>">
-                <label for="<?php echo md5($file['name']); ?>" class="image" >
-                    <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'thumbnail', 'id' => rawurlencode($file['uri']), 'photoset' => null)); ?>" />
+    <div class="row">
+        <?php foreach ($this->files as $file):?>
+        <div class="col-xs-4 col-sm-3 col-md-2">
+            <div class="thumbnail">
+                <label for="<?php echo md5($file['name']); ?>" class="image">
+                    <div class="image">
+                        <img src="<?php echo $this->url(array('controller' => 'image', 'action' => 'thumbnail', 'id' => rawurlencode($file['uri']), 'photoset' => null)); ?>" />
+                    </div>
                 </label>
-                <input type="radio" id="<?php echo md5($file['name']); ?>" name="thumbnail" value="<?php echo $file['uri']; ?>" <?php echo $this->photoset->thumbnail == $file['uri'] ? ' checked="checked"' : ''; ?> />
-            </li>
-            <?php endforeach; ?>
-        </ul>
+                <div class="caption">
+                    <input type="radio" id="<?php echo md5($file['name']); ?>" name="thumbnail" value="<?php echo $file['uri']; ?>" <?php echo $this->photoset->thumbnail == $file['uri'] ? ' checked="checked"' : ''; ?> />
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
     <?php else:?>
         <div>
             <?php echo $this->files; ?>
         </div>
     <?php endif; ?>
     <input type="hidden" name="referer" value="<?php echo array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : ''; ?>" />
-    <button type="submit">Update</button>
-    <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> /><label for="disableCheckbox">Disable photoset</label>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="disable" value="1" id="disableCheckbox" <?php echo $this->photoset->active ? '' : ' checked="checked"'; ?> />
+            Disable photoset
+        </label>
+    </div>
 </form>

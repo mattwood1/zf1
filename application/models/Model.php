@@ -59,6 +59,11 @@ class God_Model_Model extends Doctrine_Record
                 'length'             => '25'
         ));
 
+        $this->hasColumn('rankDate', 'timestamp', 25, array(
+                'type'               => 'timestamp',
+                'length'             => '25'
+        ));
+
         $this->hasColumn('photosetsChecked', 'date', 25, array(
                 'type'               => 'date',
                 'length'             => '25'
@@ -192,26 +197,36 @@ class God_Model_Model extends Doctrine_Record
 
     public function getLatestPhotoset()
     {
+        $keys = array();
         if ($this->photosets) {
             foreach ($this->photosets as $key => $photoset) {
-                if (! $photoset->isActive() || ! $photoset->isManualThumb() ) {
-                    unset($this->photosets[$key]);
+                if ($photoset->isActive() && $photoset->isManualThumb() ) {
+                    $keys[] = $key;
                 }
             }
         }
-        $key = array_pop(array_keys($this->photosets->toArray()));
+        
+        $key = array_pop($keys);
         return $this->photosets[$key];
     }
 
     public function getRandomPhotoset()
     {
         if ($this->photosets) { // TODO: Needs to be $this->photosets->getActive()
-            $key = array_rand($this->photosets->toArray(), 1);
-            $photoset = $this->photosets[$key];
+            
+            $photosets = clone($this->photosets);
+            $photosetKeys = array();
+            
+            foreach ($photosets as $photosetKey => $photoset) {
+                if ($photoset->active == 0) {
+                    unset($photosets[$photosetKey]);
+                } else {
+                    $photosetKeys[$photosetKey] = $photosetKey;
+                }
+            }
+            $key = array_rand($photosetKeys, 1);
 
-            if ($photoset->active == 0) $this->getRandomPhotoset(); // Makes this redundant
-
-            return $photoset;
+            return $this->photosets[$key];
         }
         return null;
     }

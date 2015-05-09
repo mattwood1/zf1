@@ -1,5 +1,7 @@
-<li>
-    <a href="<?php echo $this->url(array('controller'=>'image', 'action'=>'large', 'id'=>rawurlencode($this->uri), 'photoset' => null)); ?>">
-        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($this->uri)), null, true); ?>" />
+<div class="col-xs-4 col-sm-3 col-md-2">
+    <a href="<?php echo $this->url(array('controller'=>'image', 'action'=>'large', 'id'=>rawurlencode($this->uri)), null, true); ?>" class="thumbnail">
+        <div class="image">
+            <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($this->uri))); ?>" />
+        </div>
     </a>
-</li>
+</div>
