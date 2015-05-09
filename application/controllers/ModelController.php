@@ -124,7 +124,7 @@ class ModelController extends Coda_Controller
             ->andWhere('n.default = ?', 1)
             ->andWhere('p.active = ?', 1)
             ->andWhere('p.manual_thumbnail = ?', 0)
-            ->orderBy('m.ranking desc, p.name asc');
+            ->orderBy('m.ranking desc, n.name asc, p.name asc');
     
         $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
