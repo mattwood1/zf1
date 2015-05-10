@@ -12,13 +12,14 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         $modelsQuery = $modelTable->getInstance()
             ->createQuery('m')
             ->leftJoin('m.photosets p')
-            ->where('photosetsChecked < ?', date("Y-m-d", strtotime("-1 day")))
+            ->where('photosetsChecked < ?', date("Y-m-d", strtotime("today")))
             ->orWhere('photosetsChecked = ?', "0000-00-00")
-            ->andWhere('ranking >= ?', 0)
+            ->andWhere('m.ranking >= ?', 0)
             ->andWhere('p.active = ?', 1);
         $models = $modelsQuery->execute();
-
+        
         foreach ($models as $model) {
+            echo $model->getName() . "\n";
             if ($model->isActive()) {
                 $model->updatePhotosets();
             }

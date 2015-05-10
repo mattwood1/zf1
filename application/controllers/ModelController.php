@@ -38,8 +38,13 @@ class ModelController extends Coda_Controller
 
     public function addAction()
     {
-        // add body
         $form = new God_Form_AddModel();
+        
+        if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
+            $modelTable = new God_Model_ModelTable();
+            $modelTable->addModel($form->getValue('name'));
+        }
+        
         $this->view->form = $form;
     }
 

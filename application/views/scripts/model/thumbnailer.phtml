@@ -5,6 +5,7 @@
 <div class="row">
 
 <?php
+if (count($this->photosets)):
 foreach ($this->photosets as $photoset):
 ?>
 
@@ -24,7 +25,11 @@ foreach ($this->photosets as $photoset):
 
 <?php
 endforeach;
-?>
+else:?>
+    <div class="col-md-12">
+        <p>No photosets need thumbnails to be set</p>
+    </div>
+<?php endif; ?>
 
 </div>
 

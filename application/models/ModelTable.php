@@ -125,4 +125,27 @@ class God_Model_ModelTable extends Doctrine_Record
     {
         return $this->_query;
     }
+    
+    public function addModel($name)
+    {
+        $modelnames = $this->getInstance()->createQuery('m')
+                ->leftJoin('m.names n')
+                ->where('n.name = ?', $name)
+                ->execute();
+        
+        if (count($modelnames) == 0) {
+            $model = new God_Model_Model();
+            $model->name = $name;
+            $model->save();
+            
+            $modelname = new God_Model_ModelName();
+            $modelname->name = $name;
+            $modelname->model_id = $model->id;
+            $modelname->default = 1;
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

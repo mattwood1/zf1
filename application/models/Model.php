@@ -13,12 +13,12 @@ class God_Model_Model extends Doctrine_Record
                 'autoincrement'      => true,
                 'length'             => '11',
         ));
-/*
+
         $this->hasColumn('name', 'string', 1000, array(
                 'type'               => 'string',
                 'length'             => '1000',
         ));
-*/
+
         $this->hasColumn('path', 'string', 1000, array(
                 'type'               => 'string',
                 'length'             => '1000'
@@ -249,7 +249,7 @@ class God_Model_Model extends Doctrine_Record
 
         return $weblinks;
     }
-
+    
 
 /*
     public function getModelName()
