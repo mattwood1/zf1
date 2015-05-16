@@ -4,6 +4,8 @@ class God_Form_Login extends Twitter_Bootstrap_Form_Horizontal
     public function init()
     {
         $this->setColType('sm');
+        $this->setLabelColSize('4');
+        $this->setFieldColSize('8');
         
         $this->addElement("text", "username", array(
                 "label" => "Username",
