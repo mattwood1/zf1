@@ -71,7 +71,7 @@ class GalleryController extends Coda_Controller
             }
             closedir($handle);
         } else {
-            return 'Cannot open '.$_SERVER['DOCUMENT_ROOT'].'/'.$path;
+            return false;
         }
 
         ksort($data);
