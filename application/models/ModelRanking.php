@@ -1,7 +1,7 @@
 <?php
 class God_Model_ModelRanking extends God_Model_ModelTable {
 
-    private $_factor = 10;
+    private $_factor = 20;
     private $_modes = array();
     private $_mode = null;
     private $_models = array();
