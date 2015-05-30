@@ -48,6 +48,10 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
             $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]));
         }
         
+        if ($this->_highTop >= $this->_topLow) {
+            $this->_highTop = $this->_topLow - 1;
+        }
+        
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             // Bottom
             if ($rankingStatKey < $this->_highBottom) {
@@ -66,6 +70,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         if (@$_GET['test']) {
             _d(array('$this->_rankingStats' => $this->_rankingStats));
             _d(array('modes' => $this->_modes));
+            _d(array('mode' => $this->_mode));
             
             _d(array('Top High' => $this->_topHigh, 'Top Low' => $this->_topLow));
             _d(array('High Key' => $this->_highKey));

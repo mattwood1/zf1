@@ -59,21 +59,6 @@ class God_Model_ModelTable extends Doctrine_Record
 
         $ranking = $this->_ranking;
         
-        if (@$_GET['test'] == 1) {
-            $ranking = array(
-                1 => 1,
-                2 => 1,
-                3 => 1,
-                4 => 11,
-                5 => 11,
-                6 => 10,
-                7 => 10,
-                8 => 10,
-                9 => 1,
-                10 => 1
-            );
-        }
-        
         if ($minimum) {
             foreach ($ranking as $rank => $number) {
                 if ($number < $minimum) {
