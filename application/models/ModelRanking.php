@@ -25,8 +25,16 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $this->_rankingStats = $this->getRankingStats(2, true);
         $this->_ignoreModel = $ignoreModel;
         
+        // Sorting Top Ranking
         $this->_topHigh = max(array_keys($this->getRankingStats(1, true)));
         $this->_topLow = (int)($this->_topHigh - floor(($this->_topHigh / 100) * $this->_factor));
+        
+        foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
+            if ($rankingStatKey >= $this->_topLow) {
+                $this->_topRankingStats[$rankingStatKey] = $rankingStat;
+                unset($this->_rankingStats[$rankingStatKey]);
+            }
+        }
         
         $this->_highKey = reset(array_keys($this->_rankingStats, max($this->_rankingStats)));
         
@@ -53,13 +61,10 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         }
         
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
-            // Bottom
             if ($rankingStatKey < $this->_highBottom) {
                 $this->_bottomRankingStats[$rankingStatKey] = $rankingStat;
             } elseif ($rankingStatKey >= $this->_highBottom && $rankingStatKey <= $this->_highTop) {
                 $this->_highRankingStats[$rankingStatKey] = $rankingStat;
-            } elseif ($rankingStatKey >= $this->_topLow) {
-                $this->_topRankingStats[$rankingStatKey] = $rankingStat;
             }
         }
         
