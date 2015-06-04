@@ -56,12 +56,14 @@
                 </div>
             </div>
             <?php endforeach; ?>
+            
+            <div class="col-xs-12">
+                <div style="padding:9px;">
+                    <a href="<?php echo $this->url(array('action' => 'ranking'));?>" class="btn btn-default btn-block">Try Again</a>
+                </div>
+            </div>
 	</div>
     </div>
 </div>
-
-<ul id="menu" class="clearfix">
-    <li><a href="<?php echo $this->url(array('action' => 'ranking'));?>">Try Again</a></li>
-</ul>
 
 <?php echo implode(', ', $this->modes); ?>
