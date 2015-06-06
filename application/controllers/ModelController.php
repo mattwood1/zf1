@@ -2,9 +2,11 @@
 
 class ModelController extends Coda_Controller
 {
+    protected $modelSession;
 
     public function init()
     {
+        $this->modelSession = new Zend_Session_Namespace(get_class());
         /* Initialize action controller here */
     }
 
@@ -96,14 +98,18 @@ class ModelController extends Coda_Controller
 
             // Check the ranking value to prevent mis clicks and multi clicks
             if ($model->ranking == $this->_request->getParam('model_ranking')) {
+                unset($this->modelSession->ranking[$model->ranking]);
+                
                 $model->ranking++;
                 $model->rankDate = date("Y-m-d h:i:s", mktime());
                 $model->search = (bool)$this->_request->getParam('search');
                 $model->save();
+                
+                $this->modelSession->ranking[$model->ranking] = $model->ID;
             }
         }
 
-        $modelRanking = new God_Model_ModelRanking($model);
+        $modelRanking = new God_Model_ModelRanking($this->modelSession->ranking);
 
         $this->view->modes = $modelRanking->getModes();
         $this->view->mode = $modelRanking->getMode();
