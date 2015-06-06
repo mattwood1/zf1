@@ -236,6 +236,10 @@ footer {
     padding: 5px 10px;
 }
 
+footer .version {
+    padding-left: 5px;
+}
+
 .nav>li>a {
     padding: 10px 10px;
 }
