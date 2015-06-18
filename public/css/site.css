@@ -23,6 +23,18 @@ ul#menu li a:hover {
     
 }
 
+.menu-notification {
+    font-size: 50%;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+}
+
+.menu-notification.large {
+    left: -8px;
+    top: -3px;
+}
+
 /* Table */
 th {
     text-align: left;
