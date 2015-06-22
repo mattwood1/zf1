@@ -49,7 +49,31 @@ class TestController extends Coda_Controller
                 $directories = new God_Model_File($path);
 
                 foreach ($directories->getDirectories() as $directory) {
+                    
+                    $files = new God_Model_File($path .'/'.$directory);
 
+                    // Query for photoset
+                    $photosetFound = false;
+                    foreach ($model->photosets as $photoset) {
+                        if ($photoset->path == $model->path.'/'.$directory) {
+                            $photosetFound = true;
+                        }
+                    }
+                    
+                    if ($photosetFound == false && is_array($files)) {
+                        
+                        $model->photosets[]->fromArray(array(
+                            'name' => $directory,
+                            'path' => $model->path.'/'.$directory,
+                            'uri' => $model->uri.'/'.$directory,
+                            'thumbnail' => $model->path.'/'.$directory.'/'.$files[0]
+                        ));
+                        
+                        $model->save();
+
+                    }
+                    
+                    /*
                     $files = new God_Model_File($path .'/'.$directory);
 
                     foreach ($files->getFiles() as $file) {
@@ -62,6 +86,7 @@ class TestController extends Coda_Controller
                         _d(implode(",", $hash));
                         
                     }
+                    */
 
                 }
                 
