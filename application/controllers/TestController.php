@@ -32,6 +32,7 @@ class TestController extends Coda_Controller
             //->orWhere('photosetsChecked = ?', "0000-00-00")
             ->andWhere('m.ranking >= ?', 0)
             ->andWhere('p.active = ?', 1)
+            ->andWhere('m.id = ?', 785)
                 
             ->limit(1);
         $models = $modelsQuery->execute();
@@ -50,7 +51,8 @@ class TestController extends Coda_Controller
 
                 foreach ($directories->getDirectories() as $directory) {
                     
-                    $files = new God_Model_File($path .'/'.$directory);
+                    $file = new God_Model_File($path .'/'.$directory);
+                    $files = $file->getFiles();
 
                     // Query for photoset
                     $photosetFound = false;
@@ -60,17 +62,26 @@ class TestController extends Coda_Controller
                         }
                     }
                     
-                    if ($photosetFound == false && is_array($files)) {
+                    _d(array($directory => $photosetFound));
+                    
+                    if ($photosetFound == FALSE) {
+                        _d(array('files' => $files));
+                    }
+                    
+                    if ( $photosetFound == false && is_array($files) ) {
                         
-                        $model->photosets[]->fromArray(array(
+                        $photoset = new God_Model_Photoset();
+                        $photoset->fromArray(array(
                             'name' => $directory,
                             'path' => $model->path.'/'.$directory,
                             'uri' => $model->uri.'/'.$directory,
-                            'thumbnail' => $model->path.'/'.$directory.'/'.$files[0]
+                            'thumbnail' => $model->path.'/'.$directory.'/'.$files[floor(count($files)*0.6)]
                         ));
                         
-                        $model->save();
+                        $photoset->link('model', array($model->ID));
+                        $photoset->save();
 
+                        _d($model, $photoset);
                     }
                     
                     /*

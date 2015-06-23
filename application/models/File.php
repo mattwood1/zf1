@@ -37,13 +37,13 @@ class God_Model_File
 
     public function getDirectories()
     {
-        asort($this->_directories);
+        sort($this->_directories);
         return $this->_directories;
     }
     
     public function getFiles()
     {
-        asort($this->_files);
+        sort($this->_files);
         return $this->_files;
     }
 }
