@@ -44,13 +44,74 @@ class God_Model_Model extends God_Model_Base_Model
         }
         return $this->names;
     }
+    
+    public function updatePhotosets()
+    {
+        $path = APPLICATION_PATH . '/../public' . $this->path;
+        
+        $directories = new God_Model_File($path);
+
+        foreach ($directories->getDirectories() as $directory) {
+
+            $file = new God_Model_File($path . '/' . $directory);
+            $files = $file->getFiles();
+
+            // Query for photoset
+            $photosetFound = false;
+            foreach ( $this->photosets as $photoset ) {
+                if ( $photoset->path == $this->path . '/' . $directory ) {
+                    $photosetFound = true;
+                }
+            }
+
+            if ( $photosetFound == false && is_array($files) ) {
+
+                $photoset = new God_Model_Photoset();
+                $photoset->fromArray(array(
+                    'name' => $directory,
+                    'path' => $this->path . '/' . $directory,
+                    'uri' => $this->uri . '/' . $directory,
+                    'thumbnail' => $this->path . '/' . $directory . '/' . $files[floor(count($files)*0.6)]
+                ));
+
+                $photoset->link('model', array($this->ID));
+                $photoset->save();
+            }
+            
+            /**
+             * Image updates
+             */
+            /*
+            foreach ( $this->photosets as $photoset ) {
+                if (
+                    strtotime($photoset->imagesCheckedDate) < strtotime("-1 month")
+                    || $photoset->imagesCheckedDate = "0000-00-00"
+                ) {
+                    
+                    $files = new God_Model_File($path .'/'.$directory);
+
+                    foreach ($files->getFiles() as $file) {
+                        
+                        $filepath = $path.'/'.$directory.'/'.$file;
+
+                        _d($filepath);
+
+                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash($filepath));
+
+                        _d(implode(",", $hash));
+
+                }
+            }
+            */
+        }
+    }
 
     /**
      * Update photosets that are on disk
      *
      * Run by a CRON job
      */
-    public function updatePhotosets()
+    public function updatePhotosetsOld()
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
             if ($handle = opendir(APPLICATION_PATH.'/../public'.$this->path)) {
