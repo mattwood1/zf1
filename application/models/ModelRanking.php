@@ -44,12 +44,6 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
         }
         
-        if (array_key_exists($highBottomPrev, $this->_rankingStats)) {
-            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev]))-1;
-        } else {
-            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev+1]));
-        }
-                
         if (array_key_exists($this->_highKey - 1, $this->_rankingStats)) {
             $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey - 1]));
         } else {
@@ -60,9 +54,8 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
             $this->_highTop = $this->_topLow - 1;
         }
 
-        // Check consequitive keys
+        // Check consequitive keys and set highBottom
         for ($currentHighKey = $this->_highTop; $currentHighKey >= 0; $currentHighKey--) {
-//            _d( array('c' => $currentHighKey, 'iskey' => array_key_exists($currentHighKey, $this->_rankingStats) ));
             if (!array_key_exists($currentHighKey, $this->_rankingStats) ) {
                 $this->_highBottom = $currentHighKey+1;
                 break;
