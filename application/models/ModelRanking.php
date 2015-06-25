@@ -59,7 +59,16 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         if ($this->_highTop >= $this->_topLow) {
             $this->_highTop = $this->_topLow - 1;
         }
-        
+
+        // Check consequitive keys
+        for ($currentHighKey = $this->_highTop; $currentHighKey >= 0; $currentHighKey--) {
+//            _d( array('c' => $currentHighKey, 'iskey' => array_key_exists($currentHighKey, $this->_rankingStats) ));
+            if (!array_key_exists($currentHighKey, $this->_rankingStats) ) {
+                $this->_highBottom = $currentHighKey+1;
+                break;
+            }
+        }
+
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             if ($rankingStatKey < $this->_highBottom) {
                 $this->_bottomRankingStats[$rankingStatKey] = $rankingStat;
