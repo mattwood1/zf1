@@ -79,7 +79,7 @@ class God_Model_Model extends God_Model_Base_Model
             }
             
             /**
-             * Image updates
+             * Image updates, maybe better in photosets
              */
             /*
             foreach ( $this->photosets as $photoset ) {
