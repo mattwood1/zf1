@@ -108,4 +108,13 @@ class TestController extends Coda_Controller
         }
         exit;
     }
+    
+    public function testAction()
+    {
+        $model = God_Model_ModelTable::getInstance()->find(1);
+        
+        $model->updatePhotosets();
+        
+        exit;
+    }
 }

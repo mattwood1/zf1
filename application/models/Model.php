@@ -49,12 +49,9 @@ class God_Model_Model extends God_Model_Base_Model
     {
         $path = APPLICATION_PATH . '/../public' . $this->path;
         
-        $directories = new God_Model_File($path);
-
-        foreach ($directories->getDirectories() as $directory) {
-
-            $file = new God_Model_File($path . '/' . $directory);
-            $files = $file->getFiles();
+        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {
+            
+            $files = God_Model_File::scanPath($path . '/' . $directory)->getFiles();
 
             // Query for photoset
             $photosetFound = false;

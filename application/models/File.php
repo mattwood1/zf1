@@ -34,6 +34,16 @@ class God_Model_File
     {
         closedir($this->_handle);
     }
+    
+    /**
+     * Static function to perform a directory scan
+     * @param string $path
+     * @return \self
+     */
+    public static function scanPath($path)
+    {
+        return new self($path);
+    }
 
     public function getDirectories()
     {
