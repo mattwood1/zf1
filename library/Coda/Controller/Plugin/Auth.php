@@ -8,7 +8,7 @@ class Coda_Controller_Plugin_Auth extends Zend_Controller_Plugin_Abstract
             
             // Store the url in the session if user is not logged in and is not 
             // The log in page.
-            if ($request->getPathInfo() != '/auth/login') {
+            if ( !in_array($request->getPathInfo(), array('/auth/login', '/favicon.ico')) ) {
                 $_SESSION['requestUrl'] = $request->getPathInfo();
             }
             
