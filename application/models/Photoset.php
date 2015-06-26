@@ -16,5 +16,12 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         }
         return false;
     }
+    
+    public function updateImages()
+    {
+        return;
+        
+        
+    }
 
 }

@@ -51,8 +51,6 @@ class God_Model_Model extends God_Model_Base_Model
         
         foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {
             
-            $files = God_Model_File::scanPath($path . '/' . $directory)->getFiles();
-
             // Query for photoset
             $photosetFound = false;
             foreach ( $this->photosets as $photoset ) {
@@ -61,7 +59,7 @@ class God_Model_Model extends God_Model_Base_Model
                 }
             }
 
-            if ( $photosetFound == false && is_array($files) ) {
+            if ( $photosetFound == false && is_array( God_Model_File::scanPath($path . '/' . $directory)->getFiles() ) ) {
 
                 $photoset = new God_Model_Photoset();
                 $photoset->fromArray(array(
@@ -73,6 +71,8 @@ class God_Model_Model extends God_Model_Base_Model
 
                 $photoset->link('model', array($this->ID));
                 $photoset->save();
+                
+                $photoset->updateImages();
             }
             
             /**
