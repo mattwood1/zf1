@@ -80,24 +80,7 @@ class God_Model_Model extends God_Model_Base_Model
              */
             /*
             foreach ( $this->photosets as $photoset ) {
-                if (
-                    strtotime($photoset->imagesCheckedDate) < strtotime("-1 month")
-                    || $photoset->imagesCheckedDate = "0000-00-00"
-                ) {
-                    
-                    $files = new God_Model_File($path .'/'.$directory);
-
-                    foreach ($files->getFiles() as $file) {
-                        
-                        $filepath = $path.'/'.$directory.'/'.$file;
-
-                        _d($filepath);
-
-                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash($filepath));
-
-                        _d(implode(",", $hash));
-
-                }
+                
             }
             */
         }
