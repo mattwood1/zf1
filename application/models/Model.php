@@ -59,7 +59,7 @@ class God_Model_Model extends God_Model_Base_Model
                 }
             }
 
-            if ( $photosetFound == false && is_array( God_Model_File::scanPath($path . '/' . $directory)->getFiles() ) ) {
+            if ( $photosetFound == false && is_array( $files = God_Model_File::scanPath($path . '/' . $directory)->getFiles() ) ) {
 
                 $photoset = new God_Model_Photoset();
                 $photoset->fromArray(array(
