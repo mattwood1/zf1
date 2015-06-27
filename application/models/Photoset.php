@@ -22,15 +22,16 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         return;
         
         if (
-            strtotime($photoset->imagesCheckedDate) < strtotime("-1 month")
-            || $photoset->imagesCheckedDate = "0000-00-00"
+            strtotime($this->imagesCheckedDate) < strtotime("-1 month")
+            || $this->imagesCheckedDate = "0000-00-00"
         ) {
 
-            $files = God_Model_File::scanPath($path .'/'.$directory)->getFiles();
+            $path = APPLICATION_PATH . '/../public' . $this->path;
+            $files = God_Model_File::scanPath($path)->getFiles();
 
-            foreach ($files->getFiles() as $file) {
+            foreach ($files as $file) {
 
-                $filepath = $path.'/'.$directory.'/'.$file;
+                $filepath = $path.'/'.$file;
 
                 _d($filepath);
 
@@ -38,7 +39,9 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
                 _d(implode(",", $hash));
             }
-
+            
+            $this->imagesCheckedDate = date("Y-m-d");
+            
         }
     }
 

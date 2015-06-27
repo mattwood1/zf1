@@ -109,11 +109,11 @@ class TestController extends Coda_Controller
         exit;
     }
     
-    public function testAction()
+    public function updateImagesAction()
     {
-        $model = God_Model_ModelTable::getInstance()->find(1);
+        $photoset = God_Model_PhotosetTable::getInstance()->find(1);
         
-        $model->updatePhotosets();
+        $photoset->updateImages();
         
         exit;
     }
