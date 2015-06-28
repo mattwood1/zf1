@@ -56,10 +56,15 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
 
         // Check consequitive keys and set highBottom
         for ($currentHighKey = $this->_highTop; $currentHighKey >= 0; $currentHighKey--) {
-            if (!array_key_exists($currentHighKey, $this->_rankingStats)
-                || $this->_rankingStats[$currentHighKey] < $this->_rankingStats[$highBottomPrev]
-            ) {
+            
+            // Concurrency
+            if ( !array_key_exists($currentHighKey, $this->_rankingStats) ) {
                 $this->_highBottom = $currentHighKey+1;
+                break;
+            } 
+            // Ensures that if it is concurrent it needs to be less than highBottomPrev
+            elseif ( $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
+                $this->_highBottom = $currentHighKey;
                 break;
             }
         }
