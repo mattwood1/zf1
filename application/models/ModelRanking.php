@@ -40,8 +40,12 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
         if (array_key_exists($this->_highKey -1, $this->_rankingStats)) {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
+            $highBottomMode = 'flat';
+//            _d(array('1st' => $highBottomPrev, $highBottomMode));
         } else {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
+            $highBottomMode = 'spike';
+//            _d(array('2nd' => $highBottomPrev, $highBottomMode));
         }
         
         if (array_key_exists($this->_highKey - 1, $this->_rankingStats)) {
@@ -63,10 +67,15 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 break;
             } 
             // Ensures that if it is concurrent it needs to be less than highBottomPrev
-            elseif ( $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
+            elseif ( $highBottomMode == 'spike' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
                 $this->_highBottom = $currentHighKey;
                 break;
             }
+            elseif ( $highBottomMode == 'flst' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
+                $this->_highBottom = $currentHighKey;
+                break;
+            }
+
         }
 
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
