@@ -71,7 +71,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 $this->_highBottom = $currentHighKey;
                 break;
             }
-            elseif ( $highBottomMode == 'flst' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
+            elseif ( $highBottomMode == 'flat' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
                 $this->_highBottom = $currentHighKey;
                 break;
             }
