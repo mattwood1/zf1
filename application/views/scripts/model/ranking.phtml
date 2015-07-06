@@ -53,12 +53,21 @@
                 </div>
             </div>
             <?php endforeach; ?>
-            
+	</div>
+        
+        <div class="row">
             <div class="col-xs-12">
                 <div style="padding:0 9px 9px 9px;">
                     <a href="<?php echo $this->url(array('action' => 'ranking'));?>" class="btn btn-default btn-block">Try Again</a>
                 </div>
             </div>
-	</div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="padding:0 9px 9px 9px;"><?php echo implode(", ", $this->modes); ?></div>
+            </div>
+        </div>
+        
     </div>
 </div>

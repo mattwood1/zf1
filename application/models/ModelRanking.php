@@ -40,12 +40,16 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
         if (array_key_exists($this->_highKey -1, $this->_rankingStats)) {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
-            $highBottomMode = 'flat';
+            $highBottomMode = 'spike';
 //            _d(array('1st' => $highBottomPrev, $highBottomMode));
         } else {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
-            $highBottomMode = 'spike';
+            $highBottomMode = 'flat';
 //            _d(array('2nd' => $highBottomPrev, $highBottomMode));
+        }
+        
+        if ($highBottomMode == 'flat') {
+            _d($highBottomMode);
         }
         
         if (array_key_exists($this->_highKey - 1, $this->_rankingStats)) {
