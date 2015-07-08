@@ -14,14 +14,14 @@ class God_Model_Base_ImageHash extends Doctrine_Record
                 'length'             => '11',
         ));
 
-        $this->hasColumn('image_id', 'string', 5, array(
-                'type'               => 'string',
-                'length'             => '5'
-        ));
-
-        $this->hasColumn('duplicate_image_id', 'integer', 11, array(
+        $this->hasColumn('image_id', 'integer', 11, array(
                 'type'               => 'integer',
                 'length'             => '11'
+        ));
+
+        $this->hasColumn('hash', 'string', 50, array(
+                'type'               => 'string',
+                'length'             => '50'
         ));
     }
     

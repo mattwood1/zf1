@@ -111,7 +111,7 @@ class TestController extends Coda_Controller
     
     public function updateImagesAction()
     {
-        $photoset = God_Model_PhotosetTable::getInstance()->find(1);
+        $photoset = God_Model_PhotosetTable::getInstance()->find(14374);
         
         $photoset->updateImages();
         

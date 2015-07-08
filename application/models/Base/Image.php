@@ -5,7 +5,7 @@ class God_Model_Base_Image extends Doctrine_Record
     {
         $this->setTableName('images');
 
-        $this->hasColumn('ID', 'integer', 11, array(
+        $this->hasColumn('id', 'integer', 11, array(
                 'type'               => 'integer',
                 'fixed'              => 0,
                 'unsigned'           => true,

@@ -19,8 +19,6 @@ class God_Model_Photoset extends God_Model_Base_Photoset
     
     public function updateImages()
     {
-        return;
-        
         if (
             strtotime($this->imagesCheckedDate) < strtotime("-1 month")
             || $this->imagesCheckedDate = "0000-00-00"
@@ -31,17 +29,57 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
             foreach ($files as $file) {
 
-                $filepath = $path.'/'.$file;
+                $realpath = realpath($path.'/'.$file);
+                $urlPath = str_replace(IMAGE_DIR, '', $realpath);
 
-                _d($filepath);
+//                _d($urlPath);
+                
+                $image = God_Model_ImageTable::getInstance()->createQuery('i')
+                        ->where('filename = ?', $urlPath)
+                        ->fetchOne();
+                
+                if (!$image) {
+                    $image = new God_Model_Image();
+                }
+                
+                $imageInfo = getimagesize(IMAGE_DIR . $urlPath);
+                        
+                if ($imageInfo[0] && $imageInfo[1]) {
+                
+                    $imageData = array(
+                        'photoset_id' => $this->id,
+                        'width' => $imageInfo[0],
+                        'height' => $imageInfo[1],
+                        'bits' => $imageInfo['bits'],
+                        'channels' => $imageInfo['channels'],
+                        'mime' => $imageInfo['mime'],
+                        'filename' => $urlPath                        
+                    );
 
-                $hash = ph_dct_imagehash_to_array(ph_dct_imagehash($filepath));
+                    $image->fromArray($imageData);                
+                    $image->save();
 
-                _d(implode(",", $hash));
+                    $imageHash = God_Model_ImageHashTable::getInstance()->createQuery('ih')
+                            ->where('image_id = ?', $image->id)
+                            ->fetchOne();
+
+                    if (!$imageHash) {
+                        $imageHash = new God_Model_ImageHash();
+                    }
+
+                    $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
+
+                    $imageHash->fromArray(array(
+                        'hash' => implode(",", $hash),
+                        'image_id' => $image->id
+                    ));
+
+                    $imageHash->save();
+                }
             }
             
             $this->imagesCheckedDate = date("Y-m-d");
-            
+            $this->save();
         }
     }
 

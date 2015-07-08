@@ -32,7 +32,9 @@ class God_Model_File
     
     public function __destruct()
     {
-        closedir($this->_handle);
+        if (is_resource($this->_handle)) {
+            closedir($this->_handle);
+        }
     }
     
     /**
