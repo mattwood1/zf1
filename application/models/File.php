@@ -13,6 +13,12 @@ class God_Model_File
     public function __construct($path)
     {
         $this->_path = $path;
+        
+        if (!file_exists($this->_path)) {
+//            _dexit(realpath($this->_path));
+//            mkdir(realpath($this->_path), 0777);
+        }
+        
         $this->_handle = opendir($path);
         
         if ($this->_handle) {
