@@ -1,98 +1,6 @@
 <?php
-class God_Model_Model extends Doctrine_Record
+class God_Model_Model extends God_Model_Base_Model
 {
-    public function setTableDefinition()
-    {
-        $this->setTableName('models');
-
-        $this->hasColumn('ID', 'integer', 11, array(
-                'type'               => 'integer',
-                'fixed'              => 0,
-                'unsigned'           => true,
-                'primary'            => true,
-                'autoincrement'      => true,
-                'length'             => '11',
-        ));
-
-        $this->hasColumn('name', 'string', 1000, array(
-                'type'               => 'string',
-                'length'             => '1000',
-        ));
-
-        $this->hasColumn('path', 'string', 1000, array(
-                'type'               => 'string',
-                'length'             => '1000'
-        ));
-
-        $this->hasColumn('uri', 'string', 1000, array(
-                'type'               => 'string',
-                'length'             => '1000'
-        ));
-
-        $this->hasColumn('active', 'boolean', 25, array(
-                'type'               => 'boolean',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('ranking', 'integer', 11, array(
-                'type'               => 'integer',
-                'length'             => '11'
-        ));
-
-        $this->hasColumn('date', 'date', 25, array(
-                'type'               => 'date',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('search', 'boolean', 25, array(
-                'type'               => 'boolean',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('searched', 'boolean', 25, array(
-                'type'               => 'boolean',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('datesearched', 'timestamp', 25, array(
-                'type'               => 'timestamp',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('rankDate', 'timestamp', 25, array(
-                'type'               => 'timestamp',
-                'length'             => '25'
-        ));
-
-        $this->hasColumn('photosetsChecked', 'date', 25, array(
-                'type'               => 'date',
-                'length'             => '25'
-        ));
-
-
-    }
-
-    public function setUp()
-    {
-        $this->hasMany('God_Model_ModelName as names', array(
-                'local'   =>  'ID',
-                'foreign' =>  'model_id',
-                //'cascade' => array('delete')
-        ));
-
-        $this->hasMany('God_Model_Photoset as photosets', array(
-                'local'   =>  'ID',
-                'foreign' =>  'model_id',
-                //'cascade' => array('delete')
-        ));
-
-        $this->hasMany('God_Model_WebLink as webLinks', array(
-                'local'   =>  'ID',
-                'foreign' =>  'model_id',
-                //'cascade' => array('delete')
-        ));
-    }
-
     public function isActive()
     {
         if ($this->active) {
@@ -103,6 +11,7 @@ class God_Model_Model extends Doctrine_Record
 
     public function hasPhotosets()
     {
+        $this->refreshRelated('photosets');
         if ( count($this->photosets) ) {
             return true;
         }
@@ -136,13 +45,53 @@ class God_Model_Model extends Doctrine_Record
         }
         return $this->names;
     }
+    
+    public function updatePhotosets()
+    {
+        $path = APPLICATION_PATH . '/../public' . $this->path;
+        
+        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {
+            
+            // Query for photoset
+            $photosetFound = false;
+            foreach ( $this->photosets as $photoset ) {
+                
+                if ( $photoset->path == $this->path . '/' . $directory ) {
+                    $photosetFound = true;
+                    $photoset->updateImages();
+                }
+            }
+
+            if ( $photosetFound == false && is_array( $files = God_Model_File::scanPath($path . '/' . $directory)->getFiles() ) ) {
+
+                $photoset = new God_Model_Photoset();
+                $photoset->fromArray(array(
+                    'name' => $directory,
+                    'path' => $this->path . '/' . $directory,
+                    'uri' => $this->uri . '/' . $directory,
+                    'thumbnail' => $this->path . '/' . $directory . '/' . $files[floor(count($files)*0.6)]
+                ));
+
+                $photoset->link('model', array($this->ID));
+                $photoset->save();
+                
+                $photoset->updateImages();
+            }  
+            
+        }
+        
+        $this->photosetsChecked = date("Y-m-d", mktime());
+        
+        $this->save();
+
+    }
 
     /**
      * Update photosets that are on disk
      *
      * Run by a CRON job
      */
-    public function updatePhotosets()
+    public function updatePhotosetsOld()
     {
         if ($this->photosetsChecked != date("Y-m-d", mktime())) {
             if ($handle = opendir(APPLICATION_PATH.'/../public'.$this->path)) {

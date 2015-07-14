@@ -1,5 +1,5 @@
 <?php
-class God_Model_Image {
+class God_Model_Image extends God_Model_Base_Image {
 	/**
 	 *
 	 * @param rawurlencode $file
@@ -66,7 +66,7 @@ class God_Model_Image {
 		// CODE STARTS HERE
 		/////////////////////
 
-				$file = rawurldecode($file);
+                $file = rawurldecode($file);
 
 		if (!isset($file))
 		{
@@ -89,18 +89,18 @@ class God_Model_Image {
 		// images must start with '/'
 		if ($image{0} != '/' || strpos(dirname($image), ':') || preg_match('/(\.\.|<|>)/', $image))
 		{
-			header('HTTP/1.1 400 Bad Request');
-			echo 'Error: malformed image path. Image paths must begin with \'/\'';
-			exit();
+                    header('HTTP/1.1 400 Bad Request');
+                    echo 'Error: malformed image path. Image paths must begin with \'/\'';
+                    exit();
 		}
 
 		// If the image doesn't exist, or we haven't been told what it is, there's nothing
 		// that we can do
 		if (!$image)
 		{
-			header('HTTP/1.1 400 Bad Request');
-			echo 'Error: no image was specified';
-			exit();
+                    header('HTTP/1.1 400 Bad Request');
+                    echo 'Error: no image was specified';
+                    exit();
 		}
 
 		// Strip the possible trailing slash off the document root
@@ -108,9 +108,9 @@ class God_Model_Image {
 
 		if (!file_exists($docRoot . $image))
 		{
-			header('HTTP/1.1 404 Not Found');
-			echo 'Error: image does not exist: ' . $docRoot . $image;
-			exit();
+                    header('HTTP/1.1 404 Not Found');
+                    echo 'Error: image does not exist: ' . $docRoot . $image;
+                    exit();
 		}
 
 		// Get the size and MIME type of the requested image
@@ -120,9 +120,9 @@ class God_Model_Image {
 		// Make sure that the requested file is actually an image
 		if (substr($mime, 0, 6) != 'image/')
 		{
-			header('HTTP/1.1 400 Bad Request');
-			echo 'Error: requested file is not an accepted type: ' . $docRoot . $image;
-			exit();
+                    header('HTTP/1.1 400 Bad Request');
+                    echo 'Error: requested file is not an accepted type: ' . $docRoot . $image;
+                    exit();
 		}
 
 		$width			= $size[0];
@@ -132,9 +132,9 @@ class God_Model_Image {
 		$maxHeight		= (isset($_height)) ? (int) $_height : 0;
 
 		if (isset($_GET['color']))
-			$color		= preg_replace('/[^0-9a-fA-F]/', '', (string) $_GET['color']);
+                    $color		= preg_replace('/[^0-9a-fA-F]/', '', (string) $_GET['color']);
 		else
-			$color		= FALSE;
+                    $color		= FALSE;
 
 		// If either a max width or max height are not specified, we default to something
 		// large so the unspecified dimension isn't a constraint on our resized image.
@@ -142,33 +142,33 @@ class God_Model_Image {
 		// all, just coloring.
 		if (!$maxWidth && $maxHeight)
 		{
-			$maxWidth	= 99999999999999;
+                    $maxWidth	= 99999999999999;
 		}
 		elseif ($maxWidth && !$maxHeight)
 		{
-			$maxHeight	= 99999999999999;
+                    $maxHeight	= 99999999999999;
 		}
 		elseif ($color && !$maxWidth && !$maxHeight)
 		{
-			$maxWidth	= $width;
-			$maxHeight	= $height;
+                    $maxWidth	= $width;
+                    $maxHeight	= $height;
 		}
 
 		// If we don't have a max width or max height, OR the image is smaller than both
 		// we do not want to resize it, so we simply output the original image and exit
 		if ((!$maxWidth && !$maxHeight) || (!$color && $maxWidth >= $width && $maxHeight >= $height))
 		{
-			$data	= file_get_contents($docRoot . '/' . $image);
+                    $data	= file_get_contents($docRoot . '/' . $image);
 
-			$lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($docRoot . '/' . $image)) . ' GMT';
-			$etag				= md5($data);
+                    $lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($docRoot . '/' . $image)) . ' GMT';
+                    $etag				= md5($data);
 
-			$this->doConditionalGet($etag, $lastModifiedString);
+                    $this->doConditionalGet($etag, $lastModifiedString);
 
-			header("Content-type: $mime");
-			header('Content-Length: ' . strlen($data));
-			echo $data;
-			exit();
+                    header("Content-type: $mime");
+                    header('Content-Length: ' . strlen($data));
+                    echo $data;
+                    exit();
 		}
 
 		// Ratio cropping
@@ -177,25 +177,25 @@ class God_Model_Image {
 
 		if (isset($_cropratio))
 		{
-			$cropRatio		= explode(':', (string) $_cropratio);
-			if (count($cropRatio) == 2)
-			{
-				$ratioComputed		= $width / $height;
-				$cropRatioComputed	= (float) $cropRatio[0] / (float) $cropRatio[1];
+                    $cropRatio		= explode(':', (string) $_cropratio);
+                    if (count($cropRatio) == 2)
+                    {
+                        $ratioComputed		= $width / $height;
+                        $cropRatioComputed	= (float) $cropRatio[0] / (float) $cropRatio[1];
 
-				if ($ratioComputed < $cropRatioComputed)
-				{ // Image is too tall so we will crop the top and bottom
-					$origHeight	= $height;
-					$height		= $width / $cropRatioComputed;
-					$offsetY	= ($origHeight - $height) / 2;
-				}
-				else if ($ratioComputed > $cropRatioComputed)
-				{ // Image is too wide so we will crop off the left and right sides
-					$origWidth	= $width;
-					$width		= $height * $cropRatioComputed;
-					$offsetX	= ($origWidth - $width) / 2;
-				}
-			}
+                        if ($ratioComputed < $cropRatioComputed)
+                        { // Image is too tall so we will crop the top and bottom
+                                $origHeight	= $height;
+                                $height		= $width / $cropRatioComputed;
+                                $offsetY	= ($origHeight - $height) / 2;
+                        }
+                        else if ($ratioComputed > $cropRatioComputed)
+                        { // Image is too wide so we will crop off the left and right sides
+                                $origWidth	= $width;
+                                $width		= $height * $cropRatioComputed;
+                                $offsetX	= ($origWidth - $width) / 2;
+                        }
+                    }
 		}
 
 		// Setting up the ratios needed for resizing. We will compare these below to determine how to
@@ -205,13 +205,13 @@ class God_Model_Image {
 
 		if ($xRatio * $height < $maxHeight)
 		{ // Resize the image based on width
-			$tnHeight	= ceil($xRatio * $height);
-			$tnWidth	= $maxWidth;
+                    $tnHeight	= ceil($xRatio * $height);
+                    $tnWidth	= $maxWidth;
 		}
 		else // Resize the image based on height
 		{
-			$tnWidth	= ceil($yRatio * $width);
-		 	$tnHeight	= $maxHeight;
+                    $tnWidth	= ceil($yRatio * $width);
+                    $tnHeight	= $maxHeight;
 		}
 
 		// Determine the quality of the output image
@@ -224,9 +224,9 @@ class God_Model_Image {
 		// We store our cached image filenames as a hash of the dimensions and the original filename
 		$resizedImageSource		= $tnWidth . 'x' . $tnHeight . 'x' . $quality;
 		if ($color)
-			$resizedImageSource	.= 'x' . $color;
+                    $resizedImageSource	.= 'x' . $color;
 		if (isset($_cropratio))
-			$resizedImageSource	.= 'x' . (string) $_cropratio;
+                    $resizedImageSource	.= 'x' . (string) $_cropratio;
 		$resizedImageSource		.= '-' . $image;
 
 		$resizedImage	= md5($resizedImageSource);
@@ -237,22 +237,22 @@ class God_Model_Image {
 		// If the original file is older than the cached file, then we simply serve up the cached file
 		if (!isset($_GET['nocache']) && file_exists($resized))
 		{
-			$imageModified	= filemtime($docRoot . $image);
-			$thumbModified	= filemtime($resized);
+                    $imageModified	= filemtime($docRoot . $image);
+                    $thumbModified	= filemtime($resized);
 
-			if($imageModified < $thumbModified) {
-				$data	= file_get_contents($resized);
+                    if($imageModified < $thumbModified) {
+                        $data	= file_get_contents($resized);
 
-				$lastModifiedString	= gmdate('D, d M Y H:i:s', $thumbModified) . ' GMT';
-				$etag				= md5($data);
+                        $lastModifiedString	= gmdate('D, d M Y H:i:s', $thumbModified) . ' GMT';
+                        $etag				= md5($data);
 
-				$this->doConditionalGet($etag, $lastModifiedString);
+                        $this->doConditionalGet($etag, $lastModifiedString);
 
-				header("Content-type: $mime");
-				header('Content-Length: ' . strlen($data));
-				echo $data;
-				exit();
-			}
+                        header("Content-type: $mime");
+                        header('Content-Length: ' . strlen($data));
+                        echo $data;
+                        exit();
+                    }
 		}
 
 		// We don't want to run out of memory
@@ -264,29 +264,29 @@ class God_Model_Image {
 		// Set up the appropriate image handling functions based on the original image's mime type
 		switch ($size['mime'])
 		{
-			case 'image/gif':
-				// We will be converting GIFs to PNGs to avoid transparency issues when resizing GIFs
-				// This is maybe not the ideal solution, but IE6 can suck it
-				$creationFunction	= 'ImageCreateFromGif';
-				$outputFunction		= 'ImagePng';
-				$mime				= 'image/png'; // We need to convert GIFs to PNGs
-				$doSharpen			= FALSE;
-				$quality			= round(10 - ($quality / 10)); // We are converting the GIF to a PNG and PNG needs a compression level of 0 (no compression) through 9
-			break;
+                    case 'image/gif':
+                        // We will be converting GIFs to PNGs to avoid transparency issues when resizing GIFs
+                        // This is maybe not the ideal solution, but IE6 can suck it
+                        $creationFunction	= 'ImageCreateFromGif';
+                        $outputFunction		= 'ImagePng';
+                        $mime				= 'image/png'; // We need to convert GIFs to PNGs
+                        $doSharpen			= FALSE;
+                        $quality			= round(10 - ($quality / 10)); // We are converting the GIF to a PNG and PNG needs a compression level of 0 (no compression) through 9
+                    break;
 
-			case 'image/x-png':
-			case 'image/png':
-				$creationFunction	= 'ImageCreateFromPng';
-				$outputFunction		= 'ImagePng';
-				$doSharpen			= FALSE;
-				$quality			= round(10 - ($quality / 10)); // PNG needs a compression level of 0 (no compression) through 9
-			break;
+                    case 'image/x-png':
+                    case 'image/png':
+                        $creationFunction	= 'ImageCreateFromPng';
+                        $outputFunction		= 'ImagePng';
+                        $doSharpen			= FALSE;
+                        $quality			= round(10 - ($quality / 10)); // PNG needs a compression level of 0 (no compression) through 9
+                    break;
 
-			default:
-				$creationFunction	= 'ImageCreateFromJpeg';
-				$outputFunction	 	= 'ImageJpeg';
-				$doSharpen			= TRUE;
-			break;
+                    default:
+                        $creationFunction	= 'ImageCreateFromJpeg';
+                        $outputFunction	 	= 'ImageJpeg';
+                        $doSharpen			= TRUE;
+                    break;
 		}
 
 		// Read in the original image
@@ -294,27 +294,27 @@ class God_Model_Image {
 
 		if (in_array($size['mime'], array('image/gif', 'image/png')))
 		{
-			if (!$color)
-			{
-				// If this is a GIF or a PNG, we need to set up transparency
-				imagealphablending($dst, false);
-				imagesavealpha($dst, true);
-			}
-			else
-			{
-				// Fill the background with the specified color for matting purposes
-				if ($color[0] == '#')
-					$color = substr($color, 1);
+                    if (!$color)
+                    {
+                        // If this is a GIF or a PNG, we need to set up transparency
+                        imagealphablending($dst, false);
+                        imagesavealpha($dst, true);
+                    }
+                    else
+                    {
+                        // Fill the background with the specified color for matting purposes
+                        if ($color[0] == '#')
+                            $color = substr($color, 1);
 
-				$background	= FALSE;
+                        $background	= FALSE;
 
-				if (strlen($color) == 6)
-					$background	= imagecolorallocate($dst, hexdec($color[0].$color[1]), hexdec($color[2].$color[3]), hexdec($color[4].$color[5]));
-				else if (strlen($color) == 3)
-					$background	= imagecolorallocate($dst, hexdec($color[0].$color[0]), hexdec($color[1].$color[1]), hexdec($color[2].$color[2]));
-				if ($background)
-					imagefill($dst, 0, 0, $background);
-			}
+                        if (strlen($color) == 6)
+                            $background	= imagecolorallocate($dst, hexdec($color[0].$color[1]), hexdec($color[2].$color[3]), hexdec($color[4].$color[5]));
+                        else if (strlen($color) == 3)
+                            $background	= imagecolorallocate($dst, hexdec($color[0].$color[0]), hexdec($color[1].$color[1]), hexdec($color[2].$color[2]));
+                        if ($background)
+                            imagefill($dst, 0, 0, $background);
+                    }
 		}
 
 		// Resample the original image into the resized canvas we set up earlier
@@ -322,37 +322,37 @@ class God_Model_Image {
 
 		if ($doSharpen)
 		{
-			// Sharpen the image based on two things:
-			//	(1) the difference between the original size and the final size
-			//	(2) the final size
-			$sharpness	= $this->findSharp($width, $tnWidth);
+                    // Sharpen the image based on two things:
+                    //	(1) the difference between the original size and the final size
+                    //	(2) the final size
+                    $sharpness	= $this->findSharp($width, $tnWidth);
 
-			$sharpenMatrix	= array(
-				array(-1, -2, -1),
-				array(-2, $sharpness + 12, -2),
-				array(-1, -2, -1)
-			);
-			$divisor		= $sharpness;
-			$offset			= 0;
-			imageconvolution($dst, $sharpenMatrix, $divisor, $offset);
+                    $sharpenMatrix	= array(
+                        array(-1, -2, -1),
+                        array(-2, $sharpness + 12, -2),
+                        array(-1, -2, -1)
+                    );
+                    $divisor		= $sharpness;
+                    $offset			= 0;
+                    imageconvolution($dst, $sharpenMatrix, $divisor, $offset);
 		}
 
 		// Make sure the cache exists. If it doesn't, then create it
 		if (!file_exists(CACHE_DIR))
-			mkdir(CACHE_DIR, 0755);
+                    mkdir(CACHE_DIR, 0755);
 
 		// Make sure we can read and write the cache directory
 		if (!is_readable(CACHE_DIR))
 		{
-			header('HTTP/1.1 500 Internal Server Error');
-			echo 'Error: the cache directory is not readable';
-			exit();
+                    header('HTTP/1.1 500 Internal Server Error');
+                    echo 'Error: the cache directory is not readable';
+                    exit();
 		}
 		else if (!is_writable(CACHE_DIR))
 		{
-			header('HTTP/1.1 500 Internal Server Error');
-			echo 'Error: the cache directory is not writable';
-			exit();
+                    header('HTTP/1.1 500 Internal Server Error');
+                    echo 'Error: the cache directory is not writable';
+                    exit();
 		}
 
 		// Write the resized image to the cache
@@ -370,7 +370,7 @@ class God_Model_Image {
 
 		// See if the browser already has the image
 		$lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($resized)) . ' GMT';
-		$etag				= md5($data);
+		$etag			= md5($data);
 
 		$this->doConditionalGet($etag, $lastModifiedString);
 
@@ -395,29 +395,29 @@ class God_Model_Image {
 
 	public function doConditionalGet($etag, $lastModified)
 	{
-		header("Last-Modified: $lastModified");
-		header("ETag: \"{$etag}\"");
+            header("Last-Modified: $lastModified");
+            header("ETag: \"{$etag}\"");
 
-		$if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?
-			stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) :
-			false;
+            $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?
+                stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) :
+                false;
 
-		$if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?
-			stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) :
-			false;
+            $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?
+                stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) :
+                false;
 
-		if (!$if_modified_since && !$if_none_match)
-			return;
+            if (!$if_modified_since && !$if_none_match)
+                return;
 
-		if ($if_none_match && $if_none_match != $etag && $if_none_match != '"' . $etag . '"')
-			return; // etag is there but doesn't match
+            if ($if_none_match && $if_none_match != $etag && $if_none_match != '"' . $etag . '"')
+                return; // etag is there but doesn't match
 
-		if ($if_modified_since && $if_modified_since != $lastModified)
-			return; // if-modified-since is there but doesn't match
+            if ($if_modified_since && $if_modified_since != $lastModified)
+                return; // if-modified-since is there but doesn't match
 
-		// Nothing has changed since their last request - serve a 304 and exit
-		header('HTTP/1.1 304 Not Modified');
-		exit();
+            // Nothing has changed since their last request - serve a 304 and exit
+            header('HTTP/1.1 304 Not Modified');
+            exit();
 	} // doConditionalGet()
 
 	// old pond

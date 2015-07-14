@@ -23,6 +23,18 @@ ul#menu li a:hover {
     
 }
 
+.menu-notification {
+    font-size: 50%;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+}
+
+.menu-notification.large {
+    left: -8px;
+    top: -3px;
+}
+
 /* Table */
 th {
     text-align: left;
@@ -234,6 +246,10 @@ a.thumbnail:hover, a.thumbnail:focus, .thumbnail .image.medium .name a:hover, a.
 footer {
     border-top: 1px solid #cccccc;
     padding: 5px 10px;
+}
+
+footer .version {
+    padding-left: 5px;
 }
 
 .nav>li>a {

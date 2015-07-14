@@ -40,16 +40,18 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
         if (array_key_exists($this->_highKey -1, $this->_rankingStats)) {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
+            $highBottomMode = 'spike';
+//            _d(array('1st' => $highBottomPrev, $highBottomMode));
         } else {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
+            $highBottomMode = 'flat';
+//            _d(array('2nd' => $highBottomPrev, $highBottomMode));
         }
         
-        if (array_key_exists($highBottomPrev, $this->_rankingStats)) {
-            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev]))-1;
-        } else {
-            $this->_highBottom = reset(array_keys($this->_rankingStats, $this->_rankingStats[$highBottomPrev+1]));
+        if ($highBottomMode == 'flat') {
+            _d($highBottomMode);
         }
-                
+        
         if (array_key_exists($this->_highKey - 1, $this->_rankingStats)) {
             $this->_highTop = end(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey - 1]));
         } else {
@@ -59,7 +61,27 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         if ($this->_highTop >= $this->_topLow) {
             $this->_highTop = $this->_topLow - 1;
         }
-        
+
+        // Check consequitive keys and set highBottom
+        for ($currentHighKey = $this->_highTop; $currentHighKey >= 0; $currentHighKey--) {
+            
+            // Concurrency
+            if ( !array_key_exists($currentHighKey, $this->_rankingStats) ) {
+                $this->_highBottom = $currentHighKey+1;
+                break;
+            } 
+            // Ensures that if it is concurrent it needs to be less than highBottomPrev
+            elseif ( $highBottomMode == 'spike' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
+                $this->_highBottom = $currentHighKey;
+                break;
+            }
+            elseif ( $highBottomMode == 'flat' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
+                $this->_highBottom = $currentHighKey;
+                break;
+            }
+
+        }
+
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             if ($rankingStatKey < $this->_highBottom) {
                 $this->_bottomRankingStats[$rankingStatKey] = $rankingStat;
@@ -188,7 +210,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $hour = (int)date("G", mktime());
         $hour = $hour < 24 ? $hour = 2 : $hour;
         if ( $hour%2 == 0 ) {
-            foreach (array('random', 'top-random', 'bottom-random') as $remove) {
+            foreach (array('random', 'top-random', 'bottom-ordered') as $remove) {
                 $key = array_search($remove, $this->_modes);
                 if($key !== false) {
                     unset($this->_modes[$key]);

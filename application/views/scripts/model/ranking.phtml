@@ -24,9 +24,6 @@
                             
                         </strong>
 
-                        <div class="pull-right">
-                             <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'thumbnail', 'id' => $model->ID, 'photoset' => $photoset->id)); ?>" class="<?php echo $photoset->manual_thumbnail ? 'text-success' : 'text-danger'; ?>"><i class="<?php echo $photoset->manual_thumbnail ? 'fa fa-check' : 'fa fa-times'; ?>"></i></a>
-                        </div>
                         <div class="pull-left">
                             <i class="fa fa-thumbs-o-up"></i> <?php echo $model->ranking; ?> <span class="badge"><i class="fa fa-star"></i> <?php echo $this->modelCount; ?></span>&nbsp;
                         </div>
@@ -56,14 +53,21 @@
                 </div>
             </div>
             <?php endforeach; ?>
-            
+	</div>
+        
+        <div class="row">
             <div class="col-xs-12">
-                <div style="padding:9px;">
+                <div style="padding:0 9px 9px 9px;">
                     <a href="<?php echo $this->url(array('action' => 'ranking'));?>" class="btn btn-default btn-block">Try Again</a>
                 </div>
             </div>
-	</div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12">
+                <div style="padding:0 9px 9px 9px;"><?php echo implode(", ", $this->modes); ?></div>
+            </div>
+        </div>
+        
     </div>
 </div>
-
-<?php echo implode(', ', $this->modes); ?>
