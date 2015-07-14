@@ -1,10 +1,14 @@
 <?php
 $load = sys_getloadavg();
+$temp = str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p'))));
+
 ?>
 <div class="row">
     <div class="pull-left">
         <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
-            <?php echo $load[0].','.$load[1].','.$load[2]; ?>
+        <div class="cpu">
+            <?php echo implode(', ', $load) . ', ' . $temp; ?>
+        </div>
         <?php endif; ?>
     </div>
     <div class="pull-right">
