@@ -11,6 +11,7 @@ class God_Model_Model extends God_Model_Base_Model
 
     public function hasPhotosets()
     {
+        $this->refreshRelated('photosets');
         if ( count($this->photosets) ) {
             return true;
         }
@@ -78,6 +79,11 @@ class God_Model_Model extends God_Model_Base_Model
             }  
             
         }
+        
+        $this->photosetsChecked = date("Y-m-d", mktime());
+        
+        $this->save();
+
     }
 
     /**

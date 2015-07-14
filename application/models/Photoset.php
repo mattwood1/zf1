@@ -21,7 +21,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
     {
         if (
             strtotime($this->imagesCheckedDate) < strtotime("-1 month")
-            || $this->imagesCheckedDate = "0000-00-00"
+            || $this->imagesCheckedDate == "0000-00-00"
         ) {
 
             $path = APPLICATION_PATH . '/../public' . $this->path;
@@ -31,8 +31,6 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);
-
-//                _d($urlPath);
                 
                 $image = God_Model_ImageTable::getInstance()->createQuery('i')
                         ->where('filename = ?', $urlPath)
