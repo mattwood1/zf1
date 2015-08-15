@@ -31,7 +31,9 @@ class God_Model_ModelTable extends Doctrine_Record
     
     public function getActivePhotosets()
     {
-        $this->_query->andWhere('p.active = ?', 1);
+        $this->_query
+            ->andWhere('p.active = ?', 1)
+            ->andWhere('p.manual_thumb = ?', 1);
     }
 
     /**
