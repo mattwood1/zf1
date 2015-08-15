@@ -36,7 +36,7 @@ class God_Model_ModelTable extends Doctrine_Record
     
     public function getOnlyManualThumbs()
     {
-        $this->_query->andWhere('p.manual_thumb = ?', 1);
+        $this->_query->andWhere('p.manual_thumbnail = ?', 1);
     }
 
     /**
