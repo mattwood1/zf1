@@ -31,9 +31,12 @@ class God_Model_ModelTable extends Doctrine_Record
     
     public function getActivePhotosets()
     {
-        $this->_query
-            ->andWhere('p.active = ?', 1)
-            ->andWhere('p.manual_thumb = ?', 1);
+        $this->_query->andWhere('p.active = ?', 1);
+    }
+    
+    public function getOnlyManualThumbs()
+    {
+        $this->_query->andWhere('p.manual_thumb = ?', 1);
     }
 
     /**
@@ -48,6 +51,7 @@ class God_Model_ModelTable extends Doctrine_Record
             
             $this->getModels();
             $this->getActivePhotosets();
+            $this->getOnlyManualThumbs();
             if ($checkPhotosets) {
                 $this->_query
                     ->select('m.*');
