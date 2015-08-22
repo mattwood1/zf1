@@ -40,7 +40,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
         if (array_key_exists($this->_highKey -1, $this->_rankingStats)) {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey -1]))-1;
-            $highBottomMode = 'spike';
+            $highBottomMode = 'split';
 //            _d(array('1st' => $highBottomPrev, $highBottomMode));
         } else {
             $highBottomPrev = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey]))-1;
@@ -71,7 +71,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 break;
             } 
             // Ensures that if it is concurrent it needs to be less than highBottomPrev
-            elseif ( $highBottomMode == 'spike' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
+            elseif ( $highBottomMode == 'split' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
                 $this->_highBottom = $currentHighKey;
                 break;
             }
@@ -162,6 +162,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $this->_calculateHigh();
         $this->_calculateTop();
         $this->_calculateBottom();
+        $this->_caclulateHighBottom();
     }
     
     private function _calculateRandom()
@@ -199,6 +200,17 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
             $this->_rankingCalc['bottom-ordered'] = $ordered[0];
             $this->_modes[] = 'bottom-random';
             $this->_modes[] = 'bottom-ordered';
+        }
+    }
+    
+    private function _caclulateHighBottom()
+    {
+        if (
+            !in_array('bottom-random', $this->_modes) 
+            && count(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey])) > 1
+        ) {
+            $this->_rankingCalc['high-bottom'] = reset(array_keys($this->_rankingStats, $this->_rankingStats[$this->_highKey-1]));
+//            $this->_modes[] = 'high-bottom';
         }
     }
     
@@ -243,6 +255,9 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 break;
             case 'high-ordered':
                 $this->_rankingStatsKey = $this->_rankingCalc['high-ordered'];
+                break;
+            case 'high-bottom':
+                $this->_rankingStatsKey = $this->_rankingCalc['high-bottom'];
                 break;
             case 'bottom-random':
                 $this->_rankingStatsKey = $this->_rankingCalc['bottom-random'];
