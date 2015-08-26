@@ -47,6 +47,39 @@ class GalleryController extends Coda_Controller
         $this->view->photoset = $photoset;
         $this->view->files = $this->_getFiles($photoset->path);
     }
+    
+    public function duplicateAction()
+    {
+        $conn = Doctrine_Manager::getInstance()->connection();  
+        $results = $conn->execute('SELECT 
+            im1.filename as filename1,
+            im1.width as width1,
+            im1.height as height1,
+            
+            im2.filename as filename2,
+            im2.width as width2,
+            im2.height as height2
+            
+                FROM `imagehash` ih1
+                JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
+                JOIN images im1 ON (ih1.image_id = im1.id)
+                JOIN images im2 ON (ih2.image_id = im2.id)
+                LIMIT 30'
+        );  
+
+//        _d($results->fetchAll());  
+        
+//        $imageHash = God_Model_ImageHashTable::getInstance();
+//                ->createQuery('ih1')
+//                ->select()
+//                ->leftJoin('ih1.hash ih2')
+//                ->where('ih1.id != ih2.id')
+//                ->limit(10)
+        
+//                ->execute();
+        
+        $this->view->duplicates = $results->fetchAll();
+    }
 
     protected function _getFiles($path)
     {

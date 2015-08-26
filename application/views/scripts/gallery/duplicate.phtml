@@ -1,0 +1,29 @@
+<?php
+    $this->title = 'Duplicates';
+    $this->subtitle = null;
+    $this->headTitle('Duplicates');
+?>
+
+<?php //_d($this->imageHash); ?>
+
+<?php if ($this->duplicates): ?>
+<div class=row">
+<?php foreach ($this->duplicates as $duplicate): ?>
+
+    <div class="col-md-3 thumbnail">
+        <img src="<?php echo $duplicate['filename1'] ?>" />
+    </div>
+    <div class="col-md-3">
+        imagedetails1
+    </div>
+    <div class="col-md-3">
+        imagedetails2
+    </div>
+    <div class="col-md-3 thumbnail">
+        <img src="<?php echo $duplicate['filename2'] ?>" />
+    </div>
+    <?php _d($duplicate); ?>
+    
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
