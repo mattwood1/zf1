@@ -52,31 +52,43 @@ class GalleryController extends Coda_Controller
     {
         $conn = Doctrine_Manager::getInstance()->connection();  
         $results = $conn->execute('SELECT 
-            im1.filename as filename1,
-            im1.width as width1,
-            im1.height as height1,
+            im1.id as imageid1,
+            p1.id photosetid1,
             
-            im2.filename as filename2,
-            im2.width as width2,
-            im2.height as height2
+            im2.id as imageid2,
+            p2.id photosetid2
             
                 FROM `imagehash` ih1
                 JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
                 JOIN images im1 ON (ih1.image_id = im1.id)
                 JOIN images im2 ON (ih2.image_id = im2.id)
-                LIMIT 30'
+                
+                JOIN photosets p1 ON (im1.photoset_id = p1.id)
+                JOIN photosets p2 ON (im2.photoset_id = p2.id)
+                LIMIT 10'
         );  
 
-//        _d($results->fetchAll());  
+//        _d($results->fetchAll()); 
         
-//        $imageHash = God_Model_ImageHashTable::getInstance();
-//                ->createQuery('ih1')
-//                ->select()
-//                ->leftJoin('ih1.hash ih2')
-//                ->where('ih1.id != ih2.id')
-//                ->limit(10)
+        $duplicateImages = $results->fetchAll();
         
-//                ->execute();
+        if ($duplicateImages) {
+            $usedPhotosetIds = array(); // Storing used photosets
+            $photosets = array(); // storing photosets and duplicate images
+            foreach ($duplicateImages as $duplicateImage) {
+                if ( ! (in_array($duplicateImage['photosetid1'], $usedPhotosetIds) || in_array($duplicateImage['photosetid2'], $usedPhotosetIds))) {
+                    // add photosets to photosets array
+                    $photosets[$duplicateImage['photosetid1']] = array(
+                        'photoset1' => God_Model_PhotosetTable::getInstance()->find($duplicateImage['photosetid1']),
+                        'photoset2' => God_Model_PhotosetTable::getInstance()->find($duplicateImage['photosetid2']),
+                    );
+                }
+                _d($duplicateImage['photosetid1'], $duplicateImage['imageid1'], $duplicateImage['imageid2']);
+                $photosets[$duplicateImage['photosetid1']]['duplicateImages'][$duplicateImage['imageid1']] = $duplicateImage['imageid2'];
+                _d('Array', $photosets[$duplicateImage['photosetid1']]['duplicateImages']);
+            }
+            _d($photosets);
+        }
         
         $this->view->duplicates = $results->fetchAll();
     }

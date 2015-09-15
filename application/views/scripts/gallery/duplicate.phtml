@@ -14,15 +14,28 @@
         <img src="<?php echo $duplicate['filename1'] ?>" />
     </div>
     <div class="col-md-3">
-        imagedetails1
+        <h3><?php echo $duplicate['photosetname1'] ?></h3>
+        <dl class="dl-horizontal">
+            <dt>Width</dt>
+            <dd><?php echo $duplicate['width1'] ?></dd>
+            <dt>Height</dt>
+            <dd><?php echo $duplicate['height1'] ?></dd>
+        </dl>
     </div>
     <div class="col-md-3">
-        imagedetails2
+        
+        <h3><?php echo $duplicate['photosetname2'] ?></h3>
+        <dl class="dl-horizontal">
+            <dt>Width</dt>
+            <dd><?php echo $duplicate['width2'] ?></dd>
+            <dt>Height</dt>
+            <dd><?php echo $duplicate['height2'] ?></dd>
+        </dl>
     </div>
     <div class="col-md-3 thumbnail">
         <img src="<?php echo $duplicate['filename2'] ?>" />
     </div>
-    <?php _d($duplicate); ?>
+    <?php //_d($duplicate); ?>
     
 <?php endforeach; ?>
 </div>
