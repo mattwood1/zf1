@@ -50,6 +50,7 @@ class GalleryController extends Coda_Controller
     
     public function duplicateAction()
     {
+        ini_set('xdebug.var_display_max_depth', 10);
         $conn = Doctrine_Manager::getInstance()->connection();  
         $results = $conn->execute('SELECT 
             im1.id as imageid1,
@@ -65,32 +66,41 @@ class GalleryController extends Coda_Controller
                 
                 JOIN photosets p1 ON (im1.photoset_id = p1.id)
                 JOIN photosets p2 ON (im2.photoset_id = p2.id)
-                LIMIT 10'
+                LIMIT 50'
         );  
 
-//        _d($results->fetchAll()); 
-        
         $duplicateImages = $results->fetchAll();
         
+//        _d(array('$duplicateImages' => $duplicateImages));
+        
         if ($duplicateImages) {
+            
             $usedPhotosetIds = array(); // Storing used photosets
             $photosets = array(); // storing photosets and duplicate images
+            
             foreach ($duplicateImages as $duplicateImage) {
-                if ( ! (in_array($duplicateImage['photosetid1'], $usedPhotosetIds) || in_array($duplicateImage['photosetid2'], $usedPhotosetIds))) {
+                
+                if ( ! (in_array($duplicateImage['photosetid1'], $usedPhotosetIds) || in_array($duplicateImage['photosetid2'], $usedPhotosetIds)) ) {
                     // add photosets to photosets array
-                    $photosets[$duplicateImage['photosetid1']] = array(
+                    $photosets[$duplicateImage['photosetid1']]['photosets'] = array(
                         'photoset1' => God_Model_PhotosetTable::getInstance()->find($duplicateImage['photosetid1']),
                         'photoset2' => God_Model_PhotosetTable::getInstance()->find($duplicateImage['photosetid2']),
                     );
                 }
-                _d($duplicateImage['photosetid1'], $duplicateImage['imageid1'], $duplicateImage['imageid2']);
-                $photosets[$duplicateImage['photosetid1']]['duplicateImages'][$duplicateImage['imageid1']] = $duplicateImage['imageid2'];
-                _d('Array', $photosets[$duplicateImage['photosetid1']]['duplicateImages']);
+                
+//                _d($duplicateImage['photosetid1'], $duplicateImage['imageid1'], $duplicateImage['imageid2']);
+                
+                // Store the duplicate images
+                $photosets[$duplicateImage['photosetid1']]['images1'][] = $duplicateImage['imageid1'];
+                $photosets[$duplicateImage['photosetid1']]['images2'][] = $duplicateImage['imageid2'];
+                
+//                _d('Array', $photosets[$duplicateImage['photosetid1']]['duplicateImages']);
             }
-            _d($photosets);
+            
+//            _d(array('$photosets' => $photosets));
         }
         
-        $this->view->duplicates = $results->fetchAll();
+        $this->view->duplicates = $photosets;
     }
 
     protected function _getFiles($path)
