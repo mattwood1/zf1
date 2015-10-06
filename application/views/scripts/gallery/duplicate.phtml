@@ -2,8 +2,17 @@
     .duplicate {
         border: 1px solid red;
     }
-    .border-right {
-        
+    .left {
+        border-right: 1px solid #dddddd;
+        padding-right: 20px;
+    }
+    .right {
+        padding-left: 20px;
+    }
+    .actions a {
+        display: block;
+        text-align: center;
+        padding: 3px;
     }
 </style>
 
@@ -24,18 +33,25 @@
     $duplicateImages2 = $duplicate['images2'];
     ?>
     
-    <div class="col-md-6 border-right">
+    <div class="col-md-6 col-sm-6 col-xs-6 left">
         <h3><?php echo $photoset1->model->name; ?> <small><?php echo $photoset1->name; ?></small></h3>
         
         <div class="row">
         <?php foreach ($photoset1->images as $image): ?>
         
-        <div class="col-md-2">
-            <a class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
+        <div class="col-md-2 col-sm-3 col-xs-4">
+            <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
                 <div class="image">
                     <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
                 </div>
-            </a>
+                <div class="actions">
+                    <?php if (in_array($image->id, $duplicateImages1)): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id)); ?>" >Delete <i class="fa fa-trash-o"></i></a>
+                    <?php else: ?>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id)); ?>" >Move <i class="fa fa-arrow-right"></i></a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
         <?php endforeach; ?>
         </div>
@@ -43,18 +59,25 @@
         <?php //_d($photoset1->toArray()) ?>
     </div>
     
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6 col-xs-6 right">
         <h3><?php echo $photoset2->model->name; ?> <small><?php echo $photoset2->name; ?></small></h3>
         
         <div class="row">
         <?php foreach ($photoset2->images as $image): ?>
         
-        <div class="col-md-2">
-            <a class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
+        <div class="col-md-2 col-sm-3 col-xs-4">
+            <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
                 <div class="image">
                     <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
                 </div>
-            </a>
+                <div class="actions">
+                    <?php if (in_array($image->id, $duplicateImages2)): ?>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id)); ?>" ><i class="fa fa-trash-o"></i> Delete</a>
+                    <?php else: ?>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id)); ?>" ><i class="fa fa-arrow-left"></i> Move</a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
         <?php endforeach; ?>
         </div>

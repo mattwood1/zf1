@@ -19,6 +19,16 @@ class ImageController extends Coda_Controller
     {
         // action body
     }
+    
+    public function deleteAction()
+    {
+        
+    }
+    
+    public function moveAction()
+    {
+        
+    }
 
     public function thumbnailAction()
     {

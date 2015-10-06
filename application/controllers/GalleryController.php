@@ -66,7 +66,7 @@ class GalleryController extends Coda_Controller
                 
                 JOIN photosets p1 ON (im1.photoset_id = p1.id)
                 JOIN photosets p2 ON (im2.photoset_id = p2.id)
-                LIMIT 50'
+                LIMIT 10'
         );  
 
         $duplicateImages = $results->fetchAll();
@@ -135,14 +135,6 @@ class GalleryController extends Coda_Controller
     }
 
     protected function _threeDigits($value) {
-        switch (strlen($value)) {
-            case 1:
-                $value = "00".$value;
-                break;
-            case 2:
-                $value = "0".$value;
-                break;
-        }
-        return $value;
+        return str_pad($value, 3, '0', STR_PAD_LEFT);
     }
 }
