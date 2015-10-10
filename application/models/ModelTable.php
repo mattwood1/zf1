@@ -81,7 +81,7 @@ class God_Model_ModelTable extends Doctrine_Record
                 ->orderBy('m.rankDate, m.id')
                 ;
 
-        return $this->_query->execute();
+        return $this->_query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
     }
 
     protected function _getOrder()
