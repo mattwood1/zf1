@@ -5,17 +5,35 @@
     <a href="<?php echo $this->url(array('order' => 'name'));?>">Name</a>
 </div>
 
-<?php if ($this->models->toArray()): ?>
+<?php if ($this->models): ?>
 <div class="row">
     <?php foreach($this->models as $model): ?>
     <div class="col-xs-4 col-sm-3 col-md-2">
-        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model->ID, 'page' => null, 'search' => null, 'order' => null)); ?>" class="thumbnail">
+        <a href="<?php echo $this->url(array('controller'=>'model', 'action'=>'view', 'id'=>$model['ID'], 'page' => null, 'search' => null, 'order' => null)); ?>" class="thumbnail">
             <div class="image thumb">
-                <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($model->getLatestPhotoset()->thumbnail), 'page' => null)); ?>" />
+                <?php
+                $image = '';
+                foreach (array_reverse($model['photosets']) as $recentPhotoset) {
+                    if ($recentPhotoset['manual_thumbnail']) {
+                        $image = $recentPhotoset['thumbnail'];
+                        break;
+                    }
+                }
+                ?>
+                <img data-src="holder.js/100%x168" src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image), 'page' => null)); ?>" />
                 <div class="name">
-                    <?php echo $model->getName() ;?><br />
-                    <i class="fa fa-thumbs-o-up"></i> <?php echo $this->escape($model->ranking)?>
-                    <i class="fa fa-picture-o"></i> <?php echo count($model->photosets); ?>
+                    <?php
+                    $name = '';
+                    foreach ($model['names'] as $modelName) {
+                        if ($modelName['default']) {
+                            $name = $modelName['name'];
+                            break;
+                        }
+                    }
+                    ?>
+                    <?php echo $name ;?><br />
+                    <i class="fa fa-thumbs-o-up"></i> <?php echo $this->escape($model['ranking'])?>
+                    <i class="fa fa-picture-o"></i> <?php echo count($model['photosets']); ?>
                 </div>
             </div>
         </a>
