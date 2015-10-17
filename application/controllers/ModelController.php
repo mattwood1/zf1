@@ -27,7 +27,7 @@ class ModelController extends Coda_Controller
             ->andWhere('m.active = ?', 1)
             ->andWhere('n.default = ?', 1)
             ->andWhere('p.active = ?', 1)
-            ->orderBy('p.name desc');
+            ->orderBy('p.id desc');
         
         $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
