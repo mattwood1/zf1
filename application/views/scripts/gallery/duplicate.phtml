@@ -46,9 +46,9 @@
                 </div>
                 <div class="actions">
                     <?php if (in_array($image->id, $duplicateImages1)): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id)); ?>" >Delete <i class="fa fa-trash-o"></i></a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>Delete <i class="fa fa-trash-o"></i></a>
                     <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id)); ?>" >Move <i class="fa fa-arrow-right"></i></a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" >Move <i class="fa fa-arrow-right"></i></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -72,9 +72,9 @@
                 </div>
                 <div class="actions">
                     <?php if (in_array($image->id, $duplicateImages2)): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id)); ?>" ><i class="fa fa-trash-o"></i> Delete</a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-trash-o"></i> Delete</a>
                     <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id)); ?>" ><i class="fa fa-arrow-left"></i> Move</a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-arrow-left"></i> Move</a>
                     <?php endif; ?>
                 </div>
             </div>

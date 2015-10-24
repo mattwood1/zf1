@@ -22,7 +22,24 @@ class ImageController extends Coda_Controller
     
     public function deleteAction()
     {
+        $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
         
+        if ($image) {
+            $imagehash = God_Model_ImageHashTable::getInstance()->findBy('image_id', $image->id);
+            $path = realpath(IMAGE_DIR . $image->filename);
+
+            if ($path) {
+                unlink($path);
+                $image->delete();
+                $imagehash->delete();
+            }
+        }
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
     }
     
     public function moveAction()
