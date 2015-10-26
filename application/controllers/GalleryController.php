@@ -51,7 +51,23 @@ class GalleryController extends Coda_Controller
     public function duplicateAction()
     {
         ini_set('xdebug.var_display_max_depth', 10);
-        $conn = Doctrine_Manager::getInstance()->connection();  
+        $conn = Doctrine_Manager::getInstance()->connection();
+        
+//        $pretest = $conn->execute('SELECT 
+//            p1.id photosetid1,
+//            
+//                FROM `imagehash` ih1
+//                JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
+//                JOIN images im1 ON (ih1.image_id = im1.id)
+//                JOIN images im2 ON (ih2.image_id = im2.id)
+//                
+//                JOIN photosets p1 ON (im1.photoset_id = p1.id)
+//                JOIN photosets p2 ON (im2.photoset_id = p2.id)
+//                LIMIT 1');
+//        $pretestResults = $pretest->fetchAll();
+        
+        // SQL query with a WHERE seems to take a long time.
+        
         $results = $conn->execute('SELECT 
             im1.id as imageid1,
             p1.id photosetid1,
