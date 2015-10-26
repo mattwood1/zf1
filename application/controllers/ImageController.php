@@ -44,7 +44,24 @@ class ImageController extends Coda_Controller
     
     public function moveAction()
     {
+        $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
+        $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('to'));
         
+        // figure out the new name
+        $file = pathinfo(IMAGE_DIR . $image->filename);
+        $newname = IMAGE_DIR . $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
+        
+        rename(IMAGE_DIR . $image->filename, $newname);
+        
+        $image->filename = $newname;
+        $image->photoset_id = $photoset->id;
+        $image->save();
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
     }
 
     public function thumbnailAction()
