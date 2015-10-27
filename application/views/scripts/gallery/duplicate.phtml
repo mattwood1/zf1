@@ -1,4 +1,7 @@
 <style>
+    .thumbnail {
+        border: 1px solid transparent;
+    }
     .duplicate {
         border: 1px solid red;
     }
@@ -39,16 +42,16 @@
         <div class="row">
         <?php foreach ($photoset1->images as $image): ?>
         
-        <div class="col-md-2 col-sm-3 col-xs-4">
+        <div class="col-md-3 col-sm-3 col-xs-6">
             <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
                 <div class="image">
                     <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
                 </div>
                 <div class="actions">
                     <?php if (in_array($image->id, $duplicateImages1)): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>Delete <i class="fa fa-trash-o"></i></a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>">Delete <i class="fa fa-trash-o"></i></a>
                     <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" >Move <i class="fa fa-arrow-right"></i></a>
+                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>">Move <i class="fa fa-arrow-right"></i></a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -65,7 +68,7 @@
         <div class="row">
         <?php foreach ($photoset2->images as $image): ?>
         
-        <div class="col-md-2 col-sm-3 col-xs-4">
+        <div class="col-md-3 col-sm-3 col-xs-6">
             <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
                 <div class="image">
                     <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />

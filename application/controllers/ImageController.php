@@ -49,9 +49,9 @@ class ImageController extends Coda_Controller
         
         // figure out the new name
         $file = pathinfo(IMAGE_DIR . $image->filename);
-        $newname = IMAGE_DIR . $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
+        $newname = $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
         
-        rename(IMAGE_DIR . $image->filename, $newname);
+        rename(IMAGE_DIR . $image->filename, IMAGE_DIR . $newname);
         
         $image->filename = $newname;
         $image->photoset_id = $photoset->id;

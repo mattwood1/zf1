@@ -82,7 +82,9 @@ class GalleryController extends Coda_Controller
                 
                 JOIN photosets p1 ON (im1.photoset_id = p1.id)
                 JOIN photosets p2 ON (im2.photoset_id = p2.id)
-                LIMIT 10'
+                
+                WHERE ih1.hash != ""
+                LIMIT 25'
         );  
 
         $duplicateImages = $results->fetchAll();
