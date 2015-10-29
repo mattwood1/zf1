@@ -40,52 +40,63 @@
         <h3><?php echo $photoset1->model->name; ?> <small><?php echo $photoset1->name; ?></small></h3>
         
         <div class="row">
-        <?php foreach ($photoset1->images as $image): ?>
-        
-        <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
-                <div class="image">
-                    <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
-                </div>
-                <div class="actions">
-                    <?php if (in_array($image->id, $duplicateImages1)): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>">Delete <i class="fa fa-trash-o"></i></a>
-                    <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>">Move <i class="fa fa-arrow-right"></i></a>
-                    <?php endif; ?>
+            <?php foreach ($photoset1->images as $image): ?>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
+                    <div class="image">
+                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                    </div>
+                    <div class="actions">
+                        <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
+                        <?php if (in_array($image->id, $duplicateImages1)): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>">Delete <i class="fa fa-trash-o"></i></a>
+                        <?php elseif ($photoset1->id != $photoset2->id): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>">Move <i class="fa fa-arrow-right"></i></a>
+                        <?php else: ?>
+                        <a>&nbsp;</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
+            <?php endforeach; ?>
+            <?php if ($photoset1->id != $photoset2->id): ?>
+            <div class="col-xs-12 text-center">
+                <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'photoset-toggle', 'id' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn <?php echo $photoset1->active ? 'btn-success' : 'btn-primary'; ?>"><?php echo $photoset1->active ? 'Photoset Active' : 'Photoset Disabled'; ?></a>
+            </div>
+            <?php endif ;?>
         </div>
-        <?php endforeach; ?>
-        </div>
-            
-        <?php //_d($photoset1->toArray()) ?>
     </div>
     
     <div class="col-md-6 col-sm-6 col-xs-6 right">
         <h3><?php echo $photoset2->model->name; ?> <small><?php echo $photoset2->name; ?></small></h3>
         
         <div class="row">
-        <?php foreach ($photoset2->images as $image): ?>
-        
-        <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
-                <div class="image">
-                    <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
-                </div>
-                <div class="actions">
-                    <?php if (in_array($image->id, $duplicateImages2)): ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-trash-o"></i> Delete</a>
-                    <?php else: ?>
-                    <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-arrow-left"></i> Move</a>
-                    <?php endif; ?>
+            <?php foreach ($photoset2->images as $image): ?>
+
+            <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
+                    <div class="image">
+                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                    </div>
+                    <div class="actions">
+                        <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
+                        <?php if (in_array($image->id, $duplicateImages2)): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-trash-o"></i> Delete</a>
+                        <?php elseif ($photoset1->id != $photoset2->id): ?>
+                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" ><i class="fa fa-arrow-left"></i> Move</a>
+                        <?php else: ?>
+                        <a>&nbsp;</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
+            <?php endforeach; ?>
+            <?php if ($photoset1->id != $photoset2->id): ?>
+            <div class="col-xs-12 text-center">
+                <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'photoset-toggle', 'id' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn <?php echo $photoset2->active ? 'btn-success' : 'btn-primary'; ?>"><?php echo $photoset2->active ? 'Photoset Active' : 'Photoset Disabled'; ?></a>
+            </div>
+            <?php endif; ?>
         </div>
-        <?php endforeach; ?>
-        </div>
-            
-        <?php //_d($photoset2->toArray()) ?>
     </div>
 </div>
     

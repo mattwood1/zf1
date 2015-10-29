@@ -63,6 +63,26 @@ class ImageController extends Coda_Controller
         
         exit;
     }
+    
+    public function photosetToggleAction()
+    {
+        $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('id'));
+        switch ($photoset->active) {
+            case 0:
+                $photoset->active = 1;
+                break;
+            case 1:
+                $photoset->active = 0;
+                break;
+        }
+        $photoset->save();
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
+    }
 
     public function thumbnailAction()
     {
