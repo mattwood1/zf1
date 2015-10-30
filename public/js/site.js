@@ -17,6 +17,7 @@ function resetEqualHeights() {
         $(this).css("height", "auto")
     });
     $('.image').equalHeights();
+    $('.actions').equalHeights();
 }
 
 function onImageReady(selector) {
