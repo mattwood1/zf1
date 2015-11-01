@@ -48,6 +48,7 @@
                     </div>
                     <div class="actions">
                         <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
+                        <div class="text-center"><small><?php echo str_replace(',', ', ', $image->hash->hash); ?></small></div>
                         <?php if (in_array($image->id, $duplicateImages1)): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>" class="btn btn-default btn-lg" role="button">Delete <i class="fa fa-trash-o"></i></a>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button">Move <i class="fa fa-arrow-right"></i></a>
@@ -81,6 +82,7 @@
                     </div>
                     <div class="actions">
                         <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
+                        <div class="text-center"><small><?php echo str_replace(',', ', ', $image->hash->hash); ?></small></div>
                         <?php if (in_array($image->id, $duplicateImages2)): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button"><i class="fa fa-trash-o"></i> Delete</a>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button"><i class="fa fa-arrow-left"></i> Move</a>
