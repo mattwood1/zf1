@@ -34,25 +34,29 @@
     $photoset2 = $duplicate['photosets']['photoset2'];
     $duplicateImages1 = $duplicate['images1'];
     $duplicateImages2 = $duplicate['images2'];
+    
+    $same = $photoset1->id == $photoset2->id;
     ?>
     
-    <div class="col-md-6 col-sm-6 col-xs-6 left">
+    <div class="col-xs-<?php echo $same ? '12' : '6'; ?> left">
         <h3><?php echo $photoset1->model->name; ?> <small><?php echo $photoset1->name; ?></small></h3>
         
         <div class="row">
             <?php foreach ($photoset1->images as $image): ?>
-            <div class="col-md-3 col-sm-3 col-xs-6">
+            <div class="col-md-<?php echo $same ? '2' :'3'; ?> col-sm-3 col-xs-<?php echo $same ? '3' :'6'; ?>">
                 <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages1)) ? ' duplicate': ''; ?>">
                     <div class="image">
-                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'mini', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                        <a href="#<?php echo $same ? '' : 'r-'; ?><?php echo $image->hash->hash; ?>" id="<?php echo $same ? '' :'l-'; ?><?php echo $image->hash->hash; ?>">
+                            <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'mini', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                        </a>
                     </div>
                     <div class="actions">
                         <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
                         <div class="text-center"><small><?php echo str_replace(',', ', ', $image->hash->hash); ?></small></div>
                         <?php if (in_array($image->id, $duplicateImages1)): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))) ?>" class="btn btn-default btn-lg" role="button">Delete <i class="fa fa-trash-o"></i></a>
-                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button">Move <i class="fa fa-arrow-right"></i></a>
-                        <?php elseif ($photoset1->id != $photoset2->id): ?>
+                        <?php endif; ?>
+                        <?php if ($photoset1->id != $photoset2->id): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button">Move <i class="fa fa-arrow-right"></i></a>
                         <?php else: ?>
                         <a>&nbsp;</a>
@@ -69,6 +73,7 @@
         </div>
     </div>
     
+    <?php if ($photoset1->id != $photoset2->id): ?>
     <div class="col-md-6 col-sm-6 col-xs-6 right">
         <h3><?php echo $photoset2->model->name; ?> <small><?php echo $photoset2->name; ?></small></h3>
         
@@ -78,15 +83,17 @@
             <div class="col-md-3 col-sm-3 col-xs-6">
                 <div class="thumbnail<?php echo (in_array($image->id, $duplicateImages2)) ? ' duplicate': ''; ?>">
                     <div class="image">
-                        <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'mini', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                        <a href="#l-<?php echo $image->hash->hash; ?>" id="r-<?php echo $image->hash->hash; ?>">
+                            <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'mini', 'id'=>rawurlencode($image->filename)), null, true); ?>" />
+                        </a>
                     </div>
                     <div class="actions">
                         <div class="text-center"><?php echo number_format(($image->width * $image->height / 1024 / 1024),1); ?>MP</div>
                         <div class="text-center"><small><?php echo str_replace(',', ', ', $image->hash->hash); ?></small></div>
                         <?php if (in_array($image->id, $duplicateImages2)): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'delete', 'id' => $image->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button"><i class="fa fa-trash-o"></i> Delete</a>
-                        <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button"><i class="fa fa-arrow-left"></i> Move</a>
-                        <?php elseif ($photoset1->id != $photoset2->id): ?>
+                        <?php endif; ?>
+                        <?php if ($photoset1->id != $photoset2->id): ?>
                         <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'move', 'id' => $image->id, 'to' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn btn-default btn-lg" role="button"><i class="fa fa-arrow-left"></i> Move</a>
                         <?php else: ?>
                         <a>&nbsp;</a>
@@ -102,6 +109,7 @@
             <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 </div>
     
 <?php endforeach; ?>
