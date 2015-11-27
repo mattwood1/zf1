@@ -24,7 +24,6 @@ class God_Model_ModelTable extends Doctrine_Record
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
             ->andWhere('n.default = ?', 1);
-            //->andWhere('p.active = ?',1);
 
         $this->_getOrder();
     }
@@ -87,7 +86,7 @@ class God_Model_ModelTable extends Doctrine_Record
                 ->orderBy('m.rankDate, m.id')
                 ;
 
-        return $this->_query->execute();
+        return $this->_query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
     }
 
     protected function _getOrder()

@@ -8,16 +8,16 @@
 
 <?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'view')); ?>
             
-<?php if ($this->photosets->toArray()): ?>
+<?php if ($this->photosets): ?>
 <div class="row">
 
     <?php foreach ($this->photosets as $photoset): ?>
     <div class="col-xs-4 col-sm-3 col-md-2">
-        <a href="<?php echo $photoset->manual_thumbnail ? $this->url(array('controller'=>'gallery', 'action'=>'view', 'photoset' => $photoset->id), null, true) : $this->url(array('controller'=>'gallery', 'action'=>'thumbnail', 'photoset' => $photoset->id), null, true); ?>" class="thumbnail">
-            <div class="image <?php echo $photoset->manual_thumbnail ? '' : 'autothumb' ?>">
-                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset->thumbnail))); ?>" />
+        <a href="<?php echo $photoset->manual_thumbnail ? $this->url(array('controller'=>'gallery', 'action'=>'view', 'photoset' => $photoset['id']), null, true) : $this->url(array('controller'=>'gallery', 'action'=>'thumbnail', 'photoset' => $photoset['id']), null, true); ?>" class="thumbnail">
+            <div class="image <?php echo $photoset['manual_thumbnail'] ? '' : 'autothumb' ?>">
+                <img src="<?php echo $this->url(array('controller'=>'image', 'action'=>'thumbnail', 'id'=>rawurlencode($photoset['thumbnail']))); ?>" />
                 <div class="name">
-                    <?php echo $photoset->name ;?>
+                    <?php echo $photoset['name'] ;?>
                 </div>
             </div>
         </a>

@@ -31,7 +31,7 @@ class ModelController extends Coda_Controller
         
         $paginator = new Doctrine_Pager($query, $this->_getParam('page',1), 18 );
 
-        $photosets = $paginator->execute();
+        $photosets = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $this->view->paginator = $paginator;
         $this->view->model = $model;
