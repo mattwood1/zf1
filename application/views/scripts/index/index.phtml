@@ -33,7 +33,13 @@
                     ?>
                     <?php echo $name ;?><br />
                     <i class="fa fa-thumbs-o-up"></i> <?php echo $this->escape($model['ranking'])?>
-                    <i class="fa fa-picture-o"></i> <?php echo count($model['photosets']); ?>
+                    <i class="fa fa-picture-o"></i>
+                        <?php 
+                        $activePhotosetCount = 0;
+                        foreach ($model['photosets'] as $photoset) {
+                            if ($photoset['active']) $activePhotosetCount++;
+                        }
+                        echo $activePhotosetCount; ?>
                 </div>
             </div>
         </a>
