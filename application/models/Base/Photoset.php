@@ -59,8 +59,12 @@ class God_Model_Base_Photoset extends Doctrine_Record
     {
         $this->hasOne('God_Model_Model as model', array(
                 'local'   =>  'model_id',
-                'foreign' =>  'ID',
-                //'cascade' => array('delete')
+                'foreign' =>  'ID'
+        ));
+        
+        $this->hasMany('God_Model_Image as images', array(
+                'local'   => 'id',
+                'foreign' => 'photoset_id'
         ));
     }
 }

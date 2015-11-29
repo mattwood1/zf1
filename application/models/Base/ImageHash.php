@@ -25,4 +25,13 @@ class God_Model_Base_ImageHash extends Doctrine_Record
         ));
     }
     
+    public function setUp()
+    {
+        $this->hasMany('God_Model_ImageHash as hash', array(
+                'local'   =>  'hash',
+                'foreign' =>  'hash',
+                //'cascade' => array('delete')
+        ));
+    }
+    
 }

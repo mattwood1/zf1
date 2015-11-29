@@ -5,6 +5,7 @@ class ImageController extends Coda_Controller
     protected $_largeWidth = 800;
     protected $_mediumWidth = 400; // Desktop 400, BlackBerry 150
     protected $_thumbWidth = 190;
+    protected $_miniWidth = 132;
     protected $_height = 200;
     protected $_ratio = 1.333;
     protected $_quality = 100; // percent
@@ -19,6 +20,91 @@ class ImageController extends Coda_Controller
     {
         // action body
     }
+    
+    public function deleteAction()
+    {
+        $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
+        
+        if ($image) {
+            $imagehash = God_Model_ImageHashTable::getInstance()->findBy('image_id', $image->id);
+            $path = realpath(IMAGE_DIR . $image->filename);
+
+            if ($path) {
+                unlink($path);
+                $image->delete();
+                $imagehash->delete();
+            }
+        }
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
+    }
+    
+    public function moveAction()
+    {
+        $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
+        $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('to'));
+        
+        // figure out the new name
+        $file = pathinfo(IMAGE_DIR . $image->filename);
+        $newname = $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
+        
+        rename(IMAGE_DIR . $image->filename, IMAGE_DIR . $newname);
+        
+        $image->filename = $newname;
+        $image->photoset_id = $photoset->id;
+        $image->save();
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
+    }
+    
+    public function photosetToggleAction()
+    {
+        $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('id'));
+        switch ($photoset->active) {
+            case 0:
+                $photoset->active = 1;
+                break;
+            case 1:
+                $photoset->active = 0;
+                break;
+        }
+        $photoset->save();
+        
+        if ($this->_request->getParam('referer')) {
+            $this->_redirect(urldecode($this->_request->getParam('referer')));
+        }
+        
+        exit;
+    }
+
+    public function miniAction()
+    {
+        $this->_height('mini');
+        $image = new God_Model_Image();
+
+        $cache = Zend_Cache::factory('Core', 'Memcached');
+        $cachekey = md5($this->_request->getParam('id').$this->_height);
+
+        $thumb = $cache->load($cachekey);
+        
+        if ($this->_request->getParam('ignorecache') == 1) {
+            $image = false;
+        }
+            
+        if (!$thumb) {
+            $thumb = $image->process($this->_getParam('id'), $this->_miniWidth, $this->_height, $this->_quality, $this->_miniWidth.':'.$this->_height);
+            $cache->save($thumb, $cachekey);
+        }
+        return $thumb;
+    }
 
     public function thumbnailAction()
     {
@@ -26,7 +112,7 @@ class ImageController extends Coda_Controller
         $image = new God_Model_Image();
 
         $cache = Zend_Cache::factory('Core', 'Memcached');
-        $cachekey = md5($this->_request->getParam('id'));
+        $cachekey = md5($this->_request->getParam('id').$this->_height);
 
         $thumb = $cache->load($cachekey);
         
@@ -120,9 +206,10 @@ class ImageController extends Coda_Controller
     {
         switch(true) {
             case stristr($_SERVER['HTTP_USER_AGENT'], 'Mobile'):
-                $this->_largeWidth = 320;
-                $this->_mediumWidth = 150;
-                $this->_thumbWidth = 99.9;
+                $this->_largeWidth = 1200;
+                $this->_mediumWidth = 295;
+                $this->_thumbWidth = 193;
+                $this->_miniWidth = 133;
                 $this->_largeWidth = floor($this->_largeWidth*2);
                 break;
         }

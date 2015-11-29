@@ -31,6 +31,12 @@ class God_Model_Model extends God_Model_Base_Model
         }
         return $this->names[0]->name . '(No Default)';
     }
+    
+    public static function getPrimaryName($modelID)
+    {
+        $model = God_Model_ModelTable::getInstance()->find($modelID);
+        return $model->getName();
+    }
 
     /**
      * Returns the Models Aliases
@@ -159,11 +165,12 @@ class God_Model_Model extends God_Model_Base_Model
         return $this->photosets[$key];
     }
 
-    public function getRandomPhotoset()
+    public static function getRandomPhotoset($modelID)
     {
-        if ($this->photosets) { // TODO: Needs to be $this->photosets->getActive()
+        $model = God_Model_ModelTable::getInstance()->find($modelID);
+        if ($model->photosets) { // TODO: Needs to be $this->photosets->getActive()
             
-            $photosets = clone($this->photosets);
+            $photosets = $model->photosets;
             $photosetKeys = array();
             
             foreach ($photosets as $photosetKey => $photoset) {
@@ -175,7 +182,7 @@ class God_Model_Model extends God_Model_Base_Model
             }
             $key = array_rand($photosetKeys, 1);
 
-            return $this->photosets[$key];
+            return $model->photosets[$key];
         }
         return null;
     }

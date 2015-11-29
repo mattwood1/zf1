@@ -32,6 +32,11 @@ class God_Model_ModelTable extends Doctrine_Record
     {
         $this->_query->andWhere('p.active = ?', 1);
     }
+    
+    public function getOnlyManualThumbs()
+    {
+        $this->_query->andWhere('p.manual_thumbnail = ?', 1);
+    }
 
     /**
      * Gets the Ranking Stats
@@ -45,6 +50,7 @@ class God_Model_ModelTable extends Doctrine_Record
             
             $this->getModels();
             $this->getActivePhotosets();
+            $this->getOnlyManualThumbs();
             if ($checkPhotosets) {
                 $this->_query
                     ->select('m.*');
