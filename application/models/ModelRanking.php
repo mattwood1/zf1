@@ -134,7 +134,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         // Prevent model flow
         if ($this->_ignoreModel && $this->getModelCount() > 2 && array_key_exists($this->_rankingStatsKey, $this->_ignoreModel)) {
             foreach ($models as $modelKey => $model) {
-                if ($model->ID == $this->_ignoreModel[$this->_rankingStatsKey]) {
+                if ($model['ID'] == $this->_ignoreModel[$this->_rankingStatsKey]) {
                     unset($models[$modelKey]);
                 }
             }
