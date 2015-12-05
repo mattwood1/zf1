@@ -31,9 +31,9 @@ class ImageController extends Coda_Controller
 
             if ($path) {
                 unlink($path);
-                $image->delete();
-                $imagehash->delete();
             }
+            $image->delete();
+            $imagehash->delete();
         }
         
         if ($this->_request->getParam('referer')) {

@@ -53,7 +53,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                         'mime' => $imageInfo['mime'],
                         'filename' => $urlPath                        
                     );
-
+                    
                     $image->fromArray($imageData);                
                     $image->save();
 
@@ -64,16 +64,16 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                     // No point re-hashing an image that hasn't changed.
                     if (!$imageHash) {
                         $imageHash = new God_Model_ImageHash();
-
-                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
-
-                        $imageHash->fromArray(array(
-                            'hash' => implode(",", $hash),
-                            'image_id' => $image->id
-                        ));
-
-                        $imageHash->save();
+                        $imageHash->image_id = $image->id;
                     }
+                    
+                    if (!$imageHash->hash) {
+                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
+                        $imageHash->hash = implode(",", $hash);
+                    }
+                    
+                    $imageHash->save();
+                    
                 }
             }
             

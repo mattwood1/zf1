@@ -61,7 +61,6 @@ class God_Model_Model extends God_Model_Base_Model
             // Query for photoset
             $photosetFound = false;
             foreach ( $this->photosets as $photoset ) {
-                
                 if ( $photoset->path == $this->path . '/' . $directory ) {
                     $photosetFound = true;
                     $photoset->updateImages();
@@ -79,6 +78,7 @@ class God_Model_Model extends God_Model_Base_Model
                 ));
 
                 $photoset->link('model', array($this->ID));
+                var_dump('Created gallery ' . $photoset->name, $files);                
                 $photoset->save();
                 
                 $photoset->updateImages();
