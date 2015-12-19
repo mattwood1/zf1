@@ -58,6 +58,9 @@ class ImageController extends Coda_Controller
         $image->photoset_id = $photoset->id;
         $image->save();
         
+        $photoset->manual_thumbnail = 0;
+        $photoset->save();
+        
         if ($this->_request->getParam('referer')) {
             $this->_redirect(urldecode($this->_request->getParam('referer')));
         }
