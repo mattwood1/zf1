@@ -123,7 +123,7 @@ class ModelController extends Coda_Controller
         $this->view->rankings = $modelTable->getRankingStats();
     }
     
-    public function thumbnailerAction()
+    public function thumbnailAction()
     {
         $photosetTable = new God_Model_PhotosetTable;;
         $query = $photosetTable->getThumbnails();

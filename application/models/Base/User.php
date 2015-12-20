@@ -43,5 +43,10 @@ class God_Model_Base_User extends Doctrine_Record
                 'type'               => 'boolean',
                 'length'             => '25'
         ));
+
+        $this->hasColumn('role', 'char', 50, array(
+                'type'               => 'char',
+                'length'             => '50'
+        ));
     }
 }
