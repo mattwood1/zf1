@@ -29,10 +29,14 @@
     <div class="col-md-1 col-sm-1 col-xs-2"><?php echo $url->httpStatusCode; ?></div>
     <div class="col-md-2 col-sm-2 col-xs-5">
         <select>
-            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
-            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
-            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
-            <option value="" <?php echo $url->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_NEW_URL; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_NEW_URL ? 'selected="selected"' : ''; ?>>New Url</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_GET_THUMBNAILS; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_GET_THUMBNAILS ? 'selected="selected"' : ''; ?>>Get Thumbnails</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE ? 'selected="selected"' : ''; ?>>Thubmnail Issue</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_GOT_THUMBNAILS; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS ? 'selected="selected"' : ''; ?>>Got Thumbnails</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_GET_IMAGES; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_GET_IMAGES ? 'selected="selected"' : ''; ?>>Get Images</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_GOT_IMAGES; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_GOT_IMAGES ? 'selected="selected"' : ''; ?>>Got Images</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_READY_TO_DOWNLOAD; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_READY_TO_DOWNLOAD ? 'selected="selected"' : ''; ?>>Ready for Download</option>
+            <option value="<?php echo God_Model_WebURLTable::ACTION_DOWNLOADED; ?>" <?php echo $url->action == God_Model_WebURLTable::ACTION_DOWNLOADED ? 'selected="selected"' : ''; ?>>Downloaded</option>
         </select>
         <span class="hidden-sm hidden-xs"><?php echo $url->action; ?></span>
     </div>
