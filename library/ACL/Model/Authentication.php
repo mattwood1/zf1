@@ -46,6 +46,10 @@ class ACL_Model_Authentication
 
             // get the current user record and refresh it
             $this->_current_user = $this->_auth->getIdentity();
+            if (!is_object($this->_current_user)) {
+                _dexit($this->_current_user);
+                $this->logOut ();
+            }
             $this->_current_user->refresh();
 
             // set the current user role
