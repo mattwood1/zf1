@@ -188,9 +188,18 @@ class ImageController extends Coda_Controller
 
     protected function _orientation()
     {
-        list($width,$height) = getimagesize($_SERVER['DOCUMENT_ROOT'].urldecode($this->_getParam('id')));
-        if ($width > $height) {
-            $this->_orientation = "landscape";
+        if (realpath($_SERVER['DOCUMENT_ROOT'].urldecode($this->_getParam('id'))) != false) {
+            list($width,$height) = getimagesize($_SERVER['DOCUMENT_ROOT'].urldecode($this->_getParam('id')));
+            if ($width > $height) {
+                $this->_orientation = "landscape";
+            }
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            $this->_setParam('id', urlencode("/img/error_404.jpg"));
+            list($width,$height) = getimagesize($_SERVER['DOCUMENT_ROOT'].urldecode($this->_getParam('id')));
+            if ($width > $height) {
+                $this->_orientation = "landscape";
+            }
         }
     }
 

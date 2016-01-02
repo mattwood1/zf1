@@ -225,7 +225,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         $hour = (int)date("G", mktime());
         $hour = $hour < 24 ? $hour = 2 : $hour;
         if ( $hour%2 == 0 ) {
-            foreach (array('random', 'top-random', 'bottom-ordered') as $remove) {
+            foreach (array('random', 'top-ordered', 'bottom-ordered') as $remove) {
                 $key = array_search($remove, $this->_modes);
                 if($key !== false) {
                     unset($this->_modes[$key]);
