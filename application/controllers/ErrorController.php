@@ -20,12 +20,14 @@ class ErrorController extends Coda_Controller
                 $this->getResponse()->setHttpResponseCode(404);
                 $priority = Zend_Log::NOTICE;
                 $this->view->message = 'Page not found';
+                $this->renderScript('error/error_404.phtml');
                 break;
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
                 $priority = Zend_Log::CRIT;
                 $this->view->message = 'Application error';
+                $this->renderScript('error/error_500.phtml');
                 break;
         }
 
