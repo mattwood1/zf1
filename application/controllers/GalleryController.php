@@ -73,25 +73,30 @@ class GalleryController extends Coda_Controller
         
         // SQL query with a WHERE seems to take a long time.
         
-        $results = $conn->execute('SELECT 
-            im1.id as imageid1,
-            p1.id photosetid1,
-            
-            im2.id as imageid2,
-            p2.id photosetid2
-            
-                FROM `imagehash` ih1
-                JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
-                JOIN images im1 ON (ih1.image_id = im1.id)
-                JOIN images im2 ON (ih2.image_id = im2.id)
-                
-                JOIN photosets p1 ON (im1.photoset_id = p1.id AND p1.id = ' . $pretestResults[0]['photosetid1'] . ')
-                JOIN photosets p2 ON (im2.photoset_id = p2.id AND p2.id = ' . $pretestResults[0]['photosetid2'] . ')
-                
-                WHERE ih1.hash != ""'
-        );  
+        $duplicateImages = null;
+        $photosets = null;
+        if ($pretestResults) {
+        
+            $results = $conn->execute('SELECT 
+                im1.id as imageid1,
+                p1.id photosetid1,
 
-        $duplicateImages = $results->fetchAll();
+                im2.id as imageid2,
+                p2.id photosetid2
+
+                    FROM `imagehash` ih1
+                    JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
+                    JOIN images im1 ON (ih1.image_id = im1.id)
+                    JOIN images im2 ON (ih2.image_id = im2.id)
+
+                    JOIN photosets p1 ON (im1.photoset_id = p1.id AND p1.id = ' . $pretestResults[0]['photosetid1'] . ')
+                    JOIN photosets p2 ON (im2.photoset_id = p2.id AND p2.id = ' . $pretestResults[0]['photosetid2'] . ')
+
+                    WHERE ih1.hash != ""'
+            );  
+
+            $duplicateImages = $results->fetchAll();
+        }
         
 //        _d(array('$duplicateImages' => $duplicateImages));
         

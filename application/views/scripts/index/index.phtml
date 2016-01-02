@@ -14,7 +14,7 @@
                 <?php
                 $image = '';
                 foreach (array_reverse($model['photosets']) as $recentPhotoset) {
-                    if ($recentPhotoset['manual_thumbnail']) {
+                    if ($recentPhotoset['manual_thumbnail'] && $recentPhotoset['active']) {
                         $image = $recentPhotoset['thumbnail'];
                         break;
                     }

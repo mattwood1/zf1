@@ -14,7 +14,9 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
             ->leftJoin('m.photosets p')
             ->where('photosetsChecked < ? OR photosetsChecked = ?', array(date("Y-m-d", strtotime("today")), "0000-00-00"))
             ->andWhere('m.ranking >= ?', 0)
-            ->andWhere('m.active = ?', 1);
+            ->andWhere('m.active = ?', 1)
+//            ->limit(1)
+            ;
         
         $models = $modelsQuery->execute();
         

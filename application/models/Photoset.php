@@ -19,12 +19,21 @@ class God_Model_Photoset extends God_Model_Base_Photoset
     
     public function updateImages()
     {
+        $path = APPLICATION_PATH . '/../public' . $this->path;
+        $thumbnail = APPLICATION_PATH . '/../public' . $this->thumbnail;
+        
+        if (realpath($thumbnail) != false) {
+            
+            $this->manual_thumbnail = 0;
+            $this->save();
+            
+        }
+        
         if (
             strtotime($this->imagesCheckedDate) < strtotime("-1 month")
             || $this->imagesCheckedDate == "0000-00-00"
         ) {
-
-            $path = APPLICATION_PATH . '/../public' . $this->path;
+            
             $files = God_Model_File::scanPath($path)->getFiles();
 
             foreach ($files as $file) {
@@ -53,7 +62,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                         'mime' => $imageInfo['mime'],
                         'filename' => $urlPath                        
                     );
-
+                    
                     $image->fromArray($imageData);                
                     $image->save();
 
@@ -64,16 +73,16 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                     // No point re-hashing an image that hasn't changed.
                     if (!$imageHash) {
                         $imageHash = new God_Model_ImageHash();
-
-                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
-
-                        $imageHash->fromArray(array(
-                            'hash' => implode(",", $hash),
-                            'image_id' => $image->id
-                        ));
-
-                        $imageHash->save();
+                        $imageHash->image_id = $image->id;
                     }
+                    
+                    if (!$imageHash->hash) {
+                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
+                        $imageHash->hash = implode(",", $hash);
+                    }
+                    
+                    $imageHash->save();
+                    
                 }
             }
             
