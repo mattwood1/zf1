@@ -46,6 +46,9 @@ class God_Model_ModelTable extends Doctrine_Record
      */
     public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
+        // SELECT ranking, count(ID) FROM `models` where active = 1 and ranking > 0 group by ranking
+        // Query needs work to check photosets exist
+        
         if (!$this->_ranking) {
             
             $this->getModels();
