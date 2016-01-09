@@ -8,8 +8,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
 {
     public function run()
     {
-        $modelNameTable = new God_Model_ModelNameTable();
-        $modelNamesQuery = $modelNameTable->getInstance()
+        $modelNamesQuery = God_Model_ModelNameTable::getInstance()
             ->createQuery('mn')
             ->where('mn.datesearched < ?', date("Y-m-d", strtotime("-1 week")) )
             ->leftJoin('mn.model m')
@@ -22,8 +21,7 @@ class Job_Model_CheckWebUrls extends Job_Abstract
 
         foreach ($modelNames as $modelName) {
             _d($modelName->name);
-            $webUrlsTable = new God_Model_WebURLTable();
-            $webUrlsQuery = $webUrlsTable->getInstance()
+            $webUrlsQuery = God_Model_WebURLTable::getInstance()
                 ->createQuery('wu');
             $webUrlsQuery->where('linked <= 0');
             foreach (explode(" ", $modelName->name) as $namepart) {

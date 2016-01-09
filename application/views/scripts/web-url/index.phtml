@@ -81,6 +81,11 @@ function renderpath ($url, $path) {
     if (strstr($path, "http")) {
         return $path;
     }
+    
+    if (strstr($path, "//")) {
+        $urlParts = parse_url($url);
+        return $urlParts['scheme'].':'.$path;
+    }
 
     if (preg_match("~(\/).~", $path)) {
         $urlParts = parse_url($url);

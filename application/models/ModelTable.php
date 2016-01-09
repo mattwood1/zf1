@@ -121,20 +121,20 @@ class God_Model_ModelTable extends Doctrine_Record
     
     public function addModel($name)
     {
-        $modelnames = $this->getInstance()->createQuery('m')
-                ->leftJoin('m.names n')
-                ->where('n.name = ?', $name)
-                ->execute();
+        $modelnames = God_Model_ModelNameTable::getInstance()->findBy('name', $name);
         
         if (count($modelnames) == 0) {
-            $model = new God_Model_Model();
-            $model->name = $name;
+            $model = God_Model_ModelTable::getInstance()->create(array(
+                'name' => $name
+            ));
             $model->save();
-            
-            $modelname = new God_Model_ModelName();
-            $modelname->name = $name;
-            $modelname->model_id = $model->id;
-            $modelname->default = 1;
+                        
+            $modelname = God_Model_ModelNameTable::getInstance()->create(array(
+                'name' => $name,
+                'model_id' => $model->id,
+                'default' => 1
+            ));
+            $modelname->save();
             
             return true;
         } else {
