@@ -24,6 +24,7 @@ class God_Model_WebURLTable extends Doctrine_Record
     const LINK_FROM         = -7;
 
     // Action Codes
+    const ACTION_DISCARDED         = -10;
     const ACTION_FROM              = -7;
     const ACTION_SEARCH            = -6;
     const ACTION_CRAWL_FOR_LINKS   = -1;
