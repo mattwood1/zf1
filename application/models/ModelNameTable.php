@@ -13,7 +13,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
             ->innerJoin('mn.model m')
             ->where('m.active = ?', 1)
             ->andWhere('m.ranking > -1');
-        return $query->execute();
+        return $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
     }
 
 }

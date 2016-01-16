@@ -50,6 +50,11 @@ class Job_Model_CheckWebUrls extends Job_Abstract
                     $modelNameWebUrl->save();
                 }
                 $webUrl->linked = God_Model_WebURLTable::LINK_FOUND;
+                if ($webUrl->action < God_Model_WebURLTable::ACTION_GET_THUMBNAILS
+                        || $webUrl->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE
+                ) {
+                    $webUrl->action = God_Model_WebURLTable::ACTION_GET_THUMBNAILS;
+                }
                 $webUrl->save();
             }
 

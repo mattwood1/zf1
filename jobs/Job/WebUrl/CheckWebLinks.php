@@ -13,10 +13,10 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
             ->where('linked = ?', God_Model_WebURLTable::LINK_NOT_LINKED)
-            ->limit(800)
+            ->limit(1500)
         ;
         $webUrls = $webUrlsQuery->execute();
-
+        
         foreach ($webUrls as $webUrl) {
             if (preg_match("~(\/search\/)~i", $webUrl->url)) {
                 $webUrl->action = God_Model_WebURLTable::ACTION_CRAWL_FOR_LINKS;
@@ -33,6 +33,8 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
                 || $webUrl->action == God_Model_WebURLTable::ACTION_GET_THUMBNAILS
                 || $webUrl->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS
                 || $webUrl->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE
+                || ($webUrl->action == God_Model_WebURLTable::ACTION_CRAWL_FOR_LINKS              
+                    && $webUrl->linked == God_Model_WebURLTable::LINK_NOT_LINKED)
                 || ($webUrl->action == God_Model_WebURLTable::PARENT_LINKED
                     && $webUrl->linked == God_Model_WebURLTable::LINK_NOT_LINKED)
             ){
@@ -61,7 +63,7 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
                 }
                 $webUrl->linked = God_Model_WebURLTable::LINK_TO_BE_LINKED;
             }
-
+            
             $webUrl->save();
         }
     }

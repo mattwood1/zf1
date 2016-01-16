@@ -12,11 +12,11 @@ class Job_WebUrl_LinkModelNames extends Job_Abstract
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
             ->where('linked = ?', God_Model_WebURLTable::LINK_TO_BE_LINKED)
-            ->limit(50);
+            ->limit(1500);
         $webUrls = $webUrlsQuery->execute();
-
+        
         foreach ($webUrls as $webUrl) {
-            //var_dump($webUrl->url);
+            
             $webUrl->linked = God_Model_WebURLTable::LINK_ATTEMPTED; // Processed by this script
 
             $webUrl->linkModelNameToUrl();
