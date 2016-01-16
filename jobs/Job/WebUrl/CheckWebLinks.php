@@ -29,14 +29,11 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
 
             // These will need following up.
             if ($webUrl->action == God_Model_WebURLTable::ACTION_DISCARDED
-                || $webUrl->action == God_Model_WebURLTable::ACTION_NEW_URL
-                || $webUrl->action == God_Model_WebURLTable::ACTION_GET_THUMBNAILS
-                || $webUrl->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS
-                || $webUrl->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE
-                || ($webUrl->action == God_Model_WebURLTable::ACTION_CRAWL_FOR_LINKS              
-                    && $webUrl->linked == God_Model_WebURLTable::LINK_NOT_LINKED)
-                || ($webUrl->action == God_Model_WebURLTable::PARENT_LINKED
-                    && $webUrl->linked == God_Model_WebURLTable::LINK_NOT_LINKED)
+                || $webUrl->action == God_Model_WebURLTable::ACTION_SEARCH
+                || $webUrl->action == God_Model_WebURLTable::ACTION_FROM
+//                || $webUrl->action == God_Model_WebURLTable::ACTION_GOT_THUMBNAILS
+//                || $webUrl->action == God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE
+                || $webUrl->linked == God_Model_WebURLTable::LINK_NOT_LINKED
             ){
                 $webUrl->linked = God_Model_WebURLTable::LINK_TO_BE_LINKED;
             }
