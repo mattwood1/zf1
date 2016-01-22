@@ -13,7 +13,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
             ->createQuery('wu')
             ->where('action = ?', God_Model_WebURLTable::ACTION_GET_THUMBNAILS)
             ->orderBy('id ASC')
-            ->limit(10);
+            ->limit(300);
         $webUrls = $webUrlsQuery->execute();
 
         if ($webUrls) {
@@ -33,10 +33,12 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                         $webUrl->linked = $newWebUrl->id;
                     } else {
                         $webUrl->httpStatusCode = $curl->statusCode();
-                        $domXPath = new God_Model_DomXPath($html);
-                        $links = $domXPath->evaluate($webResource->xpathfilter);
-                        $imageLinks = $domXPath->evaluate(str_replace("/img", "", $webResource->xpathfilter));
-                        $allLinks = $domXPath->evaluate("//a");
+                        if ($webResource->xpathfilter) {
+                            $domXPath = new God_Model_DomXPath($html);
+                            $links = $domXPath->evaluate($webResource->xpathfilter);
+                            $imageLinks = $domXPath->evaluate(str_replace("/img", "", $webResource->xpathfilter));
+                            $allLinks = $domXPath->evaluate("//a");
+                        }
                     }
                 }
                 
