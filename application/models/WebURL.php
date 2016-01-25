@@ -14,10 +14,17 @@ class God_Model_WebURL extends God_Model_Base_WebURL
                 $this->linked = God_Model_WebURLTable::LINK_FOUND;            // Name Match found
                 $this->action = God_Model_WebURLTable::ACTION_GET_THUMBNAILS; // Set to get thumbs
 
-                $modelNameWebUrl = God_Model_ModelNameWebURLTable::getInstance()->create(array(
-                        'model_name_id' => $modelName['ID'],
-                        'webUrl_id'     => $this->id
-                ));
+                // Check link exists
+                $modelNameWebUrl = God_Model_ModelNameWebURLTable::getInstance()->createQuery('mnwu')
+                        ->where('model_name_id = ?', $modelName['ID'])
+                        ->andWhere('webUrl_id = ?', $this->id)
+                        ->fetchOne();
+                if (!$modelNameWebUrl) {
+                    $modelNameWebUrl = God_Model_ModelNameWebURLTable::getInstance()->create(array(
+                            'model_name_id' => $modelName['ID'],
+                            'webUrl_id'     => $this->id
+                    ));
+                }
                 $modelNameWebUrl->save();
             }
         }
