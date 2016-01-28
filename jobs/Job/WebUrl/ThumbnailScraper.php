@@ -12,8 +12,9 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
             ->where('action = ?', God_Model_WebURLTable::ACTION_GET_THUMBNAILS)
-            ->orderBy('id ASC')
-            ->limit(300);
+            ->orWhere('action = ? and httpStatusCode = 0', God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE)
+            ->orderBy('dateCreated DESC')
+            ->limit(700);
         $webUrls = $webUrlsQuery->execute();
 
         if ($webUrls) {
@@ -21,18 +22,24 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                 $webURLTable = new God_Model_WebURLTable;
                 $webResourceTable = new God_Model_WebResourceTable;
                 $webResource = $webResourceTable->getInstance()->findOneBy('id', $webUrl->webResourceId);
+                
                 $links = array();
-                if ($webResource && $webResource->xpathfilter) {
+                $allLinks = array();
+                $imageLinks = '';
+                
+                if ($webResource) {
 
                     $curl = new God_Model_Curl();
                     $html = $curl->Curl($webUrl->url, null, false, 30, true); // Follow 301
+                    
+                    $webUrl->httpStatusCode = $curl->statusCode();
+                        
                     if ($webUrl->url != $curl->lastUrl()) {
                         $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
                         $newWebUrl->dateCreated = $webUrl->dateCreated;
                         $newWebUrl->save();
                         $webUrl->linked = $newWebUrl->id;
                     } else {
-                        $webUrl->httpStatusCode = $curl->statusCode();
                         if ($webResource->xpathfilter) {
                             $domXPath = new God_Model_DomXPath($html);
                             $links = $domXPath->evaluate($webResource->xpathfilter);
@@ -73,6 +80,8 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
                     $webUrl->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
                 }
 
+                _d($webUrl);
+                
                 $webUrl->save();
                 /*
                 if ($allLinkHref) {

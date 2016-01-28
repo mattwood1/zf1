@@ -32,6 +32,11 @@ class God_Model_Curl
     {
         return $this->_statusCode;
     }
+    
+    public function rawdata()
+    {
+        return $this->_rawdata;
+    }
 
     public function lastUrl()
     {
