@@ -58,6 +58,11 @@ class God_Model_Base_WebURL extends Doctrine_Record
                 'type'               => 'date',
                 'length'             => '25'
         ));
+        
+        $this->hasColumn('dateUpdated', 'date', 25, array(
+                'type'               => 'date',
+                'length'             => '25'
+        ));
     }
 
     public function setUp()

@@ -29,4 +29,70 @@ class God_Model_WebURL extends God_Model_Base_WebURL
             }
         }
     }
+    
+    public function getThumbnails()
+    {
+        $webURLTable = new God_Model_WebURLTable;
+        $webResource = God_Model_WebResourceTable::getInstance()->findOneBy('id', $this->webResourceId);
+
+        $links = array();
+        $allLinks = array();
+        $imageLinks = '';
+        
+        $curl = new God_Model_Curl();
+        $html = $curl->Curl($this->url, null, false, 30, true); // Follow 301
+
+        $this->httpStatusCode = $curl->statusCode();
+        
+        if ($webResource) {
+            if ($this->url != $curl->lastUrl()) {
+                $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
+                $newWebUrl->dateCreated = $this->dateCreated;
+                $newWebUrl->save();
+                $this->linked = $newWebUrl->id;
+            } else {
+                if ($webResource->xpathfilter) {
+                    $domXPath = new God_Model_DomXPath($html);
+                    $links = $domXPath->evaluate($webResource->xpathfilter);
+                    $imageLinks = $domXPath->evaluate(str_replace("/img", "", $webResource->xpathfilter));
+                    $allLinks = $domXPath->evaluate("//a");
+                }
+            }
+        }
+
+        $imageLinkHref = array();
+        $allLinkHref = array();
+        if ($imageLinks) {
+            foreach ($imageLinks as $imageLink) {
+                $imageLinkHref[] = $imageLink['href'];
+            }
+        }
+
+        if ($allLinks) {
+            foreach ($allLinks as $allLink) {
+                $allLinkHref[] = $allLink['href'];
+            }
+        }
+
+        if ($links) {
+            // Split them - Old code millions already done...
+            $img = array();
+            $href = array();
+            foreach ($links as $link) {
+                $img[] = $link['img'];
+                $href[] = $link['href'];
+            }
+
+            $this->thumbnails = serialize($img);
+            $this->links = serialize($href);
+            $this->action = God_Model_WebURLTable::ACTION_GOT_THUMBNAILS;
+        } else {
+            // Mark the webUrl as bad
+            $this->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
+        }
+        
+        $this->dateUpdated = date("Y-m-d H-i-s", time());
+
+        $this->save();
+    }
 }
