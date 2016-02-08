@@ -44,7 +44,7 @@
         <?php if ($url['ModelNameWebURL']): ?>
         <ul class="list-unstyled">
         <?php foreach ($url['ModelNameWebURL'] as $modelNameLink): ?>
-            <li><a href="<?php echo $this->url(array('controller'=>'web-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['ID']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
+            <li><a href="<?php echo $this->url(array('controller'=>'web-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['model_id']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
         <?php endforeach; ?>
         </ul>
         <?php endif; ?>
@@ -57,15 +57,24 @@
         if ($thumbnails = unserialize($url['thumbnails'])):
             
             if ($url['links']) {
-                $thumbnails = unserialize($url['links']);
+                $links = unserialize($url['links']);
+                if (strstr('.jpg', $links[0])) {
+                    $thumbnails = $links;
+                }
             }
     ?>
     <div class="col-md-12">
+        <div class="row">
         <?php foreach($thumbnails as $thumbnail): ?>
-        <a class="col-lg-1 col-sm-2 col-xs-3" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo renderpath($url['url'], $thumbnail); ?>">
-            <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo renderpath($url['url'], $thumbnail); ?>&width=80" />
-        </a>
+            <div class="col-lg-1 col-sm-2 col-xs-3">
+                <a class="thumbnail" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo renderpath($url['url'], $thumbnail); ?>">
+                    <div class="image thumb">
+                        <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo renderpath($url['url'], $thumbnail); ?>&width=80" />
+                    </div>
+                </a>
+            </div>
         <?php endforeach; ?>
+        </div>
     </div>
     <?php endif; ?>
     
@@ -93,7 +102,7 @@ function renderpath ($url, $path) {
 
     if (preg_match("~(\/).~", $path)) {
         $urlParts = parse_url($url);
-        return $urlParts['scheme'].'://'.$urlParts['host'].'/'.$path;
+        return $urlParts['scheme'].'://'.$urlParts['host'].$path;
     }
 
     return $url.$path;

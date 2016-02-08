@@ -54,7 +54,8 @@ class God_Model_WebURL extends God_Model_Base_WebURL
                 if ($webResource->xpathfilter) {
                     $domXPath = new God_Model_DomXPath($html);
                     $links = $domXPath->evaluate($webResource->xpathfilter);
-                    $imageLinks = $domXPath->evaluate(str_replace("/img", "", $webResource->xpathfilter));
+                    $imageXPath = preg_replace(array('//img', '/img'), array('', ''), $webResource->xpathfilter);
+                    $imageLinks = $domXPath->evaluate($imageXPath);
                     $allLinks = $domXPath->evaluate("//a");
                 }
             }
