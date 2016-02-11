@@ -14,7 +14,7 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
             // Pick up thumbnail issues with status 0 in older than a month.
             ->orWhere('action = ? and httpStatusCode = 0 and dateUpdated = "0000-00-00 00:00:00" ', God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE)
             ->orderBy('dateCreated DESC')
-            ->limit(500);
+            ->limit(100);
         
         $webUrls = $webUrlsQuery->execute();
         

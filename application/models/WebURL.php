@@ -40,12 +40,21 @@ class God_Model_WebURL extends God_Model_Base_WebURL
         $imageLinks = '';
         
         $curl = new God_Model_Curl();
-        $html = $curl->Curl($this->url, null, false, 30, true); // Follow 301
-
+        $html = $curl->Curl($this->url, null, false, 5, true); // Follow redirectss
+        
         $this->httpStatusCode = $curl->statusCode();
+        
+        if ($curl->statusCode() == 0) {
+            $this->dateUpdated = date("Y-m-d H-i-s", time());
+            $this->action = God_Model_WebURLTable::ACTION_DISCARDED;
+        }
+        
+        $this->save();
         
         if ($webResource) {
             if ($this->url != $curl->lastUrl()) {
+                $this->action = God_Model_WebURLTable::ACTION_DISCARDED;
+                $this->save();
                 $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
                 $newWebUrl->dateCreated = $this->dateCreated;
                 $newWebUrl->save();
@@ -54,7 +63,7 @@ class God_Model_WebURL extends God_Model_Base_WebURL
                 if ($webResource->xpathfilter) {
                     $domXPath = new God_Model_DomXPath($html);
                     $links = $domXPath->evaluate($webResource->xpathfilter);
-                    $imageXPath = preg_replace(array('//img', '/img'), array('', ''), $webResource->xpathfilter);
+                    $imageXPath = preg_replace(array('~//img~', '~/img~'), array('', ''), $webResource->xpathfilter);
                     $imageLinks = $domXPath->evaluate($imageXPath);
                     $allLinks = $domXPath->evaluate("//a");
                 }
@@ -74,7 +83,7 @@ class God_Model_WebURL extends God_Model_Base_WebURL
                 $allLinkHref[] = $allLink['href'];
             }
         }
-
+        
         if ($links) {
             // Split them - Old code millions already done...
             $img = array();
@@ -93,7 +102,7 @@ class God_Model_WebURL extends God_Model_Base_WebURL
         }
         
         $this->dateUpdated = date("Y-m-d H-i-s", time());
-
+        
         $this->save();
     }
 }

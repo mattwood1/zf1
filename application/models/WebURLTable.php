@@ -58,10 +58,10 @@ class God_Model_WebURLTable extends Doctrine_Record
         if (!$action ) {
             $action = God_Model_WebURLTable::ACTION_NEW_URL;
         }
-        $urlQuery = $this->getURL($url);
-        $urlData = $this->getQuery()->execute();
+        
+        $urlData = $this->getInstance()->findOneBy('url', $url);
 
-        if (!$urlData->toArray()) {
+        if (!is_object($urlData)) {
             $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create(array(
                     'webResourceId' => $webResource->id,
                     'url' => $url,
@@ -83,9 +83,7 @@ class God_Model_WebURLTable extends Doctrine_Record
             $webResource->save();
 
             $urlData = $webUrl;
-        } else {
-            return $urlData[0];
-        }
+        } 
 
         return $urlData;
     }
