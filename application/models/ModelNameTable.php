@@ -5,6 +5,20 @@ class God_Model_ModelNameTable extends Doctrine_Record
     {
         return Doctrine_Core::getTable('God_Model_ModelName');
     }
+    
+    public static function getModelNameToBeSearched()
+    {
+        $modelNamesQuery = self::getInstance()
+            ->createQuery('mn')
+            ->where('mn.datesearched < ? OR mn.datesearched = "0000-00-00 00:00:00"', date("Y-m-d", strtotime("-1 week")) )
+            ->leftJoin('mn.model m')
+            ->andWhere('m.active = ?', 1)
+            ->andWhere('m.search = ?', 1)
+            ->andWhere('m.ranking >= ?', 0)
+            ->orderBy('mn.datesearched asc')
+            ->limit(1);
+        return $modelNamesQuery->execute();
+    }
 
     public function getActiveModelNames()
     {

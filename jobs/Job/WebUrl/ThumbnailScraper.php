@@ -15,11 +15,15 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
             ->orWhere('action = ? and httpStatusCode = 0 and dateUpdated = "0000-00-00 00:00:00" ', God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE)
             ->orderBy('dateCreated DESC')
             ->limit(100);
-        
+        echo "Getting list...\n\n";
         $webUrls = $webUrlsQuery->execute();
         
         if ($webUrls) {
+            echo "Processing " . count($webUrls) . " urls\n\n";
+            
             foreach ($webUrls as $webUrl) {
+                _d($webUrl->url);
+                
                 $webUrl->getThumbnails();
             }
         }

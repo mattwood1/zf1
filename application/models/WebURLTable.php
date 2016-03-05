@@ -60,6 +60,8 @@ class God_Model_WebURLTable extends Doctrine_Record
         }
         
         $urlData = $this->getInstance()->findOneBy('url', $url);
+        
+        _d('urlData', $urlData, $url);
 
         if (!is_object($urlData)) {
             $webUrl = Doctrine_Core::getTable('God_Model_WebURL')->create(array(

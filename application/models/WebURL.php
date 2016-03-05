@@ -40,19 +40,22 @@ class God_Model_WebURL extends God_Model_Base_WebURL
         $imageLinks = '';
         
         $curl = new God_Model_Curl();
-        $html = $curl->Curl($this->url, null, false, 5, true); // Follow redirectss
+        $html = $curl->Curl($this->url, null, false, 5, true); // Follow redirects
         
         $this->httpStatusCode = $curl->statusCode();
+        $this->dateUpdated = date("Y-m-d H-i-s", time());
         
-        if ($curl->statusCode() == 0) {
-            $this->dateUpdated = date("Y-m-d H-i-s", time());
+        if ($this->httpStatusCode == 0 || $this->httpStatusCode == 404) {
             $this->action = God_Model_WebURLTable::ACTION_DISCARDED;
+            $this->save();
+            return;
+        } else {
+            $this->save();
         }
-        
-        $this->save();
         
         if ($webResource) {
             if ($this->url != $curl->lastUrl()) {
+                echo "Redirect occured.\n\n";
                 $this->action = God_Model_WebURLTable::ACTION_DISCARDED;
                 $this->save();
                 $newWebUrl = $webURLTable->insertLink($curl->lastUrl(), $webResource);
@@ -100,8 +103,6 @@ class God_Model_WebURL extends God_Model_Base_WebURL
             // Mark the webUrl as bad
             $this->action = God_Model_WebURLTable::ACTION_THUMBNAIL_ISSUE;
         }
-        
-        $this->dateUpdated = date("Y-m-d H-i-s", time());
         
         $this->save();
     }
