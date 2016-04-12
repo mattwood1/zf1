@@ -8,7 +8,7 @@ class Job_WebUrl_LinkModelNames extends Job_Abstract
 {
     public function run()
     {
-        $this->cleanup();
+//        $this->cleanup();
         
         $webUrlsTable = new God_Model_WebURLTable;
         $webUrlsQuery = $webUrlsTable->getInstance()
