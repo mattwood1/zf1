@@ -50,17 +50,19 @@ class God_Model_ModelTable extends Doctrine_Record
         // Query needs work to check photosets exist
         
         if (!$this->_ranking) {
+            $conn = Doctrine_Manager::getInstance()->connection();
             
-            $this->getModels();
-            $this->getActivePhotosets();
-            $this->getOnlyManualThumbs();
-            if ($checkPhotosets) {
-                $this->_query
-                    ->select('m.*');
-            }
+            $sql = "SELECT * "
+                    . "FROM models m "
+                    . "INNER JOIN model_names m2 ON m.id = m2.model_id "
+                    . "LEFT JOIN photosets p ON m.id = p.model_id "
+                    . "WHERE (m.active = '1' AND m.ranking >= '0' AND m2.default = '1' AND p.active = '1' AND p.manual_thumbnail = '1') "
+                    . "GROUP BY m.id";
             
-            // 26 seconds to process models, 7 seconds for an array.
-            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
+            $query = $conn->execute($sql);
+            $models = $query->fetchAll();
+            
+            foreach ($models as $model) {
                 @$this->_ranking[$model['ranking']]++; // @ to suppress warnings.
             }
         }
