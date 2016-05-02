@@ -22,7 +22,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         $path = APPLICATION_PATH . '/../public' . $this->path;
         $thumbnail = APPLICATION_PATH . '/../public' . $this->thumbnail;
         
-        if (realpath($thumbnail) != false) {
+        if ($this->manual_thumbnail == 1 && realpath($thumbnail) == false) {
             
             $this->manual_thumbnail = 0;
             $this->save();

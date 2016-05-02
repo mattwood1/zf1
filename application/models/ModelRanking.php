@@ -71,11 +71,17 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
                 break;
             } 
             // Ensures that if it is concurrent it needs to be less than highBottomPrev
-            elseif ( $highBottomMode == 'split' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
+            elseif ( $highBottomMode == 'split' 
+                    && array_key_exists($currentHighKey, $this->_rankingStats) 
+                    && array_key_exists($highBottomPrev, $this->_rankingStats)
+                    && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev] -1 ) {
                 $this->_highBottom = $currentHighKey;
                 break;
             }
-            elseif ( $highBottomMode == 'flat' && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
+            elseif ( $highBottomMode == 'flat' 
+                    && array_key_exists($currentHighKey, $this->_rankingStats) 
+                    && array_key_exists($highBottomPrev+1, $this->_rankingStats)
+                    && $this->_rankingStats[$currentHighKey] <= $this->_rankingStats[$highBottomPrev+1] -1 ) {
                 $this->_highBottom = $currentHighKey;
                 break;
             }

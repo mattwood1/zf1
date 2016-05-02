@@ -10,10 +10,11 @@ class WebUrlController extends Coda_Controller
 
     public function indexAction()
     {
-        $webUrlTable = new God_Model_WebURLTable();
-        $webUrlQuery = $webUrlTable->getInstance()
+        $webUrlQuery = God_Model_WebURLTable::getInstance()
             ->createQuery('wu')
-            ->orderBy('wu.dateCreated DESC');
+            ->orderBy('wu.dateCreated DESC')
+            ->leftJoin('wu.ModelNameWebURL mnwu')
+            ->leftJoin('mnwu.modelName mn');
 
         if ($this->_request->getParam('webresourceid')) {
             $this->view->webresource = God_Model_WebResourceTable::getInstance()->find($this->_request->getParam('webresourceid'));
@@ -31,15 +32,13 @@ class WebUrlController extends Coda_Controller
             }
             
             $webUrlQuery
-            ->innerJoin('wu.ModelNameWebURL mnwu')
-            ->innerJoin('mnwu.modelName mn')
             ->whereIn('mn.id', $modelIds);
         }
 
         $webUrlQuery->andWhere('wu.linked < 0');
         
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
-        $webUrls = $paginator->execute();
+        $webUrls = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $this->view->paginator = $paginator;
         $this->view->webUrls = $webUrls;

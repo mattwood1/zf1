@@ -46,18 +46,23 @@ class God_Model_ModelTable extends Doctrine_Record
      */
     public function getRankingStats($minimum = 1, $checkPhotosets = false)
     {
+        // SELECT ranking, count(ID) FROM `models` where active = 1 and ranking > 0 group by ranking
+        // Query needs work to check photosets exist
+        
         if (!$this->_ranking) {
+            $conn = Doctrine_Manager::getInstance()->connection();
             
-            $this->getModels();
-            $this->getActivePhotosets();
-            $this->getOnlyManualThumbs();
-            if ($checkPhotosets) {
-                $this->_query
-                    ->select('m.*');
-            }
+            $sql = "SELECT * "
+                    . "FROM models m "
+                    . "INNER JOIN model_names m2 ON m.id = m2.model_id "
+                    . "LEFT JOIN photosets p ON m.id = p.model_id "
+                    . "WHERE (m.active = '1' AND m.ranking >= '0' AND m2.default = '1' AND p.active = '1' AND p.manual_thumbnail = '1') "
+                    . "GROUP BY m.id";
             
-            // 26 seconds to process models, 7 seconds for an array.
-            foreach ($this->_query->execute( array(), Doctrine_Core::HYDRATE_ARRAY) as $model) {
+            $query = $conn->execute($sql);
+            $models = $query->fetchAll();
+            
+            foreach ($models as $model) {
                 @$this->_ranking[$model['ranking']]++; // @ to suppress warnings.
             }
         }
@@ -118,20 +123,20 @@ class God_Model_ModelTable extends Doctrine_Record
     
     public function addModel($name)
     {
-        $modelnames = $this->getInstance()->createQuery('m')
-                ->leftJoin('m.names n')
-                ->where('n.name = ?', $name)
-                ->execute();
+        $modelnames = God_Model_ModelNameTable::getInstance()->findBy('name', $name);
         
         if (count($modelnames) == 0) {
-            $model = new God_Model_Model();
-            $model->name = $name;
+            $model = God_Model_ModelTable::getInstance()->create(array(
+                'name' => $name
+            ));
             $model->save();
-            
-            $modelname = new God_Model_ModelName();
-            $modelname->name = $name;
-            $modelname->model_id = $model->id;
-            $modelname->default = 1;
+                        
+            $modelname = God_Model_ModelNameTable::getInstance()->create(array(
+                'name' => $name,
+                'model_id' => $model->id,
+                'default' => 1
+            ));
+            $modelname->save();
             
             return true;
         } else {

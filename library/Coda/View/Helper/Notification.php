@@ -18,18 +18,19 @@ class Coda_View_Helper_Notification extends Zend_View_Helper_Abstract
             }
         }
     }
-    
+
     protected function checkAll()
     {
         $notification = false;
-        
+
         if ($this->checkThumbnail()) $notification = true;
-        
+        if ($this->checkDuplicate()) $notification = true;
+
         if ($notification) return $this->html('large');
-        
+
         return false;
     }
-    
+
     protected function checkThumbnail()
     {
         $photosetTable = new God_Model_PhotosetTable();
@@ -40,27 +41,11 @@ class Coda_View_Helper_Notification extends Zend_View_Helper_Abstract
         }
         return false;
     }
-    
+
     protected function checkDuplicate()
     {
-        $conn = Doctrine_Manager::getInstance()->connection();
-        
-        $pretest = $conn->execute('SELECT 
-            p1.id photosetid1,
-            p2.id photosetid2
-            
-                FROM `imagehash` ih1
-                JOIN imagehash ih2 ON (ih1.hash = ih2.hash and ih1.id != ih2.id)
-                JOIN images im1 ON (ih1.image_id = im1.id)
-                JOIN images im2 ON (ih2.image_id = im2.id)
-                
-                JOIN photosets p1 ON (im1.photoset_id = p1.id)
-                JOIN photosets p2 ON (im2.photoset_id = p2.id)
-                
-                WHERE ih1.hash != ""
-                LIMIT 1');
-        $pretestResults = $pretest->fetchAll();
-        
+        $pretestResults = God_Model_ImageHashTable::getDuplicateHashes(true, 1);
+
         if ($pretestResults) {
             return true;
         }

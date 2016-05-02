@@ -178,6 +178,14 @@ class ImageController extends Coda_Controller
                 echo $curl->image($this->_request->getParam('width'));
                 $image = ob_get_clean();
 
+                if ($curl->statusCode() != 200) {
+                    ob_end_clean();
+                    $curl->Curl("http://zf2.privatedns.org/img/error_404.jpg", true, 4, true);
+                    ob_start();
+                    echo $curl->image($this->_request->getParam('width'));
+                    $image = ob_get_clean();
+                }
+                
                 $cache->save($image, $cachekey);
             }
             header("Content-Type: image/jpeg");
