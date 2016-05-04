@@ -54,11 +54,11 @@ class GalleryController extends Coda_Controller
 
         // SQL query with a WHERE seems to take a long time.
 
-        _d(array('pretest' => $pretestResults));
-
         $duplicateImages = null;
         $photosets = null;
         if ($pretestResults) {
+
+            $conn = Doctrine_Manager::getInstance()->connection();
 
             $results = $conn->execute('SELECT
                 im1.id as imageid1,
@@ -80,8 +80,6 @@ class GalleryController extends Coda_Controller
 
             $duplicateImages = $results->fetchAll();
         }
-
-        _d(array($duplicateImages));
 
         if ($duplicateImages) {
 
