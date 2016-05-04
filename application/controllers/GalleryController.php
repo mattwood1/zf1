@@ -54,6 +54,8 @@ class GalleryController extends Coda_Controller
 
         // SQL query with a WHERE seems to take a long time.
 
+        _d(array('pretest' => $pretestResults));
+
         $duplicateImages = null;
         $photosets = null;
         if ($pretestResults) {
@@ -78,6 +80,8 @@ class GalleryController extends Coda_Controller
 
             $duplicateImages = $results->fetchAll();
         }
+
+        _d(array($duplicateImages));
 
         if ($duplicateImages) {
 

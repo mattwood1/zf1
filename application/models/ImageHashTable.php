@@ -22,7 +22,7 @@ class God_Model_ImageHashTable extends Doctrine_Record
             $pretestResults = unserialize($cache->load($cachekey));
         }
 
-        if ($pretestResults === false) {
+        if (!$pretestResults) {
 
             $conn = Doctrine_Manager::getInstance()->connection();
 

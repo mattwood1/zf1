@@ -45,7 +45,7 @@ class Coda_View_Helper_Notification extends Zend_View_Helper_Abstract
     protected function checkDuplicate()
     {
         $pretestResults = God_Model_ImageHashTable::getDuplicateHashes(true, 1);
-
+// _dexit($pretestResults);
         if ($pretestResults) {
             return true;
         }
