@@ -14,12 +14,12 @@ class God_Model_ImageHashTable extends Doctrine_Record
     public static function getDuplicateHashes($useCache = false, $limit = null)
     {
         // Adding caching
-        $cache = Zend_Cache::factory('Core', 'Memcached', array('lifetime' => (60*60) ));
+        $cache = new Coda_Cache();
         $cachekey = "DuplicateHashes";
         $pretestResults = false;
 
         if ($useCache) {
-            $pretestResults = unserialize($cache->load($cachekey));
+            $pretestResults = $cache->load($cachekey);
         }
 
         if ($pretestResults === false) {
@@ -47,7 +47,7 @@ class God_Model_ImageHashTable extends Doctrine_Record
             $pretestResults = $pretest->fetchAll();
         }
 
-        $cache->save(serialize($pretestResults), $cachekey);
+        $cache->save($cachekey, $pretestResults);
 
         return $pretestResults;
     }

@@ -5,7 +5,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
     {
         return Doctrine_Core::getTable('God_Model_ModelName');
     }
-    
+
     public static function getModelNameToBeSearched()
     {
         $modelNamesQuery = self::getInstance()
@@ -22,7 +22,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
 
     public function getActiveModelNames()
     {
-        $cache = Zend_Cache::factory('Core', 'Memcached', array('automatic_serialization' => true));
+        $cache = new Coda_Cache();
         $cachekey = 'activeModelNames';
 
         $activeModelNames = $cache->load($cachekey);
@@ -35,9 +35,10 @@ class God_Model_ModelNameTable extends Doctrine_Record
                 ->where('m.active = ?', 1)
                 ->andWhere('m.ranking > -1');
             $activeModelNames = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-            $cache->save($activeModelNames, $cachekey, array(), 36000); // cache for 1 hour
         }
-        
+
+        $cache->save($cachekey, $activeModelNames);
+
         return $activeModelNames;
     }
 

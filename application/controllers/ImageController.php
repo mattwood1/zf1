@@ -20,11 +20,11 @@ class ImageController extends Coda_Controller
     {
         // action body
     }
-    
+
     public function deleteAction()
     {
         $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
-        
+
         if ($image) {
             $imagehash = God_Model_ImageHashTable::getInstance()->findBy('image_id', $image->id);
             $path = realpath(IMAGE_DIR . $image->filename);
@@ -35,39 +35,39 @@ class ImageController extends Coda_Controller
             $image->delete();
             $imagehash->delete();
         }
-        
+
         if ($this->_request->getParam('referer')) {
             $this->_redirect(urldecode($this->_request->getParam('referer')));
         }
-        
+
         exit;
     }
-    
+
     public function moveAction()
     {
         $image = God_Model_ImageTable::getInstance()->find($this->_request->getParam('id'));
         $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('to'));
-        
+
         // figure out the new name
         $file = pathinfo(IMAGE_DIR . $image->filename);
         $newname = $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
-        
+
         rename(IMAGE_DIR . $image->filename, IMAGE_DIR . $newname);
-        
+
         $image->filename = $newname;
         $image->photoset_id = $photoset->id;
         $image->save();
-        
+
         $photoset->manual_thumbnail = 0;
         $photoset->save();
-        
+
         if ($this->_request->getParam('referer')) {
             $this->_redirect(urldecode($this->_request->getParam('referer')));
         }
-        
+
         exit;
     }
-    
+
     public function photosetToggleAction()
     {
         $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('id'));
@@ -80,11 +80,11 @@ class ImageController extends Coda_Controller
                 break;
         }
         $photoset->save();
-        
+
         if ($this->_request->getParam('referer')) {
             $this->_redirect(urldecode($this->_request->getParam('referer')));
         }
-        
+
         exit;
     }
 
@@ -93,19 +93,21 @@ class ImageController extends Coda_Controller
         $this->_height('mini');
         $image = new God_Model_Image();
 
-        $cache = Zend_Cache::factory('Core', 'Memcached');
+        $cache = new Coda_Cache();
         $cachekey = md5($this->_request->getParam('id').$this->_height);
 
         $thumb = $cache->load($cachekey);
-        
+
         if ($this->_request->getParam('ignorecache') == 1) {
             $image = false;
         }
-            
+
         if (!$thumb) {
             $thumb = $image->process($this->_getParam('id'), $this->_miniWidth, $this->_height, $this->_quality, $this->_miniWidth.':'.$this->_height);
-            $cache->save($thumb, $cachekey);
         }
+
+        $cache->save($cachekey, $thumb);
+
         return $thumb;
     }
 
@@ -114,19 +116,21 @@ class ImageController extends Coda_Controller
         $this->_height('thumb');
         $image = new God_Model_Image();
 
-        $cache = Zend_Cache::factory('Core', 'Memcached');
+        $cache = new Coda_Cache();
         $cachekey = md5($this->_request->getParam('id').$this->_height);
 
         $thumb = $cache->load($cachekey);
-        
+
         if ($this->_request->getParam('ignorecache') == 1) {
             $image = false;
         }
-            
+
         if (!$thumb) {
             $thumb = $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
-            $cache->save($thumb, $cachekey);
         }
+
+        $cache->save($cachekey, $thumb);
+
         return $thumb;
     }
 
@@ -156,13 +160,10 @@ class ImageController extends Coda_Controller
     public function externalAction()
     {
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
-            $cache = Zend_Cache::factory('Core', 'Memcached');
+            $cache = new Coda_Cache();
             $cachekey = md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width'));
 
             $image = $cache->load($cachekey);
-            if ($this->_request->getParam('ignorecache') == 1) {
-                $image = false;
-            }
 
             if (!$image || strstr($image, 'Warning')) {
                 $curl = new God_Model_Curl;
@@ -173,7 +174,7 @@ class ImageController extends Coda_Controller
                     // Find image url and update the path.
                     // Can't do this because the data is serialized
                 }
-                
+
                 ob_start();
                 echo $curl->image($this->_request->getParam('width'));
                 $image = ob_get_clean();
@@ -185,9 +186,10 @@ class ImageController extends Coda_Controller
                     echo $curl->image($this->_request->getParam('width'));
                     $image = ob_get_clean();
                 }
-                
-                $cache->save($image, $cachekey);
             }
+
+            $cache->save($image, $cachekey);
+
             header("Content-Type: image/jpeg");
             echo $image;
             exit;

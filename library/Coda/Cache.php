@@ -1,14 +1,26 @@
 <?php
 class Coda_Cache
 {
-    function __construct()
+    protected $_cache;
+
+    function __construct($seconds = 3600)
     {
-        // Doesn't work - WHY!
-        return Zend_Cache::factory('Core', 'Memcached', array(
-               'lifetime' => 7200, // cache lifetime of 2 hours
+        $this->_cache = Zend_Cache::factory('Core', 'Memcached', array(
+               'lifetime' => $seconds,
                'automatic_serialization' => true
             )
         );
+    }
+
+    public function save($key, $value)
+    {
+        $this->_cache->save($value, $key);
+    }
+
+    public function load($key)
+    {
+        if (isset($_GET['ignorecache'])) return false;
+        return $this->_cache->load($key);
     }
 }
 ?>
