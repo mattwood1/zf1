@@ -121,10 +121,6 @@ class ImageController extends Coda_Controller
 
         $thumb = $cache->load($cachekey);
 
-        if ($this->_request->getParam('ignorecache') == 1) {
-            $image = false;
-        }
-
         if (!$thumb) {
             $thumb = $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
         }
@@ -138,6 +134,10 @@ class ImageController extends Coda_Controller
     {
         $this->_height('medium');
         $image = new God_Model_Image();
+
+        $cache = new Coda_Cache();
+        $cachekey = md5($this->_request->getParam('id').$this->_height);
+
         return $image->process($this->_getParam('id'), $this->_mediumWidth, $this->_height, $this->_quality, $this->_mediumWidth.':'.$this->_height);
     }
 
@@ -188,7 +188,7 @@ class ImageController extends Coda_Controller
                 }
             }
 
-            $cache->save($image, $cachekey);
+            $cache->save($cachekey, $image);
 
             header("Content-Type: image/jpeg");
             echo $image;
