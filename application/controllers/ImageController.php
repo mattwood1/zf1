@@ -188,7 +188,7 @@ class ImageController extends Coda_Controller
                 }
             }
 
-            $cache->save($image, $cachekey);
+            $cache->save($cachekey, $image);
 
             header("Content-Type: image/jpeg");
             echo $image;
