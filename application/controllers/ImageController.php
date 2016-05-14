@@ -93,14 +93,10 @@ class ImageController extends Coda_Controller
         $this->_height('mini');
         $image = new God_Model_Image();
 
-        $cache = new Coda_Cache();
+        $cache = new Coda_Cache(strtotime('+28 days', 0));
         $cachekey = md5($this->_request->getParam('id').$this->_height);
 
         $thumb = $cache->load($cachekey);
-
-        if ($this->_request->getParam('ignorecache') == 1) {
-            $image = false;
-        }
 
         if (!$thumb) {
             $thumb = $image->process($this->_getParam('id'), $this->_miniWidth, $this->_height, $this->_quality, $this->_miniWidth.':'.$this->_height);
@@ -115,52 +111,33 @@ class ImageController extends Coda_Controller
     {
         $this->_height('thumb');
         $image = new God_Model_Image();
-
-        $cache = new Coda_Cache();
-        $cachekey = md5($this->_request->getParam('id').$this->_height);
-
-        $thumb = $cache->load($cachekey);
-
-        if ($this->_request->getParam('ignorecache') == 1) {
-            $image = false;
-        }
-
-        if (!$thumb) {
-            $thumb = $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
-        }
-
-        $cache->save($cachekey, $thumb);
-
-        return $thumb;
+        $image->process($this->_getParam('id'), $this->_thumbWidth, $this->_height, $this->_quality, $this->_thumbWidth.':'.$this->_height);
     }
 
     public function mediumAction()
     {
         $this->_height('medium');
         $image = new God_Model_Image();
-        return $image->process($this->_getParam('id'), $this->_mediumWidth, $this->_height, $this->_quality, $this->_mediumWidth.':'.$this->_height);
+        $image->process($this->_getParam('id'), $this->_mediumWidth, $this->_height, $this->_quality, $this->_mediumWidth.':'.$this->_height);
     }
 
     public function largeAction()
     {
         $this->_height('large');
         $image = new God_Model_Image();
-        return $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, null);
+        $image->process($this->_getParam('id'), $this->_largeWidth, $this->_height, $this->_quality, null);
     }
 
     public function fullAction()
     {
-        // action body
-        // TODO: needs a view image/full.phtml
-        //$this->view->image = $this->_getParam('id');
         $image = new God_Model_Image();
-        return $image->process($this->_getParam('id'));
+        $image->process($this->_getParam('id'));
     }
 
     public function externalAction()
     {
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
-            $cache = new Coda_Cache();
+            $cache = new Coda_Cache(strtotime('+1 week', 0));
             $cachekey = md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width'));
 
             $image = $cache->load($cachekey);
@@ -190,7 +167,10 @@ class ImageController extends Coda_Controller
 
             $cache->save($cachekey, $image);
 
-            header("Content-Type: image/jpeg");
+            $mime = 'image/jpg';
+            header("Content-type: $mime");
+    		header('Content-Length: ' . strlen($image));
+            header('ETag: ' . md5($image));
             echo $image;
             exit;
         }
@@ -236,4 +216,5 @@ class ImageController extends Coda_Controller
                 break;
         }
     }
+
 }

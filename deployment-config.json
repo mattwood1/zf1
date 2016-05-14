@@ -1,9 +1,0 @@
-{
-    "type": "sftp",
-    "host": "erekosa.privatedns.org",
-    "username": "mwood",
-    "sshKeyFile": "~/.ssh/id_rsa",
-    "port": 22,
-    "remotePath": "/srv/www/htdocs/zf",
-    "uploadOnSave": true
-}

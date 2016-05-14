@@ -66,7 +66,7 @@ class God_Model_Image extends God_Model_Base_Image {
 		// CODE STARTS HERE
 		/////////////////////
 
-                $file = rawurldecode($file);
+        $file = rawurldecode($file);
 
 		if (!isset($file))
 		{
@@ -74,6 +74,8 @@ class God_Model_Image extends God_Model_Base_Image {
 			echo 'Error: no image was specified';
 			exit();
 		}
+
+        $cache = new Coda_Cache(strtotime('+28 days', 0));
 
 		define('MEMORY_TO_ALLOCATE',	'200M');
 		define('DEFAULT_QUALITY',	100);
@@ -106,8 +108,7 @@ class God_Model_Image extends God_Model_Base_Image {
 		// Strip the possible trailing slash off the document root
 		$docRoot	= preg_replace('/\/$/', '', DOCUMENT_ROOT);
 
-		if (!file_exists($docRoot . $image))
-		{
+		if (!file_exists($docRoot . $image)) {
                     header('HTTP/1.1 404 Not Found');
                     echo 'Error: image does not exist: ' . $docRoot . $image;
                     exit();
@@ -163,10 +164,11 @@ class God_Model_Image extends God_Model_Base_Image {
                     $lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($docRoot . '/' . $image)) . ' GMT';
                     $etag				= md5($data);
 
-                    $this->doConditionalGet($etag, $lastModifiedString);
+                    $this->doConditionalGet($etag, $lastModifiedString, $image);
 
                     header("Content-type: $mime");
                     header('Content-Length: ' . strlen($data));
+
                     echo $data;
                     exit();
 		}
@@ -233,26 +235,40 @@ class God_Model_Image extends God_Model_Base_Image {
 
 		$resized		= CACHE_DIR . $resizedImage;
 
+        // Using memcache
+        if ($data = $cache->load($resizedImage)) {
+            $cache->save($resizedImage, $data);
+
+            // Remove file based cache
+            if (file_exists($resized)) unlink($resized);
+
+            header("Content-type: $mime");
+            header('Content-Length: ' . strlen($data));
+            header('Etag: ' . md5($data));
+            header('X-Memcache: '.$resizedImage);
+            echo $data;
+            exit();
+        }
+
 		// Check the modified times of the cached file and the original file.
 		// If the original file is older than the cached file, then we simply serve up the cached file
-		if (!isset($_GET['nocache']) && file_exists($resized))
-		{
-                    $imageModified	= filemtime($docRoot . $image);
-                    $thumbModified	= filemtime($resized);
+		if (false && !isset($_GET['ignorecache']) && file_exists($resized)) {
+            $imageModified	= filemtime($docRoot . $image);
+            $thumbModified	= filemtime($resized);
 
-                    if($imageModified < $thumbModified) {
-                        $data	= file_get_contents($resized);
+            if($imageModified < $thumbModified) {
+                $data	= file_get_contents($resized);
 
-                        $lastModifiedString	= gmdate('D, d M Y H:i:s', $thumbModified) . ' GMT';
-                        $etag				= md5($data);
+                $lastModifiedString	= gmdate('D, d M Y H:i:s', $thumbModified) . ' GMT';
+                $etag				= md5($data);
 
-                        $this->doConditionalGet($etag, $lastModifiedString);
+                $this->doConditionalGet($etag, $lastModifiedString, $image);
 
-                        header("Content-type: $mime");
-                        header('Content-Length: ' . strlen($data));
-                        echo $data;
-                        exit();
-                    }
+                header("Content-type: $mime");
+                header('Content-Length: ' . strlen($data));
+                echo $data;
+                exit();
+            }
 		}
 
 		// We don't want to run out of memory
@@ -356,28 +372,31 @@ class God_Model_Image extends God_Model_Base_Image {
 		}
 
 		// Write the resized image to the cache
-		$outputFunction($dst, $resized, $quality);
+		// $outputFunction($dst, $resized, $quality);
 
 		// Put the data of the resized image into a variable
 		ob_start();
 		$outputFunction($dst, null, $quality);
-		$data	= ob_get_contents();
-		ob_end_clean();
+		$data	= ob_get_clean();
+
+        $cache->save($resizedImage, $data);
 
 		// Clean up the memory
 		ImageDestroy($src);
 		ImageDestroy($dst);
 
 		// See if the browser already has the image
-		$lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($resized)) . ' GMT';
-		$etag			= md5($data);
+		// $lastModifiedString	= gmdate('D, d M Y H:i:s', filemtime($resized)) . ' GMT';
+		$etag               = md5($data);
 
-		$this->doConditionalGet($etag, $lastModifiedString);
+		// $this->doConditionalGet($etag, $lastModifiedString, $image);
 
 		// Send the image to the browser with some delicious headers
 		header("Content-type: $mime");
 		header('Content-Length: ' . strlen($data));
-		echo $data;
+        header('ETag: ' . $etag);
+        header('X-Memcache_created: '.md5($resizedImage));
+        echo $data;
 		exit;
 	}
 
@@ -393,31 +412,34 @@ class God_Model_Image extends God_Model_Base_Image {
 		return max(round($result), 0);
 	} // findSharp()
 
-	public function doConditionalGet($etag, $lastModified)
+	public function doConditionalGet($etag, $lastModified, $image)
 	{
-            header("Last-Modified: $lastModified");
-            header("ETag: \"{$etag}\"");
+        $file = basename($image);
 
-            $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?
-                stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) :
-                false;
+        header("Last-Modified: $lastModified");
+        header("ETag: \"{$etag}\"");
+        header("Content-Disposition: inline; filename=\"{$file}\"");
 
-            $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?
-                stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) :
-                false;
+        $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?
+            stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) :
+            false;
 
-            if (!$if_modified_since && !$if_none_match)
-                return;
+        $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?
+            stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) :
+            false;
 
-            if ($if_none_match && $if_none_match != $etag && $if_none_match != '"' . $etag . '"')
-                return; // etag is there but doesn't match
+        if (!$if_modified_since && !$if_none_match)
+            return;
 
-            if ($if_modified_since && $if_modified_since != $lastModified)
-                return; // if-modified-since is there but doesn't match
+        if ($if_none_match && $if_none_match != $etag && $if_none_match != '"' . $etag . '"')
+            return; // etag is there but doesn't match
 
-            // Nothing has changed since their last request - serve a 304 and exit
-            header('HTTP/1.1 304 Not Modified');
-            exit();
+        if ($if_modified_since && $if_modified_since != $lastModified)
+            return; // if-modified-since is there but doesn't match
+
+        // Nothing has changed since their last request - serve a 304 and exit
+        header('HTTP/1.1 304 Not Modified');
+        exit();
 	} // doConditionalGet()
 
 	// old pond
