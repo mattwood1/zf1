@@ -5,11 +5,14 @@ class Coda_Cache
 
     function __construct($seconds = 3600)
     {
-        $this->_cache = Zend_Cache::factory('Core', 'Memcached', array(
-               'lifetime' => $seconds,
-               'automatic_serialization' => true
-            )
-        );
+        if (!$this->_cache) {
+            $this->_cache = Zend_Cache::factory('Core', 'Memcached', array(
+                   'lifetime' => $seconds,
+                   'automatic_serialization' => true
+                )
+            );
+        }
+        return $this;
     }
 
     public function save($key, $value)

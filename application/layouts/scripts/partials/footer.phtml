@@ -22,3 +22,18 @@ $temp = str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors 
         </span>
     </div>
 </div>
+<div class="row">
+    <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
+    <?php
+        $memcache_obj = new Memcache;
+        $memcache_obj->addServer('localhost', 11211);
+        $stats = $memcache_obj->getStats();
+    ?>
+    Memcache - Items <?php echo $stats['curr_items']; ?>;
+    Evictions <?php echo $stats['evictions']; ?>;
+    Reclaimed <?php echo $stats['reclaimed']; ?>
+    <?php
+        // _d($stats['evictions'], $stats['total_items'], $stats['curr_items'], $stats);
+    ?>
+    <?php endif; ?>
+</div>
