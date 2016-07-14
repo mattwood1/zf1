@@ -37,13 +37,22 @@ class God_Model_Photoset extends God_Model_Base_Photoset
             $files = God_Model_File::scanPath($path)->getFiles();
 
             foreach ($files as $file) {
-
+                
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);
                 
                 $image = God_Model_ImageTable::getInstance()->createQuery('i')
                         ->where('filename = ?', $urlPath)
                         ->fetchOne();
+                
+                // Removing unwanted files
+                if (in_array($file, array('.directory'))) {
+                    unlink($realpath);
+                    if ($image) {
+                        $image->delete();
+                    }
+                    continue;
+                }
                 
                 if (!$image) {
                     $image = new God_Model_Image();
@@ -82,6 +91,22 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                     }
                     
                     $imageHash->save();
+                    
+                    
+                    // Image Hash Index checking for indexes
+                    $imageHashIndex = God_Model_ImageHashIndexTable::getInstance()->createQuery('ihi')
+                            ->where('image_id = ?', $image->id)
+                            ->fetchArray();
+                    
+                    if (!$imageHashIndex) {
+                        foreach (explode(',', $imageHash->hash) as $index => $hash) {
+                            $imageHashIndexItem = new God_Model_ImageHashIndex();
+                            $imageHashIndexItem->index = $index;
+                            $imageHashIndexItem->hash = $hash;
+                            $imageHashIndexItem->image_id = $image->id;
+                            $imageHashIndexItem->save();
+                        }
+                    }
                     
                 }
             }
