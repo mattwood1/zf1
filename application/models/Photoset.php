@@ -38,6 +38,8 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
             foreach ($files as $file) {
                 
+                checkCPULoad();
+                
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);
                 
@@ -107,7 +109,6 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                             $imageHashIndexItem->save();
                         }
                     }
-                    
                 }
             }
             
