@@ -101,9 +101,9 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                     if (!$imageHashIndex) {
                         foreach (explode(',', $imageHash->hash) as $index => $hash) {
                             $imageHashIndexItem = new God_Model_ImageHashIndex();
-                            $imageHashIndexItem->index = $index;
-                            $imageHashIndexItem->hash = $hash;
-                            $imageHashIndexItem->image_id = $image->id;
+                            $imageHashIndexItem->position = (int)$index;
+                            $imageHashIndexItem->hash = (int)$hash;
+                            $imageHashIndexItem->image_id = (int)$image->id;
                             $imageHashIndexItem->save();
                         }
                     }

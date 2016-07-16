@@ -14,7 +14,7 @@ class God_Model_Base_ImageHashIndex extends Doctrine_Record
                 'length'             => '11',
         ));
 
-        $this->hasColumn('index', 'integer', 11, array(
+        $this->hasColumn('position', 'integer', 11, array(
                 'type'               => 'integer',
                 'length'             => '11'
         ));
