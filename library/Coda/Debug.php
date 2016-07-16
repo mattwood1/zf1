@@ -8,9 +8,8 @@ function checkCPULoad($load = 1, $temp = 60)
     $sysload = sys_getloadavg();
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
-    if ($sysload > $load || $systemp > $temp) {
-        _d('System busy or hot');
-        sleep(30);
+    if ($sysload[0] > $load || $systemp > $temp) {
+        sleep(10);
         checkCPULoad($load, $temp);
     }
     

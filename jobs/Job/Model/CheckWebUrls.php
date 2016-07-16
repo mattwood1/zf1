@@ -13,12 +13,11 @@ class Job_Model_CheckWebUrls extends Job_Abstract
         foreach ($modelNames as $modelName) {
             _d($modelName->name);
             
-            checkCPULoad();
-            
             $webUrls = $modelName->findWebUrls();
             
             foreach ($webUrls as $webUrl) {
                 
+                checkCPULoad();
                 $modelName->linkWebUrl($webUrl);
             }
             
