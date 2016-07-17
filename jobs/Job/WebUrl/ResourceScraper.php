@@ -8,6 +8,8 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
 {
     public function run()
     {
+        checkCPULoad();
+        
         $webResourceTable = new God_Model_WebResourceTable;
         $webResourceQuery = $webResourceTable->getInstance()
             ->createQuery('wr')
@@ -18,6 +20,9 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
         $webResources = $webResourceQuery->execute();
 
         foreach ($webResources as $webResource) {
+            
+            checkCPULoad();
+            
             $domain = "http://www." . $webResource->website;
 
             $curl = new God_Model_Curl();
@@ -37,6 +42,9 @@ class Job_WebUrl_ResourceScraper extends Job_Abstract
 
             } else {
                 foreach ($links as $link) {
+                    
+                    checkCPULoad();
+                    
                     $webURLTable = new God_Model_WebURLTable;
                     if (!preg_match("~^http:\/\/~", $link["href"])) {
                         $link["href"] = $domain.$link["href"];

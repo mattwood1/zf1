@@ -8,6 +8,8 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
 {
     public function run()
     {
+        checkCPULoad();
+        
         $webLinkTable = new God_Model_WebLinkTable;
         $webLinkQuery = $webLinkTable->getInstance()
             ->createQuery('wl')
@@ -15,6 +17,9 @@ class Job_WebUrl_ImportWebLinks extends Job_Abstract
         $webLinks = $webLinkQuery->execute();
 
         foreach ($webLinks as $webLink) {
+            
+            checkCPULoad();
+            
 //var_dump($webLink->id, $webLink->url);
             // Find WebUrl by URL
             $webUrlTable = new God_Model_WebURLTable;

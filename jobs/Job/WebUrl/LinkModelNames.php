@@ -9,6 +9,7 @@ class Job_WebUrl_LinkModelNames extends Job_Abstract
     public function run()
     {
 //        $this->cleanup();
+        checkCPULoad();
         
         $webUrlsTable = new God_Model_WebURLTable;
         $webUrlsQuery = $webUrlsTable->getInstance()
@@ -19,10 +20,10 @@ class Job_WebUrl_LinkModelNames extends Job_Abstract
         
         foreach ($webUrls as $webUrl) {
             
+            checkCPULoad();
+            
             $webUrl->linked = God_Model_WebURLTable::LINK_ATTEMPTED; // Processed by this script
-
             $webUrl->linkModelNameToUrl();
-
             $webUrl->save();
 
         }

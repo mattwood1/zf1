@@ -9,6 +9,8 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
 {
     public function run()
     {
+        checkCPULoad();
+        
         $webUrlsTable = new God_Model_WebURLTable;
         $webUrlsQuery = $webUrlsTable->getInstance()
             ->createQuery('wu')
@@ -18,6 +20,9 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
         $webUrls = $webUrlsQuery->execute();
         
         foreach ($webUrls as $webUrl) {
+            
+            checkCPULoad();
+            
             if (preg_match("~(\/search\/)~i", $webUrl->url)) {
                 $webUrl->action = God_Model_WebURLTable::ACTION_CRAWL_FOR_LINKS;
                 $webUrl->linked = God_Model_WebURLTable::LINK_SEARCH;
@@ -43,6 +48,9 @@ class Job_WebUrl_CheckWebLinks extends Job_Abstract
                 if ($links) {
                     $links = array_filter($links); // Remove empty entries
                     foreach ($links as $link) {
+                        
+                        checkCPULoad();
+                        
                         $webUrlsLinkTable = new God_Model_WebURLTable;
                         $webUrlsLinkQuery = $webUrlsTable->getInstance()
                             ->createQuery('wul')

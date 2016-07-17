@@ -8,6 +8,8 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
 {
     public function run()
     {
+        checkCPULoad();
+        
         $webUrlsQuery = God_Model_WebURLTable::getInstance()
             ->createQuery('wu')
             ->where('action = ?', God_Model_WebURLTable::ACTION_GET_THUMBNAILS)
@@ -22,6 +24,8 @@ class Job_WebUrl_ThumbnailScraper extends Job_Abstract
             echo "Processing " . count($webUrls) . " urls\n\n";
             
             foreach ($webUrls as $webUrl) {
+                checkCPULoad();
+                
                 _d($webUrl->url);
                 
                 $webUrl->getThumbnails();
