@@ -22,6 +22,7 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         
     
     public function __construct($ignoreModel = null) {
+        parent::__construct();
         $this->_rankingStats = $this->getRankingStats(2, true);
         $this->_ignoreModel = $ignoreModel;
         
@@ -88,6 +89,10 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
 
         }
 
+        if ($this->_highBottom < floor(($this->_topHigh / 100) * $this->_factor)) {
+            $this->_highBottom = floor(($this->_topHigh / 100) * $this->_factor);
+        }
+
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             if ($rankingStatKey < $this->_highBottom) {
                 $this->_bottomRankingStats[$rankingStatKey] = $rankingStat;
@@ -152,7 +157,8 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
         shuffle($modelArrayKeys);
         $modelKeys[] = $modelArrayKeys[0];
         shuffle($modelKeys);
-        
+
+        $modelArray = array();
         foreach ($modelKeys as $modelKey) {
             $modelArray[] = $models[$modelKey];
         }
