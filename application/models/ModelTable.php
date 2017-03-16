@@ -7,6 +7,8 @@ class God_Model_ModelTable extends Doctrine_Record
     protected $_search = '';
     protected $_ranking = array(); // Array of all rankings
 
+    protected $_modelDir = 'Women';
+
     const ORDER_RANKING = 'ranking';
     const ORDER_NAME = 'name';
 
@@ -121,19 +123,40 @@ class God_Model_ModelTable extends Doctrine_Record
         return $this->_query;
     }
     
-    public function addModel($name)
+    public function addModel($name, $checkName = true)
     {
-        $modelnames = God_Model_ModelNameTable::getInstance()->findBy('name', $name);
-        
-        if (count($modelnames) == 0) {
+        $modelnames = array();
+        if ($checkName) {
+            $modelnames = God_Model_ModelNameTable::getInstance()->findBy('name', $name);
+        }
+
+        $uri = strtolower(str_replace(' ', '_', $name));
+
+        $found = false;
+        while (!$found) {
+            $model = God_Model_ModelTable::getInstance()->findBy('uri', $uri);
+            if (count($model)) {
+                $uri = $uri . '_';
+            }
+            else {
+                $found = true;
+            }
+        }
+
+        if (count($modelnames) == 0 || !$checkName) {
             $model = God_Model_ModelTable::getInstance()->create(array(
-                'name' => $name
+                'name' => $name,
+                'path' => '/' . $this->_modelDir . '/' . $name,
+                'uri'  => $uri,
+                'active' => 1,
+                'ranking' => 0,
+                'search' => 1
             ));
             $model->save();
                         
             $modelname = God_Model_ModelNameTable::getInstance()->create(array(
                 'name' => $name,
-                'model_id' => $model->id,
+                'model_id' => $model->ID,
                 'default' => 1
             ));
             $modelname->save();
@@ -141,6 +164,38 @@ class God_Model_ModelTable extends Doctrine_Record
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function getModelsFromFilesystem()
+    {
+        $models = God_Model_ModelTable::getInstance()->findAll();
+
+        $folders = array();
+        if (is_dir('/raid' . '/' . $this->_modelDir)) {
+            $handle = opendir('/raid' . '/' . $this->_modelDir);
+            while (false !== ($files = readdir($handle))) {
+                if ($files != "." && $files != "..") {        // remove '.' '..' directories
+                    if (is_dir('/raid' . '/' . $this->_modelDir . '/' . $files) == true) {
+                        $folders[] = stripslashes('/' . $this->_modelDir . '/' . $files);
+                    }
+                }
+            }
+        }
+
+        foreach ($models as $model) {
+            $key = array_search($model->path, $folders);
+            if ($key !== null) {
+                unset($folders[$key]);
+            }
+        }
+
+        if ($folders) {
+            foreach ($folders as $folder) {
+                $model = str_replace('/' . $this->_modelDir . '/', '', $folder);
+                _d($model);
+                $this->addModel($model, false);
+            }
         }
     }
 }
