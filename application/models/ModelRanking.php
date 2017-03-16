@@ -1,7 +1,7 @@
 <?php
 class God_Model_ModelRanking extends God_Model_ModelTable {
 
-    private $_factor = 28.5;
+    private $_factor = 35;
     private $_modes = array();
     private $_mode = null;
     private $_models = array();
@@ -32,6 +32,8 @@ class God_Model_ModelRanking extends God_Model_ModelTable {
        
         // Sorting Bottom Ranking
         $this->_highBottom = floor(($this->_topHigh / 100) * $this->_factor);
+        // Overrided
+        $this->_highBottom = floor($this->_topLow - $this->_factor * 2);
 
         foreach ($this->_rankingStats as $rankingStatKey => $rankingStat) {
             if ($rankingStatKey >= $this->_topLow) {

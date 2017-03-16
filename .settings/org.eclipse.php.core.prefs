@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
-include_path=5;com.zend.php.phpunit.CONTAINER\u00055;org.zend.php.framework.CONTAINER\u00050;/ZF
+include_path=0;/zf\u00051;/home/mwood/public_html/Zend Framework
+phpVersion=php5.4
 use_asp_tags_as_php=false
