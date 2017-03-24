@@ -4,6 +4,7 @@ class God_Model_Curl
     protected $_rawdata;
     protected $_timeout;
     protected $_statusCode;
+    protected $_contentType;
     protected $_lasturl;
 
     public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false)
@@ -23,6 +24,8 @@ class God_Model_Curl
 
         $this->_statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+        $this->_contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+
         $this->_lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
         return $this->_rawdata;
@@ -31,6 +34,11 @@ class God_Model_Curl
     public function statusCode()
     {
         return $this->_statusCode;
+    }
+
+    public function contentType()
+    {
+        return $this->_contentType;
     }
     
     public function rawdata()
@@ -48,26 +56,78 @@ class God_Model_Curl
             $im = imagecreatefromstring($this->_rawdata);
             if ($im !== null) {
 
-                if ($displayWidth) {
-                    $width = imagesx( $im );
-                    $height = imagesy( $im );
+                    $width = imagesx($im);
+                    $height = imagesy($im);
 
-                    $newwidth = $displayWidth;
-                    $newheight = ($height/$width) * $newwidth;
+                    if ($displayWidth) {
+                        $newwidth = $displayWidth;
+                        $newheight = ($height / $width) * $newwidth;
+                    } else {
+                        $newwidth = $width;
+                        $newheight = $height;
+                    }
 
                     // Create a new temporary image.
-                    $tmpimg = imagecreatetruecolor( $newwidth, $newheight );
+                    $tmpimg = imagecreatetruecolor($newwidth, $newheight);
 
                     // Copy and resize old image into new image.
-                    imagecopyresampled( $tmpimg, $im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height );
+                    imagecopyresampled($tmpimg, $im, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
 
                     // Output new file.
                     $im = $tmpimg;
-                }
                 return imagejpeg($im);
             }
         } else {
             return false;
         }
+    }
+
+    public function normalizeURL($url, $root='')
+    {
+//        _d(array('original_url' => $url));
+
+        $p_url = parse_url($url);
+
+        $r_url = array(
+            'scheme' => "http",
+            'host' => "",
+            'path' => "",
+            'query' => ""
+        );
+
+        if ($root) {
+            $r_url = array_merge($r_url, parse_url($root));
+        }
+
+//        _d(array('r_url' => $r_url, 'p_url' => $p_url));
+
+        if (array_key_exists('path', $p_url) && !array_key_exists('host', $p_url) && !$root) {
+
+            $p_path = explode("/", $p_url['path']);
+
+            $p_url['host'] = $p_path[0];
+            unset($p_path[0]);
+            $p_url['path'] = implode("/", $p_path);
+        }
+
+        if ($root && !array_key_exists('host', $p_url)) {
+            $p_url['path'] = $r_url['path'] . $p_url['path'];
+        }
+
+//        _d(array('p_url_clean' => $p_url));
+
+        if (array_key_exists('path', $p_url)) {
+            $p_url['path'] = implode('/', array_filter(explode('/', $p_url['path'])));
+        }
+
+        $p_url = array_merge($r_url, $p_url);
+
+//        _d(array('p_url_merged' => $p_url));
+
+        $url = $p_url['scheme'] . '://' . $p_url['host'];
+        $url .= $p_url['path'] ? '/' . $p_url['path'] : '';
+        $url .= $p_url['query'] ? '?' . $p_url['query'] : '';
+
+        return $url;
     }
 }
