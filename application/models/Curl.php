@@ -27,7 +27,7 @@ class God_Model_Curl
 
         $this->_contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
-        $this->_contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+        $this->_contentLength = curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD);
 
         $this->_lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
