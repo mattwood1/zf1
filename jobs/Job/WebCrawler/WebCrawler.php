@@ -25,7 +25,7 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
 
             $webCrawlerLink->statuscode = $curl->statusCode();
             $webCrawlerLink->contenttype = $curl->contentType();
-            $webCrawlerLink->contentlenght = $curl->contentLength();
+            $webCrawlerLink->contentlength = $curl->contentLength();
             $webCrawlerLink->url = $curl->lastUrl();
 
             $webCrawlerLink->save();
