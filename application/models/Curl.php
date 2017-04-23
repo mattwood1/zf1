@@ -5,6 +5,7 @@ class God_Model_Curl
     protected $_timeout;
     protected $_statusCode;
     protected $_contentType;
+    protected $_contentLength;
     protected $_lasturl;
 
     public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false)
@@ -26,6 +27,8 @@ class God_Model_Curl
 
         $this->_contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
+        $this->_contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+
         $this->_lasturl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 
         return $this->_rawdata;
@@ -39,6 +42,11 @@ class God_Model_Curl
     public function contentType()
     {
         return $this->_contentType;
+    }
+
+    public function contentLength()
+    {
+        return $this->_contentLength;
     }
     
     public function rawdata()
@@ -111,7 +119,7 @@ class God_Model_Curl
         }
 
         if ($root && !array_key_exists('host', $p_url)) {
-            $p_url['path'] = $r_url['path'] . $p_url['path'];
+            @$p_url['path'] = $r_url['path'] . $p_url['path'];
         }
 
 //        _d(array('p_url_clean' => $p_url));
