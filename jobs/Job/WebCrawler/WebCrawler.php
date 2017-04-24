@@ -63,7 +63,12 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
 
                 $href = $curl->normalizeURL($href, $webCrawlerUrl->url);
 
-                $dblink = God_Model_WebCrawlerTable::getInstance()->findBy('link', $href);
+                $dblinkQuery = God_Model_WebCrawlerTable::getInstance()
+                    ->createQuery('wc')
+                    ->where('link = ?', $href)
+                    ->orWhere('url = ?', $href);
+                $dblink = $dblinkQuery->execute();
+
                 if (count($dblink) == 0) {
 
                     $newLink = new God_Model_WebCrawler();
