@@ -36,10 +36,12 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         $webCrawlerQuery = $webCrawlerTable->getinstance()
             ->createQuery('wc')
             ->where('followed = ?', 0)
+            ->andWhere('contenttype = ?', "%text/html%");
             ->limit(10);
         $webCrawlerUrls = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
+            checkCPULoad();
 
             $curl = new God_Model_Curl();
 

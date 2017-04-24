@@ -134,7 +134,7 @@ class God_Model_Curl
 
         $url = $p_url['scheme'] . '://' . $p_url['host'];
         $url .= $p_url['path'] ? '/' . $p_url['path'] : '';
-        $url .= $p_url['query'] ? '?' . $p_url['query'] : '';
+        $url .= $p_url['query'] && !$root ? '?' . $p_url['query'] : '';
 
         return $url;
     }
