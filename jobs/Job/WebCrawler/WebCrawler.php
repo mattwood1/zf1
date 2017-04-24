@@ -13,7 +13,7 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         $webCrawlerQuery = $webCrawlerTable->getInstance()
             ->createQuery('wc')
             ->where('url = ?', '')
-            ->limit(1000);
+            ->limit(100);
         $webCrawlerLinks = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {
@@ -36,7 +36,7 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         $webCrawlerQuery = $webCrawlerTable->getinstance()
             ->createQuery('wc')
             ->where('followed = ?', 0)
-            ->andWhere('contenttype = ?', "%text/html%");
+            ->andWhere('contenttype like ?', '%text/html%')
             ->limit(10);
         $webCrawlerUrls = $webCrawlerQuery->execute();
 
