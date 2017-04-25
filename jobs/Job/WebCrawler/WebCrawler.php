@@ -13,7 +13,7 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         $webCrawlerQuery = $webCrawlerTable->getInstance()
             ->createQuery('wc')
             ->where('url = ?', '')
-            ->limit(100);
+            ->limit(300);
         $webCrawlerLinks = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {
@@ -33,11 +33,12 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         }
 
         // Get Curl contents for urls not followed and later scheduled
-        $webCrawlerQuery = $webCrawlerTable->getinstance()
+        $webCrawlerQuery = $webCrawlerTable->getInstance()
             ->createQuery('wc')
-            ->where('followed = ?', 0)
+            ->where('(followed = ? or frequency is not null)', 0)
             ->andWhere('contenttype like ?', '%text/html%')
-            ->limit(10);
+            ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
+            ->limit(50);
         $webCrawlerUrls = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
@@ -67,7 +68,7 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
                     ->createQuery('wc')
                     ->where('link = ?', $href)
                     ->orWhere('url = ?', $href);
-                $dblink = $dblinkQuery->execute();
+                $dblink = $dblinkQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
                 if (count($dblink) == 0) {
 
@@ -104,6 +105,10 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
             }
 
 //            var_dump($content, $links);
+
+            if ($webCrawlerUrl->frequency) {
+                $webCrawlerUrl->date = date('Y-m-d H:i:s', strtotime($webCrawlerUrl->frequency));
+            }
 
             $webCrawlerUrl->followed = 1;
             $webCrawlerUrl->save();

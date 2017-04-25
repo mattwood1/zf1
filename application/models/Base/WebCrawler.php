@@ -48,5 +48,15 @@ class God_Model_Base_WebCrawler extends Doctrine_Record
             'type' => 'integer',
             'length' => '1000'
         ));
+
+        $this->hasColumn('frequency', 'string', 1000, array(
+            'type'               => 'string',
+            'length'             => '1000'
+        ));
+
+        $this->hasColumn('date', 'timestamp', 25, array(
+            'type'               => 'timstamp',
+            'length'             => '25'
+        ));
     }
 }
