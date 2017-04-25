@@ -104,6 +104,10 @@ class God_Model_Curl
 
         if ($root) {
             $p_url = parse_url($root);
+            if (array_key_exists('path', $p_url)) {
+                $p_url['path'] = preg_replace("~^\/~", "", $p_url['path']);
+            }
+            $p_url = array_filter($p_url);
         }
 
         switch ($type) {
