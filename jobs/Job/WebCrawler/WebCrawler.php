@@ -92,8 +92,10 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
                     $parseUrl = parse_url($webCrawlerUrl->url);
 
                     $parent = 0;
-                    if (array_key_exists('host', $parseLink) && array_key_exists('host', $parseUrl) && $parseLink['host'] == $parseUrl['host']) {
-                        $parent = $webCrawlerUrl->id;
+                    if (array_key_exists('host', $parseLink) && array_key_exists('host', $parseUrl) && !array_key_exists('path', $parseLink)) {
+                        if ($parseLink['host'] == $parseUrl['host']) {
+                            $parent = $webCrawlerUrl->id;
+                        }
                     }
                     else {
                         $parent = $webCrawlerUrl->id;
