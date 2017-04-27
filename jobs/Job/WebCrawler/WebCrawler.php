@@ -13,14 +13,14 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
         $webCrawlerQuery = $webCrawlerTable->getInstance()
             ->createQuery('wc')
             ->where('url = ?', '')
-            ->limit(100);
+            ->limit(400);
         $webCrawlerLinks = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {
             checkCPULoad();
 
             $curl = new God_Model_Curl();
-            $curl->Curl($webCrawlerLink->link, null,false, 10, true);
+            $curl->Curl($webCrawlerLink->link, null,false, 10, true, true);
 
             $webCrawlerLink->statuscode = $curl->statusCode();
             $webCrawlerLink->contenttype = $curl->contentType();
@@ -34,8 +34,8 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
             ->createQuery('wc')
             ->where('(followed = ? or frequency is not null)', 0)
             ->andWhere('contenttype like ?', '%text/html%')
-            ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"));
-//            ->limit(50);
+            ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
+            ->limit(50);
         $webCrawlerUrls = $webCrawlerQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
@@ -68,18 +68,24 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
                 $links[] = $curl->normalizeURL($src, $webCrawlerUrl->url);
             }
 
+            $links = array_unique($links);
+            $linkChunks = array_chunk($links, 1000);
+
             // Known links
             $knownLinks = array();
-            $dblinkQuery = God_Model_WebCrawlerTable::getInstance()
-                ->createQuery('wc')
-                ->whereIn('link', $links)
-                ->orWhereIn('url', $links);
-            $dblinks = $dblinkQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+            foreach ($linkChunks as $linkChunk) {
+                $dblinkQuery = God_Model_WebCrawlerTable::getInstance()
+                    ->createQuery('wc')
+                    ->whereIn('link', $linkChunk)
+                    ->orWhereIn('url', $linkChunk);
+                $dblinks = $dblinkQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-            foreach ($dblinks as $dblink) {
-                $knownLinks[] = $dblink['link'];
-                $knownLinks[] = $dblink['url'];
+                foreach ($dblinks as $dblink) {
+                    $knownLinks[] = $dblink['link'];
+                    $knownLinks[] = $dblink['url'];
+                }
             }
+
             $knownLinks = array_filter($knownLinks);
             $knownLinks = array_unique($knownLinks);
 
@@ -101,12 +107,14 @@ class Job_WebCrawler_WebCrawler extends Job_Abstract
                         $parent = $webCrawlerUrl->id;
                     }
 
-                    $newLink = new God_Model_WebCrawler();
-                    $newLink->fromArray(array(
-                        'link' => $linkMissing,
-                        'parent' => $parent
-                    ));
-                    $newLink->save();
+                    if (strlen($linkMissing) <= 1000) {
+                        $newLink = new God_Model_WebCrawler();
+                        $newLink->fromArray(array(
+                            'link' => $linkMissing,
+                            'parent' => $parent
+                        ));
+                        $newLink->save();
+                    }
 
                 }
             }

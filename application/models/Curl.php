@@ -8,11 +8,11 @@ class God_Model_Curl
     protected $_contentLength;
     protected $_lasturl;
 
-    public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false)
+    public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false, $headerOnly = 0)
     {
         $this->_timeout = $timeout;
         $ch = curl_init ($url);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HEADER, $headerOnly);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.114 Safari/537.36');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $binary ? curl_setopt($ch, CURLOPT_BINARYTRANSFER,1): '';
