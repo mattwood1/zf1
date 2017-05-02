@@ -121,8 +121,12 @@ class God_Model_Curl
                 break;
             case 'file':
                 $r_url = $p_url['scheme'] . '://' . $p_url['host'] . '/';
-                if (array_key_exists('path', $p)) {
+
+                if (array_key_exists('path', $p) && array_key_exists('path', $p_url)) {
                     $r_url .= ($p_url['path'] == $p['path'] ? $p['path'] : $p_url['path'] . $p['path']);
+                }
+                elseif (array_key_exists('path', $p) && !array_key_exists('path', $p_url)) {
+                    $r_url .= $p['path'];
                 }
                 else {
                     $r_url .= (array_key_exists('path', $p_url) ? $p_url['path'] : '');
@@ -135,7 +139,7 @@ class God_Model_Curl
                 break;
         }
 
-        // var_dump($url, $p, $p_url, $type, $r_url);
+        var_dump($url, $p, $p_url, $type, $r_url);
         return $r_url;
 
     }
