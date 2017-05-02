@@ -122,11 +122,10 @@ class God_Model_Curl
             case 'file':
                 $r_url = $p_url['scheme'] . '://' . $p_url['host'] . '/';
                 if (array_key_exists('path', $p)) {
-                    $r_url .= $p_url['path'] . $p['path'];
+                    $r_url .= ($p_url['path'] == $p['path'] ? $p['path'] : $p_url['path'] . $p['path']);
                 }
                 else {
                     $r_url .= (array_key_exists('path', $p_url) ? $p_url['path'] : '');
-
                 }
 
                 if (array_key_exists('query', $p)) {
