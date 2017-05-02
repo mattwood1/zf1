@@ -139,7 +139,7 @@ class God_Model_Curl
                 break;
         }
 
-        var_dump($url, $p, $p_url, $type, $r_url);
+//        var_dump($url, $p, $p_url, $type, $r_url);
         return $r_url;
 
     }
