@@ -102,6 +102,8 @@ class God_Model_Curl
             $type = 'file';
         }
 
+        $p = parse_url($url);
+
         if ($root) {
             $p_url = parse_url($root);
             if (array_key_exists('path', $p_url)) {
@@ -112,18 +114,30 @@ class God_Model_Curl
 
         switch ($type) {
             case 'full':
+                $r_url = $url;
                 break;
             case 'domainless':
-                $url = $p_url['scheme'] . '://' . $p_url['host'] . $url;
+                $r_url = $p_url['scheme'] . '://' . $p_url['host'] . $url;
                 break;
             case 'file':
-                $url = $p_url['scheme'] . '://' . $p_url['host'] . '/' . (array_key_exists('path', $p_url) ? $p_url['path'] . '/': '') . $url;
+                $r_url = $p_url['scheme'] . '://' . $p_url['host'] . '/';
+                if (array_key_exists('path', $p)) {
+                    $r_url .= $p['path'];
+                }
+                else {
+                    $r_url .= (array_key_exists('path', $p_url) ? $p_url['path'] : '');
+
+                }
+
+                if (array_key_exists('query', $p)) {
+                    $r_url .= '?' . $p['query'];
+                }
+
                 break;
         }
 
-//        _d($p_url, $type, $url); sleep(1);
-
-        return $url;
+        // var_dump($url, $p, $p_url, $type, $r_url);
+        return $r_url;
 
     }
 /*

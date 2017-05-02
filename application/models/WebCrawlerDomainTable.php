@@ -10,10 +10,13 @@ class God_Model_WebCrawlerDomainTable extends Doctrine_Record
     {
         $parsedUrl = parse_url($curl->lastUrl());
 
-        preg_match("~(\w+\.(?:\w{2,3}|\w{2,3}\.\w{2,3}))$~", $parsedUrl['host'], $domainName);
+        preg_match("~(\w+\.(?:\w{2,3}|\w{2,4}\.\w{2,3}))$~", $parsedUrl['host'], $domainName);
 
         if (array_key_exists('1', $domainName)) {
             $domainName = $domainName[1];
+        }
+        else {
+            return false;
         }
 
         $domain = self::getInstance()->findOneBy('domain', $domainName);
