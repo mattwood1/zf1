@@ -123,7 +123,9 @@ class God_Model_Curl
                 $r_url = $p_url['scheme'] . '://' . $p_url['host'] . '/';
 
                 if (array_key_exists('path', $p) && array_key_exists('path', $p_url)) {
-                    $r_url .= ($p_url['path'] == $p['path'] ? $p['path'] : $p_url['path'] . $p['path']);
+                    $path_p_url = pathinfo($p_url['path']);
+                    $path_p = pathinfo($p['path']);
+                    $r_url .= ($path_p_url['dirname'] == $path_p['dirname'] ? $path_p['dirname'] : $path_p_url['dirname'] . '/' . $p['path']);
                 }
                 elseif (array_key_exists('path', $p) && !array_key_exists('path', $p_url)) {
                     $r_url .= $p['path'];
