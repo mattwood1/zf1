@@ -121,11 +121,9 @@ class God_Model_Curl
                 break;
             case 'file':
                 $r_url = $p_url['scheme'] . '://' . $p_url['host'] . '/';
-
+var_dump($p, $p_url);
                 if (array_key_exists('path', $p) && array_key_exists('path', $p_url)) {
-                    $path_p_url = pathinfo($p_url['path']);
-                    $path_p = pathinfo($p['path']);
-                    $r_url .= ($path_p_url['dirname'] == $path_p['dirname'] ? $path_p['dirname'] : $path_p_url['dirname'] . '/' . $p['path']);
+                    $r_url .= ($p_url['path'] == $p['path'] ? $p['path'] : $p_url['path'] . $p['path']);
                 }
                 elseif (array_key_exists('path', $p) && !array_key_exists('path', $p_url)) {
                     $r_url .= $p['path'];
