@@ -8,6 +8,32 @@ class Job_WebCrawler_URLTest extends Job_Abstract
     {
         $curl = new God_Model_Curl();
 
-        echo $curl->normalizeURL('images/gallery-bottom.jpg', 'http://www.foxhq.com/update/news.php?artc=28352&s=r56tlolts9rkj6a0eqtc7avsc5');
+        $tests = array(
+            array(
+                'url' => '?page=1',
+                'root' => 'http://www.site.com',
+                'result' => 'http://www.site.com/?page=1'
+            ),
+            array(
+                'url' => 'gallery.php?page=1',
+                'root' => 'http://www.site.com/gallery.php',
+                'result' => 'http://www.site.com/gallery.php?page=1'
+            ),
+            array(
+                'url' => 'image.jpg',
+                'root' => 'http://www.site.com/section_area/',
+                'result' => 'http://www.site.com/section_area/image.jpg'
+            ),
+        );
+
+        $success = true;
+        foreach($tests as $test) {
+            if ($curl->normalizeURL($test['url'],$test['root']) != $test['result']) {
+                var_dump(array('Failure' => $test, 'Result' => $curl->normalizeURL($test['url'],$test['root'])));
+                $success = false;
+            }
+        }
+
+        echo $success ? 'All worked' : 'Error found';
     }
 }
