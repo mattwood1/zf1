@@ -1,5 +1,5 @@
 <?php
-class God_Model_Base_WebCrawlerURLModelName extends Doctrine_Record
+class God_Model_Base_WebCrawlerUrlModelName extends Doctrine_Record
 {
     public function setTableDefinition()
     {

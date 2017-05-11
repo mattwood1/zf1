@@ -29,4 +29,13 @@ class God_Model_Base_WebCrawlerLink extends Doctrine_Record
             'length' => '11'
         ));
     }
+
+    public function setUp()
+    {
+        $this->hasOne('God_Model_WebCrawlerUrl as url', array(
+            'local' => 'url_id',
+            'foreign' => 'id',
+            //'cascade' => array('delete')
+        ));
+    }
 }

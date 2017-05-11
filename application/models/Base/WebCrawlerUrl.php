@@ -62,5 +62,16 @@ class God_Model_Base_WebCrawlerUrl extends Doctrine_Record
             'foreign' => 'id',
             //'cascade' => array('delete')
         ));
+
+        $this->hasOne('God_Model_WebCrawlerLink as link', array(
+            'local' => 'id',
+            'foreign' => 'url_id'
+        ));
+
+        $this->hasMany('God_Model_WebCrawlerLink as links', array(
+            'local' => 'id',
+            'foreign' => 'parent_url_id',
+            //'cascade' => array('delete')
+        ));
     }
 }

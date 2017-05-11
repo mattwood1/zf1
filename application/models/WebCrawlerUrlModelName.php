@@ -1,5 +1,5 @@
 <?php
-class God_Model_WebCrawlerModelName extends God_Model_Base_ModelNameWebURL
+class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModelName
 {
-    
+
 }
