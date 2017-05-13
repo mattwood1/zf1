@@ -21,6 +21,9 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         $models = $modelsQuery->execute();
         
         foreach ($models as $model) {
+
+            checkCPULoad();
+
             echo $model->getName() . " ($model->ID)\n";
             if ($model->isActive()) {
                 $model->updatePhotosets();
