@@ -19,7 +19,7 @@ class Job_WebCrawler_WebCrawlerUrl extends Job_Abstract
             ->andWhere('contenttype like ?', '%text/html%')
             ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
             ->andWhere('allowed = 1')
-            ->limit(50);
+            ->limit(500);
         $webCrawlerUrls = $webCrawlerUrlQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
@@ -49,10 +49,16 @@ class Job_WebCrawler_WebCrawlerUrl extends Job_Abstract
                 $links[] = trim($curl->normalizeURL($src, $webCrawlerUrl->url));
             }
 
-            $links = array_unique($links);
-            $linkChunks = array_chunk($links, 1000);
+            $links = array_unique(array_filter($links));
+
+            if ($webCrawlerUrl->domain->reg_filter) {
+                foreach ($links as $key => $link) {
+                    $links[$key] = preg_replace("~" . $webCrawlerUrl->domain->reg_filter . "~", "", $link);
+                }
+            }
 
             // Known links
+            $linkChunks = array_chunk($links, 1000);
             $knownLinks = array();
             foreach ($linkChunks as $linkChunk) {
                 $dblinkQuery = God_Model_WebCrawlerLinkTable::getInstance()

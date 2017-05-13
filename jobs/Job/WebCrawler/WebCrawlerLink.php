@@ -17,7 +17,7 @@ class Job_WebCrawler_WebCrawlerLink extends Job_Abstract
             ->createQuery('wl')
             ->where('url_id = ?', 0)
             ->orderBy('parent_url_id asc')
-            ->limit(300);
+            ->limit(500);
 //        _dexit($webCrawlerLinkQuery);
         $webCrawlerLinks = $webCrawlerLinkQuery->execute();
 

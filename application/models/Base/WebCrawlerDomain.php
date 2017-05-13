@@ -23,6 +23,11 @@ class God_Model_Base_WebCrawlerDomain extends Doctrine_Record
             'type' => 'integer',
             'length' => '11'
         ));
+
+        $this->hasColumn('reg_filter', 'string', 1000, array(
+            'type' => 'string',
+            'length' => '1000'
+        ));
     }
 
     public function setUp()

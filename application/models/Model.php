@@ -55,9 +55,11 @@ class God_Model_Model extends God_Model_Base_Model
     public function updatePhotosets()
     {
         $path = APPLICATION_PATH . '/../public' . $this->path;
+
+        checkCPULoad();
         
-        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {
-            
+        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {checkCPULoad();
+
             // Query for photoset
             $photosetFound = false;
             foreach ( $this->photosets as $photoset ) {
