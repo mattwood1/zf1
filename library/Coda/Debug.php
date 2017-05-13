@@ -3,7 +3,7 @@ class Coda_Debug extends Zend_Debug
 {
 }
 
-function checkCPULoad($load = 1, $temp = 45)
+function checkCPULoad($load = 1, $temp = 50)
 {
     $sysload = sys_getloadavg();
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
