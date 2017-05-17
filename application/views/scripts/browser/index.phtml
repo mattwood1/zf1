@@ -1,6 +1,3 @@
-<?php
-$curl = new God_Model_Curl;
-?>
 <div class="row">
     <div class="col-md-12">
         <form action="" method="get" class="form-horizontal">
@@ -19,26 +16,38 @@ $curl = new God_Model_Curl;
 
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
+            <li role="presentation" class="active"><a href="#links" aria-controls="links" role="tab" data-toggle="tab">Links</a></li>
+            <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a></li>
             <li role="presentation"><a href="#source" aria-controls="source" role="tab" data-toggle="tab">Source</a></li>
             <li role="presentation"><a href="#curl" aria-controls="curl" role="tab" data-toggle="tab">Curl</a></li>
         </ul>
 
-        <?php _d(count($this->imageElements)); ?>
-
         <!-- Tab panes -->
         <div class="tab-content">
 
-            <div role="tabpanel" class="tab-pane active" id="images">
-                <?php if ($this->imageElements && stristr($this->contentType, 'text/html') !== false): ?>
-                <h1>Showing HTML</h1>
-                <?php foreach($this->imageElements as $imageElement): ?>
-                    <div class="col-xs-4 col-sm-3 col-md-2">
-                        <a class="thumbnail" href="<?php echo $this->url(array('controller' => 'browser', 'action' => 'index')) .'?' . http_build_query(array('url' => $curl->normalizeURL($imageElement['href'], $this->url))); ?>">
-                            <img src="/image/external?referer=<?php echo $this->url; ?>&url=<?php echo $curl->normalizeURL($imageElement['img'], $this->url); ?>" />
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+            <div role="tabpanel" class="tab-pane active" id="links">
+                <?php if ($this->links): ?>
+                    <h1>Showing Links</h1>
+                    <?php foreach($this->links as $link): ?>
+                        <div class="col-md-12">
+                            <a href="<?php echo $this->url(array('controller' => 'browser', 'action' => 'index')) .'?' . http_build_query(array('url' => $link)); ?>">
+                                <?php echo $link; ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="images">
+                <?php if ($this->images): ?>
+                    <h1>Showing Images</h1>
+                    <?php foreach($this->images as $image): ?>
+                        <div class="col-md-12">
+                            <a href="<?php echo $this->url(array('controller' => 'browser', 'action' => 'index')) .'?' . http_build_query(array('url' => $image)); ?>">
+                                <?php echo $image; ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 <?php endif; ?>
 
                 <?php if ($this->contentType == 'image/jpeg'): ?>
@@ -48,11 +57,12 @@ $curl = new God_Model_Curl;
             </div>
 
             <div role="tabpanel" class="tab-pane" id="source">
-                <textarea style="width:100%; height:300px;"><?php echo $this->html; ?></textarea>
+                <textarea style="width:100%; height:500px;"><?php echo $this->html; ?></textarea>
             </div>
 
             <div role="tabpanel" class="tab-pane" id="curl">
-                <?php _d($this->contentType); ?>
+                <?php _d(parse_url($this->url)); ?>
+                <?php _d($this->curl); ?>
             </div>
         </div>
     </div>

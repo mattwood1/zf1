@@ -7,12 +7,16 @@ class God_Model_Curl
     protected $_contentType;
     protected $_contentLength;
     protected $_lasturl;
+    protected $_curlinfo;
 
     public function Curl($url, $referer = null, $binary = false, $timeout = 30, $followredir = false, $headerOnly = 0)
     {
         $this->_timeout = $timeout;
         $ch = curl_init ($url);
-        curl_setopt($ch, CURLOPT_HEADER, $headerOnly);
+        if ($headerOnly) {
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+        }
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.114 Safari/537.36');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $binary ? curl_setopt($ch, CURLOPT_BINARYTRANSFER,1): '';
@@ -21,9 +25,15 @@ class God_Model_Curl
         $referer ? curl_setopt($ch, CURLOPT_REFERER, $referer): '';
         $followredir? curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1): '';
 
+        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "/tmp/cookie.txt");
+        curl_setopt($ch, CURLOPT_COOKIEJAR,  "/tmp/cookie.txt");
+
         $this->_rawdata = curl_exec($ch);
 
         $this->_statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $this->_curlinfo = curl_getinfo($ch);
 
         $this->_contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
@@ -52,6 +62,11 @@ class God_Model_Curl
     public function rawdata()
     {
         return $this->_rawdata;
+    }
+
+    public function curlInfo()
+    {
+        return $this->_curlinfo;
     }
 
     public function lastUrl()

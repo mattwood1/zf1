@@ -6,7 +6,7 @@ class Job_WebCrawler_WebCrawlerUrl extends Job_Abstract
 {
     public function run()
     {
-        $cpuload = 1.4;
+        $cpuload = 1;
         checkCPULoad($cpuload);
 
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
@@ -54,6 +54,46 @@ class Job_WebCrawler_WebCrawlerUrl extends Job_Abstract
             if ($webCrawlerUrl->domain->reg_filter) {
                 foreach ($links as $key => $link) {
                     $links[$key] = preg_replace("~" . $webCrawlerUrl->domain->reg_filter . "~", "", $link);
+                }
+            }
+
+            // Check for fake 404 responses that returns to the root page.
+            $p_url = parse_url($webCrawlerUrl->url);
+            $root_url = $p_url['scheme'] . '://' . $p_url['host'];
+
+            if ($webCrawlerUrl->url != $root_url) {
+
+                $root_curl = $curl->Curl($root_url, null, null, 10, true);
+                $root_dom = new DOMDocument();
+                @$root_dom->loadHTML($root_curl);
+
+                $root_links = array();
+
+                $root_linkspath = new DOMXPath($root_dom);
+                $root_aTag = $root_linkspath->evaluate('//a');
+                for ($i = 0; $i < $root_aTag->length; $i++) {
+                    $link = $root_aTag->item($i);
+                    $href = $link->getAttribute('href');
+                    $root_links[] = trim($curl->normalizeURL($href, $webCrawlerUrl->url));
+                }
+
+                if ($webCrawlerUrl->domain->reg_filter) {
+                    foreach ($root_links as $key => $link) {
+                        $root_links[$key] = preg_replace("~" . $webCrawlerUrl->domain->reg_filter . "~", "", $link);
+                    }
+                }
+
+                $links_slice = array_slice($links, 0, 15);
+                $root_links_slice = array_slice($root_links, 0, 15);
+
+                $link_diff = array_diff($links_slice, $root_links_slice);
+
+                // Links are the same as home page. Fake 404 needed
+                if (count($link_diff) == 0) {
+                    $webCrawlerUrl->statuscode = 404;
+                    $webCrawlerUrl->followed = 1;
+                    $webCrawlerUrl->save();
+                    continue; // Next URL
                 }
             }
 

@@ -9,7 +9,7 @@ function checkCPULoad($load = 1, $temp = 50)
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
     if ($sysload[0] > $load || $systemp > $temp) {
-        sleep(10);
+        sleep(10*$sysload[0]*$load);
         checkCPULoad($load, $temp);
     }
     
