@@ -2,7 +2,7 @@
 /**
  * Scheduled to run every minute every day.
  */
-class Job_WebCrawler_WebCrawLink extends Job_Abstract
+class Job_WebCrawler_Link extends Job_Abstract
 {
     public function run()
     {
