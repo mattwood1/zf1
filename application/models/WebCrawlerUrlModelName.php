@@ -15,12 +15,12 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
         $names = array();
         foreach ($modelNames as $modelName) {
-            $names[$modelName['ID']] = strtolower(str_replace(" ", "[\s\-\_]", $modelName['name']));
+            $names[$modelName['ID']] = strtolower(str_replace(" ", "[\s\-\_\+]", $modelName['name']));
         }
         $names = array_filter($names);
 
         foreach ($names as $modelNameID => $name) {
-            if (preg_match("~((?:[\-\/])" . $name . "(?:[\-\/\_\.])?)~i", $url['url'], $matches)) {
+            if (preg_match("~((?:[\-\/])" . $name . "(?:[\-\/\_\.])?)~i", strtolower($url['url']), $matches)) {
                 _d($modelNameID, $name, $url['url'], $matches);
 
                 $urlModelName = new God_Model_WebCrawlerUrlModelName();

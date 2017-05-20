@@ -33,7 +33,7 @@ class BrowserController extends Coda_Controller
 
             if ($this->_request->getParam('filter')) {
                 foreach ($links as $key => $link) {
-                    $links[$key] = preg_replace("~\&s=\w+~", "", $link);
+//                    $links[$key] = preg_replace("~\&s=\w+~", "", $link);
                 }
             }
 
