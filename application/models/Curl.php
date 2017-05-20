@@ -15,7 +15,7 @@ class God_Model_Curl
         $ch = curl_init ($url);
         if ($headerOnly) {
             curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
+//            curl_setopt($ch, CURLOPT_NOBODY, true);
         }
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.114 Safari/537.36');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

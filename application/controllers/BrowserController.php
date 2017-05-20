@@ -12,6 +12,7 @@ class BrowserController extends Coda_Controller
         $curl = new God_Model_Curl;
         $links = array();
         $images = array();
+        $html = '';
 
         if ($this->_request->getParam('url')) {
 
@@ -30,8 +31,10 @@ class BrowserController extends Coda_Controller
                 $links[] = trim($curl->normalizeURL($href, $this->_request->getParam('url')));
             }
 
-            foreach ($links as $key => $link) {
-                $links[$key] = preg_replace("~\&s=\w+~", "", $link);
+            if ($this->_request->getParam('filter')) {
+                foreach ($links as $key => $link) {
+                    $links[$key] = preg_replace("~\&s=\w+~", "", $link);
+                }
             }
 
             $imgTag = $xpath->evaluate('//img');
@@ -48,7 +51,7 @@ class BrowserController extends Coda_Controller
 
         }
 
-        $originalUrl = $curl->normalizeURL($this->_request->getParam('url'));
+//        $originalUrl = $curl->normalizeURL($this->_request->getParam('url'));
 
 //        $html = $curl->Curl($originalUrl, false, false, 5, true);
 //        $url = $curl->lastUrl(); // Following redirects

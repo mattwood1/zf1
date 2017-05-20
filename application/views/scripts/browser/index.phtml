@@ -3,7 +3,17 @@
         <form action="" method="get" class="form-horizontal">
             <div class="input-group col-md-12">
                 <input type="text" name="url" class="form-control input-md" value="<?php echo $this->url ?>">
+
+
+
                 <div class="input-group-btn">
+
+                    <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-md btn-primary">
+                        <input type="checkbox" name="filter" autocomplete="off">Filter
+                    </label>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-md">Go</button>
                 </div>
             </div>
