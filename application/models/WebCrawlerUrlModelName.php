@@ -4,7 +4,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
     public static function createLink(God_Model_WebCrawlerUrl $url)
     {
         // Only link html pages not other content types
-        if (stripos($url->contexttype, "text/html") === false) return;
+        if (stripos($url->contenttype, "text/html") === false) return;
 
         /*
          * Create a quick array of the model names, processed modelNameID => model_name
