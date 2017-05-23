@@ -78,5 +78,12 @@ class God_Model_Base_WebCrawlerUrl extends Doctrine_Record
             'local' => 'id',
             'foreign' => 'webcrawler_url_id'
         ));
+
+        $this->hasMany('God_Model_WebCrawlerUrl as suburls', array(
+            'local' => 'id',
+            'foreign' => 'id',
+            'refclass' => 'God_Model_WebCrawlerLink'
+        ));
+
     }
 }

@@ -18,9 +18,9 @@ class Job_WebCrawler_Link extends Job_Abstract
             ->select('*')
             ->leftJoin('wl.parent_link as wll')
             ->where('wl.url_id = ?', 0)
-            ->orderBy('wll.parent_url_id asc')
-            ->limit(500);
-//        _dexit($webCrawlerLinkQuery);
+            ->orderBy('wl.priority desc, wll.parent_url_id asc')
+            ->limit(5);
+        _dexit($webCrawlerLinkQuery);
         $webCrawlerLinks = $webCrawlerLinkQuery->execute();
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {

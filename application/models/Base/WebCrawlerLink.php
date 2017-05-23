@@ -28,6 +28,11 @@ class God_Model_Base_WebCrawlerLink extends Doctrine_Record
             'type' => 'integer',
             'length' => '11'
         ));
+
+        $this->hasColumn('priority', 'integer', 11, array(
+            'type' => 'integer',
+            'length' => '11'
+        ));
     }
 
     public function setUp()

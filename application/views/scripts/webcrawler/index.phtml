@@ -50,6 +50,29 @@ $this->headTitle('Web Urls');
 
         </div>
 
+        <?php
+        $thumbnails = array();
+        if ($url['links']) {
+            foreach ($url['links'] as $link) {
+                $thumbnails[] = $link['url'];
+            }
+        }
+        ?>
+
+        <?php if ($thumbnails): ?>
+        <div class="col-md-12">
+            <?php foreach($thumbnails as $thumbnail): ?>
+                <div class="col-lg-1 col-sm-2 col-xs-3">
+                    <a class="thumbnail" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>">
+                        <div class="image thumb">
+                            <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>&width=80" />
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+
     <?php endforeach; ?>
 
     <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>

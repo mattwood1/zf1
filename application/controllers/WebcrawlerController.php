@@ -20,7 +20,12 @@ class WebcrawlerController extends Coda_Controller
         $webUrlQuery = God_Model_WebCrawlerUrlTable::getInstance()
             ->createQuery('wcu')
             ->leftJoin('wcu.modelnamelinks mnl')
-            ->leftJoin('mnl.modelName mn');
+            ->leftJoin('mnl.modelName mn')
+            ->leftJoin('wcu.links as links')
+            ->leftJoin('links.url as suburl')
+
+            ->andWhere('suburl.contenttype = "image/jpeg" and suburl.contentlength >= 90000')
+        ;
 
         if ($this->_request->getParam('modelid')) {
             $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
