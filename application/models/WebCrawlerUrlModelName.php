@@ -24,12 +24,14 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
         foreach ($names as $modelNameID => $name) {
             $regex = $space . '(' . $name . ')' . $space;
             if (preg_match("~" . $regex . "~i", $url['url'], $matches)) {
-                _d($modelNameID, $name, $url['url'], $matches);
-
                 $urlModelName = new God_Model_WebCrawlerUrlModelName();
                 $urlModelName->model_name_id = $modelNameID;
                 $urlModelName->webcrawler_url_id = $url->id;
                 $urlModelName->save();
+
+                $link = $url->link;
+                $link->priority = 100;
+                $link->save();
             }
         }
     }

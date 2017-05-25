@@ -19,7 +19,7 @@ class Job_WebCrawler_Url extends Job_Abstract
             ->andWhere('contenttype like ?', '%text/html%')
             ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
             ->andWhere('allowed = 1')
-            ->limit(500);
+            ->limit(50);
         $webCrawlerUrls = $webCrawlerUrlQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
@@ -97,6 +97,14 @@ class Job_WebCrawler_Url extends Job_Abstract
                 }
             }
 
+            // Don't try to follow links to email addresses
+            if (strpos($webCrawlerUrl->url, '@') !== false) {
+                $webCrawlerUrl->statuscode = 404;
+                $webCrawlerUrl->followed = 1;
+                $webCrawlerUrl->save();
+                continue; // Next URL
+            }
+
             // Known links
             $linkChunks = array_chunk($links, 1000);
             $knownLinks = array();
@@ -125,6 +133,17 @@ class Job_WebCrawler_Url extends Job_Abstract
                             'link' => trim($linkMissing),
                             'parent_url_id' => $webCrawlerUrl->id
                         ));
+
+                        $pathinfo = pathinfo($linkMissing);
+                        if (
+                            in_array($pathinfo['extension'], array('jpg'))
+                         || strpos(trim($linkMissing), $webCrawlerUrl->url) !== false
+                        ) {
+                            $newLink->priority = $webCrawlerUrl->link->priority;
+
+                            _d($webCrawlerUrl, $newLink);
+                        }
+
                         $newLink->save();
                     }
 

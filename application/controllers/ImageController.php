@@ -144,7 +144,7 @@ class ImageController extends Coda_Controller
 
             if (!$image || strstr($image, 'Warning')) {
                 $curl = new God_Model_Curl;
-                $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 1, true);
+                $curl->Curl($this->_request->getParam('url'), $this->_request->getParam('referer'), true, 10, true);
 
                 if ($this->_request->getParam('url') != $curl->lasturl()) {
                     // TODO: This needs work
