@@ -67,6 +67,9 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         $webCrawlerUrls = $webUrCrawlerUrlsQuery->execute();
 
         foreach ($webCrawlerUrls as $url) {
+
+            checkCPULoad();
+
             God_Model_WebCrawlerUrlModelName::createLink($url);
         }
     }

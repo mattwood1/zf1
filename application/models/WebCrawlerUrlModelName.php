@@ -22,11 +22,12 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
         $names = array_filter($names);
 
         foreach ($names as $modelNameID => $name) {
+
+            checkCPULoad();
+
             if (self::checkUrlWithName($name, $url['url'])) {
-                $urlModelName = new God_Model_WebCrawlerUrlModelName();
-                $urlModelName->model_name_id = $modelNameID;
-                $urlModelName->webcrawler_url_id = $url->id;
-                $urlModelName->save();
+
+                self::_createLink($modelNameID, $url->id);
 
                 $link = $url->link;
                 $link->priority = 100;
@@ -53,5 +54,23 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
             return true;
         }
         return false;
+    }
+
+    private static function _createLink($model_name_id, $webcrawler_url_id)
+    {
+        $urlModelName = God_Model_WebCrawlerUrlModelNameTable::getInstance()
+            ->createQuery('wcmn')
+            ->where('model_name_id = ?', $model_name_id)
+            ->andWhere('webcrawler_url_id = ?', $webcrawler_url_id)
+            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+        if (!$urlModelName) {
+
+            $urlModelName = new God_Model_WebCrawlerUrlModelName();
+            $urlModelName->model_name_id = $model_name_id;
+            $urlModelName->webcrawler_url_id = $webcrawler_url_id;
+            $urlModelName->save();
+
+        }
     }
 }
