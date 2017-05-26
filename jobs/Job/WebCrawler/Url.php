@@ -19,7 +19,7 @@ class Job_WebCrawler_Url extends Job_Abstract
             ->andWhere('contenttype like ?', '%text/html%')
             ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
             ->andWhere('allowed = 1')
-            ->limit(50);
+            ->limit(100);
         $webCrawlerUrls = $webCrawlerUrlQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {

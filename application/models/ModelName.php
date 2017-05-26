@@ -13,6 +13,35 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         return $webUrls;
     }
 
+    public function verifyWebCrawlerUrls()
+    {
+        // Get the existing links from Model Name to WebCrawler URLs
+        $webCrawlerModelNameLinks = God_Model_WebCrawlerUrlModelNameTable::getInstance()
+            ->createQuery('wcmn')
+            ->where('model_name_id = ?', $this->ID)
+            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+        $webCrawlerUrls = array();
+        foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
+            $webCrawlerUrls[] = $webCrawlerModelNameLink['id'];
+        }
+
+        $webCrawlerUrls = God_Model_WebCrawlerUrlTable::getInstance()
+            ->createQuery('wcu')
+            ->whereIn('id', $webCrawlerUrls)
+            ->execute();
+
+        // Format the name
+        $name = God_Model_WebCrawlerUrlModelName::formatNameForUrlReg($this->name);
+
+        // Check the URL is valid for the name
+        foreach ($webCrawlerUrls as $webCrawlerUrl) {
+            if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($name, $webCrawlerUrl->url) == false) {
+                $webCrawlerUrl->delete();
+            }
+        }
+    }
+
     public function linkWebCrawlerUrls()
     {
         $webCrawlerModelNameLinks = God_Model_WebCrawlerUrlModelNameTable::getInstance()

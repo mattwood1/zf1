@@ -13,7 +13,9 @@ class Job_Model_CheckWebCrawlerUrls extends Job_Abstract
         foreach ($modelNames as $modelName) {
 
             checkCPULoad();
-            
+
+            $modelName->verifyWebCrawlerUrls();
+
             $modelName->linkWebCrawlerUrls();
 
             $modelName->webcrawler_updated = date("Y-m-d H:i:s");

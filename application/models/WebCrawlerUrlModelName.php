@@ -1,6 +1,8 @@
 <?php
 class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModelName
 {
+    private static $space = "[\/\s\-\_\+]";
+
     public static function createLink(God_Model_WebCrawlerUrl $url)
     {
         // Only link html pages not other content types
@@ -13,17 +15,14 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
         $modelNameTable = new God_Model_ModelNameTable();
         $modelNames = $modelNameTable->getActiveModelNames();
 
-        $space = "[\/\s\-\_\+]";
-
         $names = array();
         foreach ($modelNames as $modelName) {
-            $names[$modelName['ID']] = strtolower(str_replace(" ", $space, $modelName['name']));
+            $names[$modelName['ID']] = self::formatNameForUrlReg($modelName['name']);
         }
         $names = array_filter($names);
 
         foreach ($names as $modelNameID => $name) {
-            $regex = $space . '(' . $name . ')' . $space;
-            if (preg_match("~" . $regex . "~i", $url['url'], $matches)) {
+            if (self::checkUrlWithName($name, $url['url'])) {
                 $urlModelName = new God_Model_WebCrawlerUrlModelName();
                 $urlModelName->model_name_id = $modelNameID;
                 $urlModelName->webcrawler_url_id = $url->id;
@@ -40,5 +39,19 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
                 }
             }
         }
+    }
+
+    public static function formatNameForUrlReg($name)
+    {
+        return strtolower(str_replace(" ", self::$space, $name));
+    }
+
+    public static function checkUrlWithName($name, $url)
+    {
+        $regex = self::$space . '(' . $name . ')' . self::$space;
+        if (preg_match("~" . $regex . "~i", $url, $matches)) {
+            return true;
+        }
+        return false;
     }
 }
