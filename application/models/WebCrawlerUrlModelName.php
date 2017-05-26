@@ -32,6 +32,12 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
                 $link = $url->link;
                 $link->priority = 100;
                 $link->save();
+
+                $sublinks = $link->sublinks;
+                foreach ($sublinks as $sublink) {
+                    $sublink->priority = 100;
+                    $sublink->save();
+                }
             }
         }
     }

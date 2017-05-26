@@ -20,10 +20,11 @@ class Job_Model_CheckWebUrls extends Job_Abstract
                 checkCPULoad();
                 $modelName->linkWebUrl($webUrl);
             }
-            
+
             $modelName->datesearched = date("Y-m-d H:i:s");
             $modelName->model->datesearched = date("Y-m-d H:i:s");
             $modelName->save();
+
         }
     }
 }

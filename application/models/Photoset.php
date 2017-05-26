@@ -109,6 +109,9 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                             $imageHashIndexItem->save();
                         }
                     }
+
+                    // Update duplicate Hashes Cache
+                    God_Model_ImageHashTable::getDuplicateHashes(false, 1);
                 }
             }
             

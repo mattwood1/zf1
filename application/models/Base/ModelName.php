@@ -35,8 +35,13 @@ class God_Model_Base_ModelName extends Doctrine_Record
         ));
 
         $this->hasColumn('datesearched', 'timestamp', 25, array(
-                'type'               => 'timestamp',
-                'length'             => '25',
+            'type'               => 'timestamp',
+            'length'             => '25',
+        ));
+
+        $this->hasColumn('webcrawler_updated', 'timestamp', 25, array(
+            'type'               => 'timestamp',
+            'length'             => '25',
         ));
     }
 

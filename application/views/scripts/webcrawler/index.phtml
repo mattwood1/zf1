@@ -48,39 +48,40 @@ $this->headTitle('Web Urls');
                 <?php endif; ?>
             </div>
 
-        </div>
-
-        <?php
-        $thumbnails = array();
-        if ($url['links']) {
-            foreach ($url['links'] as $link) {
-                $thumbnails[] = $link['url'];
+            <?php
+            $thumbnails = array();
+            if ($url['links']) {
+                foreach ($url['links'] as $link) {
+                    $thumbnails[] = $link['url'];
+                }
             }
-        }
-        ?>
+            ?>
 
-        <?php if ($thumbnails): ?>
-        <div class="col-md-12">
-            <?php foreach($thumbnails as $thumbnail): ?>
-                <div class="col-lg-1 col-sm-2 col-xs-3">
-                    <a class="thumbnail" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>">
-                        <div class="image thumb">
-                            <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>&width=80" />
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
+            <?php if ($thumbnails): ?>
+            <div class="col-md-12">
+                <?php foreach($thumbnails as $thumbnail): ?>
+                    <div class="col-lg-1 col-sm-2 col-xs-3">
+                        <a class="thumbnail" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>">
+                            <div class="image thumb">
+                                <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>&width=80" />
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
         </div>
-        <?php endif; ?>
-
     <?php endforeach; ?>
 
     <?php echo $this->partial('pagination.phtml', array('paginator' => $this->paginator))?>
 
 <?php else: ?>
 
-    <p>No URLS</p>
-
+    <div class="row">
+        <div class="col-md-12">
+            <p>No URLS</p>
+        </div>
+    </div>
 <?php endif; ?>
 
 

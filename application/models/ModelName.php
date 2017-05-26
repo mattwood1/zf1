@@ -9,10 +9,39 @@ class God_Model_ModelName extends God_Model_Base_ModelName
             $webUrlsQuery->andWhere('MATCH (`url`) against (?)', "' . $namepart . '");
         }
         $webUrls = $webUrlsQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-        
+
         return $webUrls;
     }
-    
+
+    public function linkWebCrawlerUrls()
+    {
+        $webCrawlerModelNameLinks = God_Model_WebCrawlerUrlModelNameTable::getInstance()
+            ->createQuery('wcmn')
+            ->where('model_name_id = ?', $this->ID)
+            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+        $alreadyLinked = array();
+        if ($webCrawlerModelNameLinks) {
+            foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
+                $alreadyLinked[] = $webCrawlerModelNameLink['webcrawler_url_id'];
+            }
+        }
+
+        $webUrCrawlerUrlsQuery = God_Model_WebCrawlerUrlTable::getInstance()
+            ->createQuery('wcu')
+            ->whereNotIn('id', $alreadyLinked)
+            ->andWhere('contenttype like "%text/html%"')
+            ->andWhere('statuscode = 200');
+        foreach (explode(" ", $this->name) as $namepart) {
+            $webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against (?)', "' . $namepart . '");
+        }
+        $webCrawlerUrls = $webUrCrawlerUrlsQuery->execute();
+
+        foreach ($webCrawlerUrls as $url) {
+            God_Model_WebCrawlerUrlModelName::createLink($url);
+        }
+    }
+
     public function linkWebUrl($webUrl)
     {
         // Check Web Resource link
