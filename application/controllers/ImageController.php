@@ -136,6 +136,9 @@ class ImageController extends Coda_Controller
 
     public function externalAction()
     {
+        // Added to render larger images.
+        ini_set('memory_limit', '1.5G');
+
         if ($this->_request->getParam('referer') && $this->_request->getParam('url')) {
             $cache = new Coda_Cache(strtotime('+1 week', 0));
             $cachekey = md5($this->_request->getParam('referer').'_'.$this->_request->getParam('url').'_'.$this->_request->getParam('width'));

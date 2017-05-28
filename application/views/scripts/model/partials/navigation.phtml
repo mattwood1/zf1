@@ -9,6 +9,6 @@
         <a href="<?php echo $this->url(array('controller'=>'web-url', 'action'=>'index', 'modelid' => $this->model->ID), null, true);?>">Web URL</a>
     </li>
     <li<?php echo $this->active == 'webcrawler' ? ' class="active"' : '' ?>>
-        <a href="<?php echo $this->url(array('controller'=>'webcrawler', 'action'=>'index', 'modelid' => $this->model->ID), null, true);?>">Webcrawler</a>
+        <a href="<?php echo $this->url(array('controller'=>'webcrawler-url', 'action'=>'index', 'modelid' => $this->model->ID), null, true);?>">Webcrawler</a>
     </li>
 </ul>

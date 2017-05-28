@@ -8,10 +8,10 @@
     <?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'webcrawler')); ?>
 <?php endif; ?>
 
-<?php if ($this->webresource): ?>
+<?php if ($this->domain): ?>
     <?php
-    $this->title = $this->webresource->website;
-    $this->headTitle($this->webresource->website);
+    $this->title = $this->domain->domain;
+    $this->headTitle($this->domain->domain);
     ?>
 <?php endif; ?>
 

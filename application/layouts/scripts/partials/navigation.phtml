@@ -19,6 +19,7 @@
                 <li><a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'thumbnailer'), null, true); ?>"><i class="fa fa-picture-o fa-fw"></i><?php echo $this->notification('thumbnail'); ?> Thumbnails</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'duplicate'), null, true); ?>"><i class="fa fa-picture-o fa-fw"></i><?php echo $this->notification('duplicate'); ?> Duplicates</a></li>
                 <li><a href="<?php echo $this->url(array('controller' => 'web-resource', 'action' => 'index'), null, true); ?>"><i class="fa fa-chain fa-fw"></i> Web Resources</a></li>
+                <li><a href="<?php echo $this->url(array('controller' => 'webcrawler-domain', 'action' => 'index'), null, true); ?>"><i class="fa fa-chain fa-fw"></i> Web Crawler</a></li>
                 <?php endif; ?>
             </ul>
             

@@ -1,0 +1,29 @@
+<?php
+$this->title = 'Web Crawler Domains';
+$this->headTitle('Web Crawler Domains');
+?>
+
+<?php if ($this->domains): ?>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Frequency</th>
+                <th>Next Updated</th>
+                <th>Web Urls</th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($this->domains as $domain): ?>
+
+        <tr>
+            <td><?php echo $domain['domain']; ?></td>
+            <td><?php echo $domain['urls'][0]['frequency']; ?></td>
+            <td><?php echo $domain['urls'][0]['date']; ?></td>
+            <td><a href="<?php echo $this->url(array('controller' => 'webcrawler-url', 'action' => 'index', 'domainid' => $domain['id']), 'default' ,true); ?>">Web Urls</a></td>
+        </tr>
+
+    <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

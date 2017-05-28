@@ -1,6 +1,6 @@
 <?php
 
-class WebcrawlerController extends Coda_Controller
+class WebcrawlerUrlController extends Coda_Controller
 {
 
     public function init()
@@ -19,31 +19,34 @@ class WebcrawlerController extends Coda_Controller
 
         $webUrlQuery = God_Model_WebCrawlerUrlTable::getInstance()
             ->createQuery('wcu')
-            ->leftJoin('wcu.modelnamelinks mnl')
-            ->leftJoin('mnl.modelName mn')
-            ->leftJoin('wcu.links as links')
+            ->innerJoin('wcu.links as links')
             ->leftJoin('links.url as suburl')
 
-            ->andWhere('suburl.contenttype = "image/jpeg" and suburl.contentlength >= 90000')
+            ->innerJoin('wcu.modelnamelinks mnl')
+            ->leftJoin('mnl.modelName mn')
+
+            ->andWhere('suburl.contenttype = "image/jpeg" and suburl.contentlength >= 90000');
         ;
 
         if ($this->_request->getParam('modelid')) {
             $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
             $modelNames = God_Model_ModelNameTable::getInstance()->createQuery('mn')
                 ->select('ID')
-                ->where('model_id = ?', $this->_request->getParam('modelid'))
+                ->andWhere('model_id = ?', $this->_request->getParam('modelid'))
                 ->execute();
             foreach ($modelNames as $modelName) {
                 $modelIds[] = $modelName->ID;
             }
 
-            $webUrlQuery
-                ->whereIn('mn.id', $modelIds);
+            $webUrlQuery->andWhereIn('mn.id', $modelIds);
         }
 
-//        $webUrlQuery->andWhere('wu.linked < 0');
+        if ($this->_request->getParam('domainid')) {
+            $webUrlQuery->andWhere('wcu.domain_id = ?', $this->_request->getParam('domainid'));
+            $this->view->domain = God_Model_WebCrawlerDomainTable::getInstance()->find($this->_request->getParam('domainid'));
+        }
 
-//        _d($webUrlQuery); exit;
+        $webUrlQuery->orderBy('wcu.id DESC');
 
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
         $webUrls = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
