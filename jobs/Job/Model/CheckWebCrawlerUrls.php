@@ -15,7 +15,6 @@ class Job_Model_CheckWebCrawlerUrls extends Job_Abstract
             checkCPULoad();
 
             $modelName->verifyWebCrawlerUrls();
-
             $modelName->linkWebCrawlerUrls();
 
             $modelName->webcrawler_updated = date("Y-m-d H:i:s");
