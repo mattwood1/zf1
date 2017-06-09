@@ -25,6 +25,21 @@ class Job_WebCrawler_Link extends Job_Abstract
 //        _dexit($webCrawlerLinkQuery);
         $webCrawlerLinks = $webCrawlerLinkQuery->execute();
 
+        $webCrawlerLinkQuery2 = $webCrawlerLinkTable->getInstance()
+            ->createQuery('wl')
+            ->select('*')
+//            ->leftJoin('wl.parent_link as wll')
+            ->where('wl.url_id = ?', 0)
+            ->andWhere('wl.priority = 0')
+//            ->orderBy('wl.priority desc, wll.parent_url_id asc')
+            ->orderBy('wl.priority desc, wl.parent_url_id asc')
+//            ->groupBy('wl.id')
+            ->limit(10);
+//        _dexit($webCrawlerLinkQuery);
+        $webCrawlerLinks2 = $webCrawlerLinkQuery2->execute();
+
+        $webCrawlerLinks = array_merge($webCrawlerLinks, $webCrawlerLinks2);
+
         foreach ($webCrawlerLinks as $webCrawlerLink) {
             checkCPULoad($cpuload);
 
