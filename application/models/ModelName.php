@@ -72,7 +72,7 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         }
 
         foreach (explode(" ", $this->name) as $namepart) {
-            $webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against ("' . $namepart . '")');
+            $webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against (?)', $namepart);
         }
 
         $webCrawlerUrls = $webUrCrawlerUrlsQuery->execute();

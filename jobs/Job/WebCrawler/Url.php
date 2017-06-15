@@ -23,6 +23,9 @@ class Job_WebCrawler_Url extends Job_Abstract
         $webCrawlerUrls = $webCrawlerUrlQuery->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
+
+God_Model_WebCrawlerUrlModelName::createLink($webCrawlerUrl);
+
             checkCPULoad($cpuload);
 
             $curl->Curl($webCrawlerUrl->url, null, null, 10, true);

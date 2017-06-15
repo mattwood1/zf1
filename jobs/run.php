@@ -12,7 +12,7 @@ defined('APPLICATION_ENV')
 
 // Define Images directory
 defined('IMAGE_DIR')
-|| define('IMAGE_DIR', '/home/root');
+|| define('IMAGE_DIR', '/raid');
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(

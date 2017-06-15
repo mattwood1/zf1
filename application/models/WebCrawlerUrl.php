@@ -15,7 +15,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $url->save();
 
-        God_Model_WebCrawlerUrlModelName::createLink($url);
+        //God_Model_WebCrawlerUrlModelName::createLink($url);
 
         return $url;
     }

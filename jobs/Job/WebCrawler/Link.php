@@ -38,10 +38,10 @@ class Job_WebCrawler_Link extends Job_Abstract
 //        _dexit($webCrawlerLinkQuery);
         $webCrawlerLinks2 = $webCrawlerLinkQuery2->execute();
 
-        $webCrawlerLinks = array_merge($webCrawlerLinks, $webCrawlerLinks2);
+        //$webCrawlerLinks = array_merge((array)$webCrawlerLinks, (array)$webCrawlerLinks2);
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {
-            checkCPULoad($cpuload);
+            //checkCPULoad($cpuload);
 
             $curl->Curl($webCrawlerLink->link, null,false, 10, true, true);
             $webUrl = $webCrawlerUrlTable->findInsert($curl);

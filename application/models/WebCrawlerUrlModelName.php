@@ -23,7 +23,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
         foreach ($names as $modelNameID => $name) {
 
-            checkCPULoad();
+            //checkCPULoad();
 
             if (self::checkUrlWithName($name, $url['url'])) {
 
