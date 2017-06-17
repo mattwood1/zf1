@@ -25,7 +25,7 @@ $this->headTitle('Web Urls');
     <?php foreach ($this->webUrls as $url): ?>
 
         <div class="row">
-            <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'web-url', 'action' => 'test', 'id' => $url['id']), 'default', true); ?>"><?php echo $url['id']; ?></a></div>
+            <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'webcrawler-url', 'action' => 'test', 'id' => $url['id']), 'default', true); ?>"><?php echo $url['id']; ?></a></div>
             <div class="col-md-6 col-sm-5 col-xs-10"><?php echo $url['url']; ?> <a href="<?php echo $url['url']; ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
             <div class="col-md-1 col-sm-1 col-xs-2"><?php echo $url['statuscode']; ?></div>
 
@@ -42,7 +42,7 @@ $this->headTitle('Web Urls');
                 <?php if ($url['modelnamelinks']): ?>
                     <ul class="list-unstyled">
                         <?php foreach ($url['modelnamelinks'] as $modelNameLink): ?>
-                            <li><a href="<?php echo $this->url(array('controller'=>'web-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['model_id']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'webcrawler-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['model_id']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -52,6 +52,9 @@ $this->headTitle('Web Urls');
             $thumbnails = array();
             if ($url['links']) {
                 foreach ($url['links'] as $link) {
+
+                    _d($link);
+
                     $thumbnails[] = $link['url'];
                 }
             }

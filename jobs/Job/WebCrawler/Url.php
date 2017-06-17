@@ -15,10 +15,11 @@ class Job_WebCrawler_Url extends Job_Abstract
         $webCrawlerUrlQuery = $webCrawlerUrlTable->getInstance()
             ->createQuery('wu')
             ->leftJoin('wu.domain wd')
-            ->where('(followed = ? or frequency is not null)', 0)
-            ->andWhere('contenttype like ?', '%text/html%')
-            ->andWhere('(date < ? or date is null)', date("Y-m-d H:i:s"))
-            ->andWhere('allowed = 1')
+            ->where('(wu.followed = ? or wu.frequency is not null)', 0)
+            ->andWhere('wu.contenttype like ?', '%text/html%')
+            ->andWhere('(wu.date < ? or wu.date is null)', date("Y-m-d H:i:s"))
+            ->andWhere('wd.allowed = 1')
+            ->orderBy('wu.date DESC')
             ->limit(100);
         $webCrawlerUrls = $webCrawlerUrlQuery->execute();
 
