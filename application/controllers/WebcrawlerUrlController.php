@@ -19,7 +19,7 @@ class WebcrawlerUrlController extends Coda_Controller
 
         $webUrlQuery = God_Model_WebCrawlerUrlTable::getInstance()
             ->createQuery('wcu')
-            ->innerJoin('wcu.links as links')
+            ->leftJoin('wcu.links as links')
             ->leftJoin('links.url as suburl')
 
             ->innerJoin('wcu.modelnamelinks mnl')
@@ -49,6 +49,7 @@ class WebcrawlerUrlController extends Coda_Controller
         $webUrlQuery->orderBy('wcu.id DESC');
 
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
+
         $webUrls = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $this->view->paginator = $paginator;
