@@ -22,7 +22,7 @@ class WebcrawlerUrlController extends Coda_Controller
             ->leftJoin('wcu.links as links')
             ->leftJoin('links.url as suburl')
 
-            ->innerJoin('wcu.modelnamelinks mnl')
+            ->leftJoin('wcu.modelnamelinks mnl')
             ->leftJoin('mnl.modelName mn')
 
             ->andWhere('suburl.contenttype = "image/jpeg" and suburl.contentlength >= 90000');
@@ -49,7 +49,6 @@ class WebcrawlerUrlController extends Coda_Controller
         $webUrlQuery->orderBy('wcu.id DESC');
 
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
-
         $webUrls = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $this->view->paginator = $paginator;

@@ -171,7 +171,8 @@ ul#ranking li div.image {
     border: 0;
     border-radius: 0;
     padding: 0;
-    margin-bottom: 10px;
+    margin: 0 auto 10px;
+    max-width: 80px;
 }
 
 .thumbnail img {
