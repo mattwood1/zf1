@@ -110,11 +110,10 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                         }
                     }
 
-                    // Update duplicate Hashes Cache
-                    God_Model_ImageHashTable::getDuplicateHashes(false, 1);
                 }
             }
-            
+
+
             $this->imagesCheckedDate = date("Y-m-d");
             $this->save();
         }

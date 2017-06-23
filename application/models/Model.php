@@ -56,7 +56,9 @@ class God_Model_Model extends God_Model_Base_Model
     {
         $path = APPLICATION_PATH . '/../public' . $this->path;
 
-        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {checkCPULoad();
+        foreach (God_Model_File::scanPath($path)->getDirectories() as $directory) {
+
+            checkCPULoad();
 
             // Query for photoset
             $photosetFound = false;
@@ -83,8 +85,10 @@ class God_Model_Model extends God_Model_Base_Model
                 
                 $photoset->updateImages();
             }  
-            
         }
+
+        // Update duplicate Hashes Cache
+        God_Model_ImageHashTable::getDuplicateHashes(false, 1);
         
         $this->photosetsChecked = date("Y-m-d", mktime());
         
