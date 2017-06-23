@@ -87,9 +87,6 @@ class God_Model_Model extends God_Model_Base_Model
             }  
         }
 
-        // Update duplicate Hashes Cache
-        God_Model_ImageHashTable::getDuplicateHashes(false, 1);
-        
         $this->photosetsChecked = date("Y-m-d", mktime());
         
         $this->save();

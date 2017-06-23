@@ -34,5 +34,8 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
                 $model->save();
             }
         }
+
+        // Update duplicate Hashes Cache
+        God_Model_ImageHashTable::getDuplicateHashes(false, 1);
     }
 }
