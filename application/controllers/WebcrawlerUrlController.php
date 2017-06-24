@@ -10,22 +10,34 @@ class WebcrawlerUrlController extends Coda_Controller
 
     public function indexAction()
     {
-        /* Index */
-//        $webUrlQuery = God_Model_WebURLTable::getInstance()
-//            ->createQuery('wu')
-//            ->orderBy('wu.dateCreated DESC')
-//            ->leftJoin('wu.ModelNameWebURL mnwu')
-//            ->leftJoin('mnwu.modelName mn');
+        $thumbnailSize = 90000;
 
         $webUrlQuery = God_Model_WebCrawlerUrlTable::getInstance()
             ->createQuery('wcu')
-            ->leftJoin('wcu.links as links')
-            ->leftJoin('links.url as suburl')
+            ->leftJoin('wcu.links as links1')
+            ->leftJoin('links1.url as wcu1')
+            ->leftJoin('wcu1.links as links2')
+            ->leftJoin('links2.url as wcu2')
 
             ->leftJoin('wcu.modelnamelinks mnl')
             ->leftJoin('mnl.modelName mn')
 
-            ->andWhere('suburl.contenttype = "image/jpeg" and suburl.contentlength >= 90000');
+            ->leftJoin('wcu.domain domain')
+
+            ->andWhere('
+            (
+                (    domain.link_depth = 1
+                 and wcu1.contenttype = "image/jpeg"
+                 and wcu1.contentlength > ' . $thumbnailSize .'
+                 and wcu2.contenttype is null 
+                 and wcu2.contentlength is null)
+            OR  (
+                     domain.link_depth = 2
+                 and wcu1.contenttype like "text/html%"
+                 and wcu2.contenttype = "image/jpeg" 
+                 and wcu2.contentlength > ' . $thumbnailSize .'
+                )
+            )')
         ;
 
         if ($this->_request->getParam('modelid')) {

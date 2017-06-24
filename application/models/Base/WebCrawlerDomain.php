@@ -28,6 +28,11 @@ class God_Model_Base_WebCrawlerDomain extends Doctrine_Record
             'type' => 'string',
             'length' => '1000'
         ));
+
+        $this->hasColumn('link_depth', 'integer', 11, array(
+            'type' => 'integer',
+            'length' => '11'
+        ));
     }
 
     public function setUp()
