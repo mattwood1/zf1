@@ -36,6 +36,36 @@ class God_Model_ModelNameTable extends Doctrine_Record
         return $modelNamesQuery->execute();
     }
 
+    public static function getByUrl($url)
+    {
+        $url_parts = parse_url($url);
+
+        if (array_key_exists('path', $url_parts)) {
+
+            $name = preg_replace("~" . God_Model_WebCrawlerUrlModelName::$space . "~", " ", $url_parts['path']);
+            $names = explode(" ", $name);
+            $names = array_filter($names);
+
+            if ($names) {
+
+                $modelNameQuery = self::getInstance()->createQuery('mn')->innerJoin('mn.model m');
+                foreach ($names as $name) {
+                    $modelNameQuery->orWhere('MATCH (m.name) AGAINST ("' . $name . '")');
+                }
+                $modelNameQuery->andWhere('m.active = 1')->andWhere('m.ranking > -1');
+
+                $modelNames = $modelNameQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+                $modelArray = array();
+                foreach ($modelNames as $modelName) {
+                    $modelArray[$modelName['ID']] = $modelName['name'];
+                }
+
+                return $modelArray;
+            }
+        }
+    }
+
     public function getActiveModelNames()
     {
         $cache = new Coda_Cache();

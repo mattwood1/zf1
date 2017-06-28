@@ -25,7 +25,7 @@ class Job_WebCrawler_Url extends Job_Abstract
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
-God_Model_WebCrawlerUrlModelName::createLink($webCrawlerUrl);
+            $webCrawlerUrl->linkModelName();
 
             checkCPULoad($cpuload);
 
@@ -140,7 +140,8 @@ God_Model_WebCrawlerUrlModelName::createLink($webCrawlerUrl);
 
                         $pathinfo = pathinfo($linkMissing);
                         if (
-                            in_array($pathinfo['extension'], array('jpg'))
+                            array_key_exists('extension', $pathinfo)
+                         && in_array($pathinfo['extension'], array('jpg'))
                          || strpos(trim($linkMissing), $webCrawlerUrl->url) !== false
                         ) {
                             $newLink->priority = $webCrawlerUrl->link->priority;

@@ -82,7 +82,7 @@ class God_Model_ModelName extends God_Model_Base_ModelName
 
                 checkCPULoad();
 
-                God_Model_WebCrawlerUrlModelName::createLink($url);
+                God_Model_WebCrawlerUrlModelName::createLink($url, array($this->ID => $this->name));
             }
         }
     }

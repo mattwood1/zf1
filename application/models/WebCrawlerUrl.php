@@ -15,8 +15,16 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $url->save();
 
-        //God_Model_WebCrawlerUrlModelName::createLink($url);
-
         return $url;
+    }
+
+    public function linkModelName()
+    {
+        if (stripos($this->contenttype, "text/html") === false || $this->statuscode != 200) return;
+
+        $modelNames = God_Model_ModelNameTable::getByUrl($this->url);
+
+        God_Model_WebCrawlerUrlModelName::createLink($this, $modelNames);
+        
     }
 }

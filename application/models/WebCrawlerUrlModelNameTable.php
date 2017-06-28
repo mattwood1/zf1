@@ -5,4 +5,5 @@ class God_Model_WebCrawlerUrlModelNameTable extends Doctrine_Record
     {
         return Doctrine_Core::getTable('God_Model_WebCrawlerUrlModelName');
     }
+
 }
