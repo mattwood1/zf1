@@ -145,8 +145,6 @@ class Job_WebCrawler_Url extends Job_Abstract
                          || strpos(trim($linkMissing), $webCrawlerUrl->url) !== false
                         ) {
                             $newLink->priority = $webCrawlerUrl->link->priority;
-
-                            _d($webCrawlerUrl, $newLink);
                         }
 
                         $newLink->save();

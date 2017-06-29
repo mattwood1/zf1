@@ -25,6 +25,6 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
         $modelNames = God_Model_ModelNameTable::getByUrl($this->url);
 
         God_Model_WebCrawlerUrlModelName::createLink($this, $modelNames);
-        
+
     }
 }

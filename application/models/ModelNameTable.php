@@ -50,7 +50,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
 
                 $modelNameQuery = self::getInstance()->createQuery('mn')->innerJoin('mn.model m');
                 foreach ($names as $name) {
-                    $modelNameQuery->orWhere('MATCH (m.name) AGAINST ("' . $name . '")');
+                    $modelNameQuery->orWhere('MATCH (m.name) AGAINST ("?")', $name);
                 }
                 $modelNameQuery->andWhere('m.active = 1')->andWhere('m.ranking > -1');
 
