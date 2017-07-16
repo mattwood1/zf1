@@ -29,6 +29,8 @@ class WebcrawlerUrlController extends Coda_Controller
                 (    domain.link_depth = 1
                  and wcu1.contenttype = "image/jpeg"
                  and wcu1.contentlength > ' . $thumbnailSize .'
+                 and wcu1.domain_id = wcu.domain_id
+                 and (wcu1.width > domain.minSize or wcu1.height > domain.minSize)
                  and wcu2.contenttype is null 
                  and wcu2.contentlength is null)
             OR  (
@@ -36,24 +38,22 @@ class WebcrawlerUrlController extends Coda_Controller
                  and wcu1.contenttype like "text/html%"
                  and wcu2.contenttype = "image/jpeg" 
                  and wcu2.contentlength > ' . $thumbnailSize .'
+                 and wcu2.domain_id = wcu.domain_id
+                 and (wcu2.width > domain.minSize or wcu2.height > domain.minSize)
                 )
             )')
         ;
 
         if ($this->_request->getParam('modelid')) {
-            $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
-            $modelNames = God_Model_ModelNameTable::getInstance()->createQuery('mn')
-                ->select('ID')
-                ->andWhere('model_id = ?', $this->_request->getParam('modelid'))
-                ->execute();
-            foreach ($modelNames as $modelName) {
-                $modelIds[] = $modelName->ID;
-            }
 
-            $webUrlQuery->andWhereIn('mn.id', $modelIds);
+            $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
+
+            $webUrlQuery->leftJoin('mn.model m');
+            $webUrlQuery->andWhere('m.id = ?', $this->_request->getParam('modelid'));
         }
 
         if ($this->_request->getParam('domainid')) {
+
             $webUrlQuery->andWhere('wcu.domain_id = ?', $this->_request->getParam('domainid'));
             $this->view->domain = God_Model_WebCrawlerDomainTable::getInstance()->find($this->_request->getParam('domainid'));
         }

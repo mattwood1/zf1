@@ -13,6 +13,12 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
         $url->statuscode = $curl->statusCode();
         $url->domain_id = $domain->id;
 
+        if ($curl->contentType() == 'image/jpeg') {
+            list($width, $height, $type, $attr) = getimagesize($curl->lastUrl());
+            $url->width = $width;
+            $url->height = $height;
+        }
+
         $url->save();
 
         return $url;
