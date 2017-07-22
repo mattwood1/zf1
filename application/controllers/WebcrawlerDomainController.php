@@ -20,4 +20,11 @@ class WebcrawlerDomainController extends Coda_Controller
 
         $this->view->domains = $webCrawlerDomains;
     }
+
+    public function editAction()
+    {
+        $webCrawlerDomain = God_Model_WebCrawlerDomainTable::getInstance()->find($this->_request->getParam('id'));
+
+        $this->view->domain = $webCrawlerDomain;
+    }
 }

@@ -44,6 +44,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
                     }
                 }
             }
+            return $names;
         }
     }
 
