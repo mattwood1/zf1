@@ -10,7 +10,7 @@ class WebcrawlerUrlController extends Coda_Controller
 
     public function indexAction()
     {
-        $thumbnailSize = 90000;
+        $thumbnailSize = 0;
 
         $webUrlQuery = God_Model_WebCrawlerUrlTable::getInstance()
             ->createQuery('wcu')
@@ -28,7 +28,6 @@ class WebcrawlerUrlController extends Coda_Controller
             (
                 (    domain.link_depth = 1
                  and wcu1.contenttype = "image/jpeg"
-                 and wcu1.contentlength > ' . $thumbnailSize .'
                  and wcu1.domain_id = wcu.domain_id
                  and (wcu1.width > domain.minSize or wcu1.height > domain.minSize)
                  and wcu2.contenttype is null 
@@ -36,8 +35,7 @@ class WebcrawlerUrlController extends Coda_Controller
             OR  (
                      domain.link_depth = 2
                  and wcu1.contenttype like "text/html%"
-                 and wcu2.contenttype = "image/jpeg" 
-                 and wcu2.contentlength > ' . $thumbnailSize .'
+                 and wcu2.contenttype = "image/jpeg"
                  and wcu2.domain_id = wcu.domain_id
                  and (wcu2.width > domain.minSize or wcu2.height > domain.minSize)
                 )

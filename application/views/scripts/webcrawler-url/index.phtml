@@ -36,16 +36,13 @@ $this->headTitle('Web Urls');
                 <span class="hidden-sm hidden-xs"><?php echo 'action'; ?></span>
             </div>
             <div class="col-md-2 col-sm-2 col-xs-5">
-
-                <?php //_dexit($url); ?>
-
+                <ul class="list-unstyled">
                 <?php if ($url['modelnamelinks']): ?>
-                    <ul class="list-unstyled">
-                        <?php foreach ($url['modelnamelinks'] as $modelNameLink): ?>
-                            <li><a href="<?php echo $this->url(array('controller'=>'webcrawler-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['model_id']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <?php foreach ($url['modelnamelinks'] as $modelNameLink): ?>
+                        <li><a href="<?php echo $this->url(array('controller'=>'webcrawler-url', 'action'=>'index', 'modelid' => $modelNameLink['modelName']['model_id']), 'default', true); ?>"><?php echo $modelNameLink['modelName']['name']; ?></a></li>
+                    <?php endforeach; ?>
                 <?php endif; ?>
+                </ul>
             </div>
 
             <?php
