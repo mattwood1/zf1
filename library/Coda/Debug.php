@@ -63,3 +63,26 @@ function _dexit()
     call_user_func_array('_d', func_get_args());
     exit;
 }
+
+function _dquery()
+{
+    foreach (func_get_args() as $arg) {
+        if (is_object($arg) && get_class($arg) == 'Doctrine_Query') {
+
+            Zend_Debug::dump(vsprintf(str_replace("?", "'%s'", $arg->getSqlQuery()), $arg->getFlattenedParams()), 'SQL Query - Object(' . get_class($arg) . ')');
+        }
+        else {
+
+            Zend_Debug::dump('Not a Doctrine Query');
+        }
+    }
+}
+
+
+if (!function_exists('getimagesizefromstring')) {
+   function getimagesizefromstring($string_data)
+   {
+       $uri = 'data://application/octet-stream;base64,'  . base64_encode($string_data);
+       return getimagesize($uri);
+   }
+}
