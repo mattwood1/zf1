@@ -14,11 +14,9 @@ class Job_WebCrawler_Image extends Job_Abstract
 
         $webUrlImagesQuery = $webCrawlerUrlTable->getInstance()
             ->createQuery('wu')
-            ->innerJoin('wu.link link')
-            ->innerJoin('link.parent_url parent_url')
             ->where('contenttype = ?', 'image/jpeg')
             ->andwhere('width = ?', 0)
-            ->andWhere('height = ?', 0)
+            ->andWhere('domain_id = ?', 1)
             ->andWhere('contentlength > ?', 0)
             ->orderBy('wu.id')
             ->limit(50)
@@ -29,6 +27,7 @@ class Job_WebCrawler_Image extends Job_Abstract
         foreach ($webUrlImages as $webUrlImage) {
             $curl->Curl($webUrlImage->url, $webUrlImage->link->parent_url->url);
             list($width, $height, $type, $attr) = getimagesizefromstring($curl->rawdata());
+            if ($width == 0) $width = -1;
             $webUrlImage->width = $width;
             $webUrlImage->height = $height;
             $webUrlImage->pixels = $width * $height;
