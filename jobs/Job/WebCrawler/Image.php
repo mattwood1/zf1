@@ -31,6 +31,7 @@ class Job_WebCrawler_Image extends Job_Abstract
             list($width, $height, $type, $attr) = getimagesizefromstring($curl->rawdata());
             $webUrlImage->width = $width;
             $webUrlImage->height = $height;
+            $webUrlImage->pixels = $width * $height;
 
             $webUrlImage->save();
         }

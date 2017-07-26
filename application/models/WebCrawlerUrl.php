@@ -19,6 +19,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             list($width, $height, $type, $attr) = getimagesizefromstring($curl->rawdata());
             $url->width = $width;
             $url->height = $height;
+            $url->pixels = $width * $height;
         }
 
         $url->save();
@@ -28,8 +29,6 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
     public function processUrl()
     {
-        _d($this);
-
         if (!$this->blockEmailAddressLinks()) {
             var_dump('Blocking Email Address');
             return $this;
@@ -50,8 +49,12 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             return $this;
         }
 
+        checkCPULoad();
+
         $links = $this->filterLinksFromExistingDBEntries($links);
         $images = $this->filterLinksFromExistingDBEntries($images);
+
+        checkCPULoad();
 
         if ($links) {
             $priority = 50;
@@ -206,6 +209,8 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
     protected function addLinks($links = array(), $priority = 0)
     {
         foreach ($links as $link) {
+
+            checkCPULoad();
 
             if (strlen($link) <= 1000) {
                 $newLink = new God_Model_WebCrawlerLink();

@@ -39,6 +39,11 @@ class God_Model_Base_WebCrawlerUrl extends Doctrine_Record
             'length' => '1000'
         ));
 
+        $this->hasColumn('pixels', 'integer', 11, array(
+            'type' => 'integer',
+            'length' => '1000'
+        ));
+
         $this->hasColumn('statuscode', 'integer', 11, array(
             'type' => 'integer',
             'length' => '11'
