@@ -69,7 +69,7 @@ $this->headTitle('Web Urls');
             <div class="col-md-12">
                 <?php foreach($thumbnails as $thumbnail): ?>
                     <div class="col-lg-1 col-sm-3 col-xs-3" >
-                        <a class="thumbnail small" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>" target="_blank" title="<?php echo $thumbnail['contentlength']; ?>">
+                        <a class="thumbnail small" href="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>" target="_blank" title="<?php echo $thumbnail['pixels']; ?>">
                             <div class="image thumb">
                                 <img src="/image/external?referer=<?php echo $url['url']; ?>&url=<?php echo $thumbnail['url']; ?>&width=80" />
                             </div>
