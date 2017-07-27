@@ -16,7 +16,6 @@ class Job_WebCrawler_Image extends Job_Abstract
             ->createQuery('wu')
             ->where('contenttype = ?', 'image/jpeg')
             ->andwhere('width = ?', 0)
-            ->andWhere('domain_id = ?', 1)
             ->andWhere('contentlength > ?', 0)
             ->orderBy('wu.id')
             ->limit(50)
