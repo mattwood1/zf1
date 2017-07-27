@@ -34,6 +34,7 @@ class WebcrawlerUrlController extends Coda_Controller
             OR  (
                      domain.link_depth = 2
                  and wcu1.contenttype like "text/html%"
+                 and wcu.domain_id = wcu1.domain_id 
                  and wcu2.contenttype = "image/jpeg"
                  and wcu2.pixels > domain.minSize
                 )

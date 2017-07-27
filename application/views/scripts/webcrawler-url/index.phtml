@@ -24,6 +24,26 @@ $this->headTitle('Web Urls');
 
     <?php foreach ($this->webUrls as $url): ?>
 
+        <?php
+        $thumbnails = array();
+
+        if ($url['links'] && $url['domain']['link_depth'] == 1) {
+            foreach ($url['links'] as $link) {
+                $thumbnails[] = $link['url'];
+            }
+        }
+
+        if ($url['links'] && $url['domain']['link_depth'] == 2) {
+            foreach ($url['links'] as $link) {
+                foreach ($link['url']['links'] as $links) {
+                    if (strpos($links['url']['contenttype'],'image/jpeg') !== false) {
+                        $thumbnails[] = $links['url'];
+                    }
+                }
+            }
+        }
+        ?>
+
         <div class="row">
             <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'webcrawler-url', 'action' => 'test', 'id' => $url['id']), 'default', true); ?>"><?php echo $url['id']; ?></a></div>
             <div class="col-md-6 col-sm-5 col-xs-10"><?php echo $url['url']; ?> <a href="<?php echo $url['url']; ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
@@ -44,26 +64,6 @@ $this->headTitle('Web Urls');
                 <?php endif; ?>
                 </ul>
             </div>
-
-            <?php
-            $thumbnails = array();
-
-            if ($url['links'] && $url['domain']['link_depth'] == 1) {
-                foreach ($url['links'] as $link) {
-                    $thumbnails[] = $link['url'];
-                }
-            }
-
-            if ($url['links'] && $url['domain']['link_depth'] == 2) {
-                foreach ($url['links'] as $link) {
-                    foreach ($link['url']['links'] as $links) {
-                        if (strpos($links['url']['contenttype'],'image/jpeg') !== false) {
-                            $thumbnails[] = $links['url'];
-                        }
-                    }
-                }
-            }
-            ?>
 
             <?php if ($thumbnails): ?>
             <div class="col-md-12">
