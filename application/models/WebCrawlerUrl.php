@@ -22,6 +22,11 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             $url->pixels = $width * $height;
         }
 
+        if (strlen($curl->lastUrl()) > 1000) {
+            $url->id = -1;
+            return $url;
+        }
+
         $url->save();
 
         return $url;

@@ -154,7 +154,7 @@ class God_Model_ModelTable extends Doctrine_Record
             ));
             $model->save();
                         
-             $modelname = God_Model_ModelNameTable::getInstance()->create(array(
+            $modelname = God_Model_ModelNameTable::getInstance()->create(array(
                 'name' => $name,
                 'model_id' => $model->ID,
                 'default' => 1

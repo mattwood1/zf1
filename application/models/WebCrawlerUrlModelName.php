@@ -11,19 +11,6 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
         /*
          * Create a quick array of the model names, processed modelNameID => model_name
          */
-
-//        if (!$names) {
-//
-//            $modelNameTable = new God_Model_ModelNameTable();
-//            $modelNames = $modelNameTable->getActiveModelNames();
-//
-//            $names = array();
-//            foreach ($modelNames as $modelName) {
-//                $names[$modelName['ID']] = $modelName['name'];
-//            }
-//        }
-//        $names = array_filter($names);
-
         if ($names) {
             foreach ($names as $modelNameID => $name) {
 
@@ -55,7 +42,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
     public static function checkUrlWithName($name, $url)
     {
-        $regex = self::$space . '(' . self::formatNameForUrlReg($name) . ')' . self::$space;
+        $regex = self::$space . '(' . self::formatNameForUrlReg($name) . ')' . self::$space . '?';
         if (preg_match("~" . $regex . "~i", $url, $matches)) {
             return true;
         }
