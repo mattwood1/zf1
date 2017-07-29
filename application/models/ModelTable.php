@@ -144,7 +144,8 @@ class God_Model_ModelTable extends Doctrine_Record
         }
 
         if (count($modelnames) == 0 || !$checkName) {
-            $model = God_Model_ModelTable::getInstance()->create(array(
+            $model = new God_Model_Model();
+            $model->fromArray(array(
                 'name' => $name,
                 'path' => '/' . $this->_modelDir . '/' . $name,
                 'uri'  => $uri,
@@ -153,18 +154,9 @@ class God_Model_ModelTable extends Doctrine_Record
                 'search' => 1
             ));
             $model->save();
-                        
-            $modelname = God_Model_ModelNameTable::getInstance()->create(array(
-                'name' => $name,
-                'model_id' => $model->ID,
-                'default' => 1
-            ));
-            $modelname->save();
-            
-            //$modelname->default = 1;
-            //$modelname->save();
 
-            return true;
+            $model->addModelName($name, $default = 1);
+            return $model;
         } else {
             return false;
         }

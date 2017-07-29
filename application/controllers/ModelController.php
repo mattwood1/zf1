@@ -44,7 +44,9 @@ class ModelController extends Coda_Controller
         
         if ($this->_request->isPost() && $form->isValid($this->_request->getPost())) {
             $modelTable = new God_Model_ModelTable();
-            $modelTable->addModel($form->getValue('name'));
+            $model = $modelTable->addModel($form->getValue('name'));
+
+            _d($model);
         }
         
         $this->view->form = $form;

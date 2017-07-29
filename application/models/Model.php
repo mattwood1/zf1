@@ -1,6 +1,17 @@
 <?php
 class God_Model_Model extends God_Model_Base_Model
 {
+    public function addModelName($name, $default = 0)
+    {
+        $modelname = new God_Model_ModelName();
+        $modelname->fromArray(array(
+            'name' => $name,
+            'model_id' => $this->ID,
+            'default' => $default
+        ));
+        $modelname->save();
+    }
+
     public function isActive()
     {
         if ($this->active) {
