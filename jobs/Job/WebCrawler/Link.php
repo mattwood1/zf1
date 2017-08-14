@@ -6,7 +6,7 @@ class Job_WebCrawler_Link extends Job_Abstract
 {
     public function run()
     {
-        $cpuload = 1;
+        $cpuload = 1.5;
         checkCPULoad($cpuload);
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
         $curl = new God_Model_Curl();
