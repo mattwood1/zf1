@@ -12,7 +12,11 @@ class Job_WebCrawler_Url extends Job_Abstract
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
         $webCrawlerUrls = $webCrawlerUrlTable->getQuery()->execute();
 
+        $webCrawlerUrls = God_Model_WebCrawlerUrlTable::getInstance()->findBy('id', 2947388);
+
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
+
+            checkCPULoad($cpuload);
 
             $webCrawlerUrl->processUrl();
         }

@@ -56,30 +56,25 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             return $this;
         }
 
-        checkCPULoad();
-
-        $links = $this->filterLinksFromExistingDBEntries($links);
-        $images = $this->filterLinksFromExistingDBEntries($images);
-
-        checkCPULoad();
-
         if ($links) {
-            $priority = 50;
-            if ($this->link->priority > $priority) {
-                $priority = $this->link->priority;
+
+            foreach ($links as $link) {
+                God_Model_WebCrawlerLinkTable::findInsert($link, $this);
             }
-            $this->addLinks($links, $priority);
         }
 
         if ($images) {
-            $this->addLinks($images, $this->link->priority);
+
+            foreach ($images as $image) {
+                God_Model_WebCrawlerLinkTable::findInsert($image, $this);
+            }
         }
 
         if ($this->frequency) {
             $this->date = date('Y-m-d H:i:s', strtotime($this->frequency));
         }
 
-        $this->followed = 1;
+        $this->followed = God_Model_WebCrawlerUrl::FOLLOWEDTARGET;
         $this->save();
 
     }
@@ -168,7 +163,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             // Links are the same as home page. Fake 404 needed
             if (count($link_diff) == 0) {
                 $this->statuscode = 404;
-                $this->followed = 1;
+                $this->followed = God_Model_WebCrawlerUrl::FOLLOWEDTARGET;
                 $this->save();
                 return false;
             }
