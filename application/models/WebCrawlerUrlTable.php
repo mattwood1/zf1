@@ -15,7 +15,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             ->andWhere('wu.contenttype like ?', '%text/html%')
             ->andWhere('(wu.date < ? or wu.date is null)', date("Y-m-d H:i:s"))
             ->andWhere('wd.allowed = 1')
-            ->orderBy('wu.date DESC, wu.followed DESC')
+            ->orderBy('wu.date DESC, wu.followed DESC, wu.id DESC')
             ->limit(100);
 
 //        _dexit($webCrawlerUrlQuery);

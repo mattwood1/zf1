@@ -19,6 +19,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         if ($curl->contentType() == 'image/jpeg') {
             list($width, $height, $type, $attr) = getimagesizefromstring($curl->rawdata());
+            if ($width == 0) $width = -1;
             $url->width = $width;
             $url->height = $height;
             $url->pixels = $width * $height;
