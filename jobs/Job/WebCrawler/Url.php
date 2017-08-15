@@ -16,6 +16,8 @@ class Job_WebCrawler_Url extends Job_Abstract
 
             checkCPULoad($cpuload);
 
+//            _d($webCrawlerUrl);
+
             $webCrawlerUrl->processUrl();
         }
     }

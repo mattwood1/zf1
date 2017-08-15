@@ -8,8 +8,8 @@ function checkCPULoad($load = 1, $temp = 50)
     $sysload = sys_getloadavg();
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
-    if ($sysload[0] > $load || $systemp >= $temp) {
-        $time = floor(10*$sysload[0]*$load);
+    if ((float)$sysload[0] > $load || $systemp >= $temp) {
+        $time = floor(10*$sysload[0]*(1/$load));
         _d('Sleeping (' . $time . ' secs) ' . $sysload[0] . ' > ' . $load);
         sleep($time);
         checkCPULoad($load, $temp);
