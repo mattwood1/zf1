@@ -27,15 +27,15 @@ $this->headTitle('Web Urls');
         <?php
         $thumbnails = array();
 
-        if ($url['links'] && $url['domain']['link_depth'] == 1) {
-            foreach ($url['links'] as $link) {
-                $thumbnails[] = $link['url'];
+        if ($url['linkref'] && $url['domain']['link_depth'] == 1) {
+            foreach ($url['linkref'] as $linkref) {
+                $thumbnails[] = $linkref['link']['url'];
             }
         }
 
-        if ($url['links'] && $url['domain']['link_depth'] == 2) {
-            foreach ($url['links'] as $link) {
-                foreach ($link['url']['links'] as $links) {
+        if ($url['linkref'] && $url['domain']['link_depth'] == 2) {
+            foreach ($url['linkref'] as $linkref) {
+                foreach ($link['link']['url']['linkref'] as $links) {
                     if (strpos($links['url']['contenttype'],'image/jpeg') !== false) {
                         $thumbnails[] = $links['url'];
                     }

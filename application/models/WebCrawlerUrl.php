@@ -1,7 +1,7 @@
 <?php
 class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 {
-    const FOLLOWEDTARGET = 2;
+    const FOLLOWEDTARGET = -2;
 
     protected $_curl;
 
