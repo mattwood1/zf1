@@ -53,7 +53,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
         $images = $this->processHTMLImages($html);
 
         if (!$this->checkFake404($links)) {
-            var_dump('Blocking fake 404 page');
+//            _d('Blocking fake 404 page');
             return $this;
         }
 
