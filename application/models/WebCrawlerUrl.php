@@ -2,6 +2,7 @@
 class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 {
     const FOLLOWEDTARGET = -2;
+    const CPULOAD = 1.7;
 
     protected $_curl;
 
@@ -38,12 +39,11 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
     public function processUrl()
     {
         if (!$this->blockEmailAddressLinks()) {
-            var_dump('Blocking Email Address');
+//            _d('Blocking Email Address');
             return $this;
         }
 
-        $names = array();
-        $names = $this->linkModelName();
+        $this->linkModelName();
 
         $this->_curl = new God_Model_Curl();
         $this->_curl->Curl($this->url, null, null, 10, true);
@@ -177,7 +177,8 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
         // Don't try to follow links to email addresses
         if (strpos($this->url, '@') !== false) {
             $this->statuscode = 404;
-            $this->followed = 1;
+            $this->contenttype = "Email";
+            $this->followed = God_Model_WebCrawlerUrl::FOLLOWEDTARGET;
             $this->save();
             return false;
         }

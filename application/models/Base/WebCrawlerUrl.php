@@ -75,7 +75,6 @@ class God_Model_Base_WebCrawlerUrl extends Doctrine_Record
         $this->hasOne('God_Model_WebCrawlerDomain as domain', array(
             'local' => 'domain_id',
             'foreign' => 'id',
-            //'cascade' => array('delete')
         ));
 
         $this->hasOne('God_Model_WebCrawlerLink as link', array(

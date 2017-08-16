@@ -50,13 +50,11 @@ class God_Model_Base_ModelName extends Doctrine_Record
         $this->hasOne('God_Model_Model as model', array(
                 'local'   =>  'model_id',
                 'foreign' =>  'ID',
-                //'cascade' => array('delete')
         ));
 
         $this->hasMany('God_Model_ModelNameWebURL as webUrls', array(
                 'local'   =>  'ID',
                 'foreign' =>  'model_name_id',
-                //'cascade' => array('delete')
         ));
     }
 }

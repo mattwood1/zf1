@@ -82,19 +82,16 @@ class God_Model_Base_Model extends Doctrine_Record
         $this->hasMany('God_Model_ModelName as names', array(
                 'local'   =>  'ID',
                 'foreign' =>  'model_id',
-                //'cascade' => array('delete')
         ));
 
         $this->hasMany('God_Model_Photoset as photosets', array(
                 'local'   =>  'ID',
                 'foreign' =>  'model_id',
-                //'cascade' => array('delete')
         ));
 
         $this->hasMany('God_Model_WebLink as webLinks', array(
                 'local'   =>  'ID',
                 'foreign' =>  'model_id',
-                //'cascade' => array('delete')
         ));
     }
 }
