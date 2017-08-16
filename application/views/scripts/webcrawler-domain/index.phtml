@@ -15,11 +15,11 @@ $this->headTitle('Web Crawler Domains');
         </thead>
         <tbody>
     <?php foreach ($this->domains as $domain): ?>
-
+<?php //_d($domain); ?>
         <tr>
             <td><?php echo $domain['domain']; ?></td>
-            <td><?php echo $domain['urls'][0]['frequency']; ?></td>
-            <td><?php echo $domain['urls'][0]['date']; ?></td>
+            <td><?php echo $domain['urls'] ? $domain['urls'][0]['frequency'] : ''; ?></td>
+            <td><?php echo $domain['urls'] ? $domain['urls'][0]['date'] : ''; ?></td>
             <td><a href="<?php echo $this->url(array('controller' => 'webcrawler-url', 'action' => 'index', 'domainid' => $domain['id']), 'default' ,true); ?>">Web Urls</a></td>
         </tr>
 
