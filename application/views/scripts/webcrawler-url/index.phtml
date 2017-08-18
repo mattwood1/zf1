@@ -35,9 +35,9 @@ $this->headTitle('Web Urls');
 
         if ($url['linkref'] && $url['domain']['link_depth'] == 2) {
             foreach ($url['linkref'] as $linkref) {
-                foreach ($link['link']['url']['linkref'] as $links) {
-                    if (strpos($links['url']['contenttype'],'image/jpeg') !== false) {
-                        $thumbnails[] = $links['url'];
+                foreach ($linkref['link']['url']['linkref'] as $links) {
+                    if (strpos($links['link']['url']['contenttype'],'image/jpeg') !== false) {
+                        $thumbnails[] = $links['link']['url'];
                     }
                 }
             }

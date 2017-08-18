@@ -15,7 +15,7 @@ class WebcrawlerDomainController extends Coda_Controller
             ->leftJoin('wcd.urls as urls')
             ->where('wcd.allowed = ?', 1)
             ->andWhere('urls.frequency is not null')
-            ->orderBy('urls.date asc') 
+            ->orderBy('urls.date asc')
             ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $this->view->domains = $webCrawlerDomains;
