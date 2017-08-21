@@ -8,7 +8,7 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
 
     public static function findInsert($linkString, God_Model_WebCrawlerUrl $url)
     {
-        checkCPULoad(God_Model_WebCrawlerUrl::CPULOAD);
+//        checkCPULoad(God_Model_WebCrawlerUrl::CPULOAD);
 
         if (strpos($linkString, '@') !== false) {
             return;

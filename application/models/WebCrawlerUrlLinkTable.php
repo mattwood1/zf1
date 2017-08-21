@@ -8,17 +8,18 @@ class God_Model_WebCrawlerUrlLinkTable extends Doctrine_Record
 
     public function findInsert(God_Model_WebCrawlerLink $link, God_Model_WebCrawlerUrl $url)
     {
-        $urlLinkQuery = God_Model_WebCrawlerUrlLinkTable::getInstance()->createQuery()
-            ->where('link_id = ?', $link->id)
-            ->andWhere('url_id = ?', $url->id);
-        $urlLink = $urlLinkQuery->execute();
+        // PDO Version
+        $conn = Doctrine_Manager::getInstance()->connection();
+        $linkRef = $conn->fetchArray(
+            'SELECT * FROM webcrawlerUrlLink_ref WHERE link_id = ? AND url_id = ?',
+            array($link->id, $url->id)
+        );
 
-        if (!$urlLink->count()) {
-            $urlLink = new God_Model_WebCrawlerUrlLink();
-            $urlLink->link_id = $link->id;
-            $urlLink->url_id = $url->id;
-
-            $urlLink->save();
+        if (!$linkRef) {
+            $conn->insert(
+                God_Model_WebCrawlerUrlLinkTable::getInstance(),
+                array('link_id' => $link->id, 'url_id' => $url->id)
+            );
         }
 
     }
