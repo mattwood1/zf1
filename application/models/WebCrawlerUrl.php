@@ -38,19 +38,35 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
     public function processUrl()
     {
+        $start = microtime(true);
+
+        file_put_contents('/tmp/Url.txt', $this->url . "\r\n", FILE_APPEND);
+
         if (!$this->blockEmailAddressLinks()) {
 //            _d('Blocking Email Address');
             return $this;
         }
 
         $this->linkModelName();
+        $linknameTime = microtime(true) - $start;
+        $start = microtime(true);
+
+        file_put_contents('/tmp/Url.txt', 'Linking Model Name - ' . $linknameTime . "\r\n", FILE_APPEND);
 
         $this->_curl = new God_Model_Curl();
         $this->_curl->Curl($this->url, null, null, 10, true);
         $html = $this->_curl->rawdata();
 
+        $curlTime = microtime(true) - $start;
+        $start = microtime(true);
+        file_put_contents('/tmp/Url.txt', 'Curl - ' . $curlTime . "\r\n", FILE_APPEND);
+
         $links = $this->processHTMLLinks($html);
         $images = $this->processHTMLImages($html);
+
+        $domTime = microtime(true) - $start;
+        $start = microtime(true);
+        file_put_contents('/tmp/Url.txt', 'Dom - ' . $domTime . "\r\n", FILE_APPEND);
 
         if (!$this->checkFake404($links)) {
 //            _d('Blocking fake 404 page');
@@ -71,6 +87,19 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             }
         }
 
+        $linkTime = microtime(true) - $start;
+        $start = microtime(true);
+        file_put_contents('/tmp/Url.txt', 'Links - ' . $linkTime . "\r\n", FILE_APPEND);
+
+        $dataLinks = $this->filterLinksFromExistingDBEntries($links);
+        $this->filterLinksFromExistingDBEntries($images);
+
+        file_put_contents('/tmp/Url.txt', 'Existing Links Data - ' . print_r($dataLinks, true) . "\r\n", FILE_APPEND);
+
+        $existingTime = microtime(true) - $start;
+        $start = microtime(true);
+        file_put_contents('/tmp/Url.txt', 'Existing Links - ' . $existingTime . "\r\n", FILE_APPEND);
+
         if ($this->frequency) {
             $this->date = date('Y-m-d H:i:s', strtotime($this->frequency));
         }
@@ -78,6 +107,8 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
         $this->followed = God_Model_WebCrawlerUrl::FOLLOWEDTARGET;
         $this->save();
 
+        $savingTime = microtime(true) - $start;
+        file_put_contents('/tmp/Url.txt', 'Saving - ' . $savingTime . "\r\n", FILE_APPEND);
     }
 
     public function linkModelName()
@@ -198,7 +229,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             $dblinks = $dblinkQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
             foreach ($dblinks as $dblink) {
-                $knownLinks[] = $dblink['link'];
+                $knownLinks[$dblink['id']] = $dblink['link'];
             }
         }
 
@@ -207,7 +238,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $linksMissing = array_diff($links, $knownLinks);
 
-        return $linksMissing;
+        return array('known' => $knownLinks, 'missing' => $linksMissing);
     }
 
     protected function addLinks($links = array(), $priority = 0)

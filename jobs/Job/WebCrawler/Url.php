@@ -23,7 +23,7 @@ class Job_WebCrawler_Url extends Job_Abstract
             $webCrawlerUrl->processUrl();
 
             $duration = microtime(true) - $start;
-            $text = $webCrawlerUrl->url . ' - ' . $duration . "\r\n";
+            $text = 'Completed - ' . $duration . "\r\n\r\n";
 
             file_put_contents('/tmp/Url.txt', $text, FILE_APPEND);
         }
