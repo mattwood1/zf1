@@ -23,6 +23,19 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
             $link = God_Model_WebCrawlerLink::create($linkString);
 //            _d($url->url);
         }
+        $link->save();
+
+        self::updateLinkPriority($link, $url);
+
+        if ($url->modelnamelinks->count() > 0 && $link->url_id == 0) {
+//            _d($link);
+        }
+
+        God_Model_WebCrawlerUrlLinkTable::findInsert($link, $url);
+    }
+
+    public static function updateLinkPriority(God_Model_WebCrawlerLink $link, God_Model_WebCrawlerUrl $url)
+    {
 
         if ($url->modelnamelinks->count() > 0 && $link->url_id == 0 && $link->priority != God_Model_WebCrawlerLink::PRIORTIY_HIGH) {
             $link->priority = God_Model_WebCrawlerLink::PRIORTIY_HIGH;
@@ -38,10 +51,5 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
         }
 
         $link->save();
-        if ($url->modelnamelinks->count() > 0 && $link->url_id == 0) {
-//            _d($link);
-        }
-
-        God_Model_WebCrawlerUrlLinkTable::findInsert($link, $url);
     }
 }
