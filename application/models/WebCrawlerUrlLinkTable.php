@@ -16,11 +16,17 @@ class God_Model_WebCrawlerUrlLinkTable extends Doctrine_Record
         );
 
         if (!$linkRef) {
-            $conn->insert(
-                God_Model_WebCrawlerUrlLinkTable::getInstance(),
-                array('link_id' => $link->id, 'url_id' => $url->id)
-            );
+            self::Insert($link->id, $url->id);
         }
 
+    }
+
+    public static function Insert($link_id, $url_id)
+    {
+        $conn = Doctrine_Manager::getInstance()->connection();
+        $conn->insert(
+            God_Model_WebCrawlerUrlLinkTable::getInstance(),
+            array('link_id' => $link_id, 'url_id' => $url_id)
+        );
     }
 }

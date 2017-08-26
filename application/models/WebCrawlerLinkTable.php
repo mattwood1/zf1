@@ -52,4 +52,11 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
 
         $link->save();
     }
+
+    public static function updateLinksPriority(array $linkIds, $priority)
+    {
+        $conn = Doctrine_Manager::getInstance()->connection();
+
+        $conn->execute('UPDATE webcrawlerLinks SET priority = ' . $priority .' WHERE id IN (' . implode(',', $linkIds) . ') AND url_id = 0');
+    }
 }

@@ -45,6 +45,8 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $this->linkModelName();
 
+        $priority = $this->modelnamelinks->count() > 0 ? God_Model_WebCrawlerLink::PRIORTIY_HIGH : God_Model_WebCrawlerLink::PRIORITY_LOW;
+
         $this->_curl = new God_Model_Curl();
         $this->_curl->Curl($this->url, null, null, 10, true);
         $html = $this->_curl->rawdata();
@@ -59,10 +61,9 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $dataLinks = $this->filterLinksFromExistingDBEntries($links);
         if ($dataLinks['known']) {
+            God_Model_WebCrawlerLinkTable::updateLinksPriority(array_keys($dataLinks['known']), $priority);
             foreach($dataLinks['known'] as $knownID => $knownUrl) {
-                $link = God_Model_WebCrawlerLinkTable::getInstance()->find($knownID);
-                God_Model_WebCrawlerLinkTable::updateLinkPriority($link, $this);
-                God_Model_WebCrawlerUrlLinkTable::findInsert($link, $this);
+                God_Model_WebCrawlerUrlLinkTable::Insert($knownID, $this->id);
             }
         }
         if ($dataLinks['missing']) {
@@ -73,10 +74,9 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
         $dataImages = $this->filterLinksFromExistingDBEntries($images);
         if ($dataImages['known']) {
+            God_Model_WebCrawlerLinkTable::updateLinksPriority(array_keys($dataImages['known']), $priority);
             foreach($dataImages['known'] as $knownID => $knownURL) {
-                $link = God_Model_WebCrawlerLinkTable::getInstance()->find($knownID);
-                God_Model_WebCrawlerLinkTable::updateLinkPriority($link, $this);
-                God_Model_WebCrawlerUrlLinkTable::findInsert($link, $this);
+                God_Model_WebCrawlerUrlLinkTable::Insert($knownID, $this->id);
             }
         }
         if ($dataImages['missing']) {
