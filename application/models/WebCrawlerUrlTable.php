@@ -26,7 +26,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
     public function getDisplayQuery()
     {
         $webUrlQuery = $this->getInstance()
-            ->createQuery('wcu')
+            ->createQuery("wcu")
             ->leftJoin('wcu.linkref as linkref1')
             ->leftJoin('linkref1.link as link1')
             ->leftJoin('link1.url as wcu1')
@@ -40,21 +40,21 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
 
             ->leftJoin('wcu.domain domain')
 
-            ->andWhere('
+            ->andWhere("
             (
                 (    domain.link_depth = 1
-                 and wcu1.contenttype = "image/jpeg"
+                 and wcu1.contenttype = 'image/jpeg'
                  and wcu1.pixels > domain.minSize
                  and wcu2.contenttype is null 
                  and wcu2.contentlength is null)
             OR  (
                      domain.link_depth = 2
-                 and wcu1.contenttype like "text/html%"
+                 and wcu1.contenttype like 'text/html%'
                  and wcu.domain_id = wcu1.domain_id 
-                 and wcu2.contenttype = "image/jpeg"
+                 and wcu2.contenttype = 'image/jpeg'
                  and wcu2.pixels > domain.minSize
                 )
-            )');
+            )");
 
         return $webUrlQuery;
     }

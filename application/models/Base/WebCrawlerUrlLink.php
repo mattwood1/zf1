@@ -29,10 +29,10 @@ class God_Model_Base_WebCrawlerUrlLink extends Doctrine_Record
     {
         $this->hasOne('God_Model_WebCrawlerLink as link', array(
             'local' => 'link_id',
-            'foreign' => 'id',
+            'foreign' => 'id'
         ));
 
-        $this->hasMany('God_Model_WebCrawlerUrl as url', array(
+        $this->hasOne('God_Model_WebCrawlerUrl as url', array(
             'local' => 'url_id',
             'foreign' => 'id'
         ));

@@ -24,7 +24,7 @@ function _d()
         if (is_object($arg)) {
             switch (get_class($arg)) {
                 case 'Doctrine_Query':
-                    Zend_Debug::dump(vsprintf( str_replace("?", "'%s'", $arg->getSqlQuery()), $arg->getFlattenedParams() ), 'SQL Query - Object(' . get_class($arg) . ')' );
+                    Zend_Debug::dump(vsprintf(str_replace(array("%", "?"), array("%%", "%s"), $arg->getSqlQuery()), $arg->getFlattenedParams() ), 'SQL Query - Object(' . get_class($arg) . ')' );
                     $obj = clone $arg;
                     _d($obj->execute());
                     break;
@@ -69,7 +69,7 @@ function _dquery()
     foreach (func_get_args() as $arg) {
         if (is_object($arg) && get_class($arg) == 'Doctrine_Query') {
 
-            Zend_Debug::dump(vsprintf(str_replace("?", "'%s'", $arg->getSqlQuery()), $arg->getFlattenedParams()), 'SQL Query - Object(' . get_class($arg) . ')');
+            Zend_Debug::dump(vsprintf(str_replace(array("%", "?"), array("%%", "%s"), $arg->getSqlQuery()), $arg->getFlattenedParams()), 'SQL Query - Object(' . get_class($arg) . ')');
         }
         else {
 
