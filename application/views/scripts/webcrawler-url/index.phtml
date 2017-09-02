@@ -24,25 +24,7 @@ $this->headTitle('Web Urls');
 
     <?php foreach ($this->webUrls as $url): ?>
 
-        <?php
-        $thumbnails = array();
-
-        if ($url['linkref'] && $url['domain']['link_depth'] == 1) {
-            foreach ($url['linkref'] as $linkref) {
-                $thumbnails[] = $linkref['link']['url'];
-            }
-        }
-
-        if ($url['linkref'] && $url['domain']['link_depth'] == 2) {
-            foreach ($url['linkref'] as $linkref) {
-                foreach ($linkref['link']['url']['linkref'] as $links) {
-                    if (strpos($links['link']['url']['contenttype'],'image/jpeg') !== false) {
-                        $thumbnails[] = $links['link']['url'];
-                    }
-                }
-            }
-        }
-        ?>
+        <?php $thumbnails = God_Model_WebCrawlerUrlTable::getThumbnailsFromData($url); ?>
 
         <div class="row">
             <div class="col-md-1 col-sm-1 col-xs-2"><a href="<?php echo $this->url(array('controller' => 'webcrawler-url', 'action' => 'test', 'id' => $url['id']), 'default', true); ?>"><?php echo $url['id']; ?></a></div>

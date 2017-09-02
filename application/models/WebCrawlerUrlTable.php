@@ -59,6 +59,29 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
         return $webUrlQuery;
     }
 
+    public static function getThumbnailsFromData($data)
+    {
+        $thumbnails = array();
+
+        if ($data['linkref'] && $data['domain']['link_depth'] == 1) {
+            foreach ($data['linkref'] as $linkref) {
+                $thumbnails[] = $linkref['link']['url'];
+            }
+        }
+
+        if ($data['linkref'] && $data['domain']['link_depth'] == 2) {
+            foreach ($data['linkref'] as $linkref) {
+                foreach ($linkref['link']['url']['linkref'] as $links) {
+                    if (strpos($links['link']['url']['contenttype'],'image/jpeg') !== false) {
+                        $thumbnails[] = $links['link']['url'];
+                    }
+                }
+            }
+        }
+
+        return $thumbnails;
+    }
+
     public function findInsert(God_Model_Curl $curl)
     {
         $url = self::getInstance()->findOneBy('url', $curl->lastUrl());
