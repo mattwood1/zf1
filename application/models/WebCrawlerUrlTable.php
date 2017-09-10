@@ -45,6 +45,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
                 (    domain.link_depth = 1
                  and wcu1.contenttype = 'image/jpeg'
                  and wcu1.pixels > domain.minSize
+                 and wcu1.downloaded = 0
                  and wcu2.contenttype is null 
                  and wcu2.contentlength is null)
             OR  (
@@ -53,6 +54,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
                  and wcu.domain_id = wcu1.domain_id 
                  and wcu2.contenttype = 'image/jpeg'
                  and wcu2.pixels > domain.minSize
+                 and wcu2.downloaded = 0
                 )
             )");
 

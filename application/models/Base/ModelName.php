@@ -43,6 +43,11 @@ class God_Model_Base_ModelName extends Doctrine_Record
             'type'               => 'timestamp',
             'length'             => '25',
         ));
+
+        $this->hasColumn('download', 'integer', 11, array(
+            'type'               => 'integer',
+            'length'             => '11',
+        ));
     }
 
     public function setUp()

@@ -161,6 +161,27 @@ class God_Model_Model extends God_Model_Base_Model
         $this->save();
     }
 
+    public function createPhotoset()
+    {
+        $file = new God_Model_File(PUBLIC_PATH . $this->path);
+        $maxDir = max($file->getDirectories());
+
+        $newDir = str_pad($maxDir+1, 3, "0", STR_PAD_LEFT);
+
+        $targetPath = PUBLIC_PATH . $this->path . DIRECTORY_SEPARATOR . $newDir;
+        mkdir($targetPath);
+
+        $photoset = new God_Model_Photoset();
+        $photoset->fromArray(array(
+            'model_id' => $this->ID,
+            'name' => $newDir,
+            'path' => $this->path . DIRECTORY_SEPARATOR . $newDir,
+            'uri' => $this->uri . DIRECTORY_SEPARATOR . $newDir,
+        ));
+        $photoset->save();
+
+        return $photoset;
+    }
 
     public function getLatestPhotoset()
     {

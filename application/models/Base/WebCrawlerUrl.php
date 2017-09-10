@@ -59,6 +59,11 @@ class God_Model_Base_WebCrawlerUrl extends Doctrine_Record
             'length' => '1000'
         ));
 
+        $this->hasColumn('downloaded', 'integer', 11, array(
+            'type' => 'integer',
+            'length' => '1000'
+        ));
+
         $this->hasColumn('frequency', 'string', 1000, array(
             'type'               => 'string',
             'length'             => '1000'

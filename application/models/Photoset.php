@@ -36,9 +36,14 @@ class God_Model_Photoset extends God_Model_Base_Photoset
             
             $files = God_Model_File::scanPath($path)->getFiles();
 
+            if (!$this->thumbnail) {
+                $this->thumbnail = $this->path . DIRECTORY_SEPARATOR . $files[floor(count($files)*0.6)];
+                $this->save();
+            }
+
             foreach ($files as $file) {
                 
-                checkCPULoad();
+                checkCPULoad(1.5);
                 
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);
