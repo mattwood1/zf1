@@ -14,7 +14,7 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
             return;
         }
 
-        if (strlen($linkString) <= 1000) {
+        if (strlen($linkString) > 1000) {
             return;
         }
 
