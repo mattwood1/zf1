@@ -14,6 +14,10 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
             return;
         }
 
+        if (strlen($linkString) <= 1000) {
+            return;
+        }
+
         $url->modelnamelinks;
 
         $link = self::getInstance()->findOneBy('link', $linkString);
