@@ -31,8 +31,10 @@ class Job_WebCrawler_Download extends Job_Abstract
                 if (!is_array($linkRef['link']['url'])) continue;
             }
 
+            //Consolidate the database records into usable data
             $thumbnails = God_Model_WebCrawlerUrlTable::getThumbnailsFromData($webCrawlerUrl);
 
+            // Make a tempory directory to put downloaded images in.
             $pathname = '/tmp/' . $webCrawlerUrl['id'];
             if (!realpath($pathname)) {
                 mkdir($pathname);
@@ -40,6 +42,8 @@ class Job_WebCrawler_Download extends Job_Abstract
 
             $images = array();
             $hashes = array();
+
+            // Download thumbnails / images, fingerprint and store in an array $images[]
             foreach ($thumbnails as $thumbnail) {
                 $curl->Curl($thumbnail['url']);
                 $filepath = $pathname . '/' . basename($thumbnail['url']);
@@ -60,43 +64,53 @@ class Job_WebCrawler_Download extends Job_Abstract
                     'height' => $fileinfo[1]
                 );
             }
-            _d($images);
+//            _d($images);
 
+            // Check for existing image fingerprints
             $exisingImageHashes = God_Model_ImageHashTable::getInstance()->createQuery('ih')
                 ->whereIn('hash', $hashes)
                 ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
             _d($exisingImageHashes);
 
+            // If there are existing image hashes get photosets that are linked to the found images
             if ($exisingImageHashes) {
 
                 $photosets = array();
-                foreach($exisingImageHashes as $exisingImageHash) {
+                foreach ($exisingImageHashes as $exisingImageHash) {
 
                     $imageObj = God_Model_ImageTable::getInstance()->find($exisingImageHash['image_id']);
                     $photosets[] = God_Model_PhotosetTable::getInstance()->find($imageObj->photoset_id);
                     $knownHashes[] = $exisingImageHash['hash']; // Needed?
 
+                    // For each image[] if image hash matches check the dimensions of the image.
+                    // If image is larger rename targetfilename to stop overwritting the file.
                     foreach ($images as $imageKey => $image) {
                         if ($image['hash'] == $exisingImageHash['hash']) {
                             if ($image['width'] <= $imageObj['width'] && $image['height'] <= $imageObj['height']) {
                                 unset($images[$imageKey]);
-                            }
-                            else {
+                            } else {
                                 $images[$imageKey]['targetfilename'] = $webCrawlerUrl['id'] . '-' . $image['targetfilename'];
                             }
                         }
                     }
                 }
-
-                if ($images) {
-                    $photoset = $photosets[0];
-                    $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
-                    $photoset->manual_thumbnail = 0;
-                    $photoset->save();
-                }
             }
-            else {
+
+            _d($images);
+            _d($photosets);
+
+            // If there are images remaining we can use the first $photosets[]
+            // Reset check data, manual thumbnail.
+            if ($images && $photosets) {
+                $photoset = $photosets[0];
+                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
+                $photoset->manual_thumbnail = 0;
+                $photoset->save();
+            }
+
+            // No Existing images, using the model name create a new photoset from the Model object
+            elseif ($images) {
                 foreach($webCrawlerUrl['modelnamelinks'] as $modelnamelink) {
                     $model = God_Model_ModelTable::getInstance()->find($modelnamelink['modelName']['model']['ID']);
                     $photoset = $model->createPhotoset();
@@ -106,12 +120,14 @@ class Job_WebCrawler_Download extends Job_Abstract
             _d($images);
 
             if ($images && $photoset) {
+                // Move the images
                 foreach ($images as $image) {
                     rename(
                         $image['filepath'],
                         PUBLIC_PATH . $photoset->path . DIRECTORY_SEPARATOR . $image['targetfilename']);
                 }
 
+                // Trigger updating images
                 $photoset->updateImages();
             }
 

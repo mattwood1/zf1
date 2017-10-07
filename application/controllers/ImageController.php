@@ -14,6 +14,9 @@ class ImageController extends Coda_Controller
     public function init()
     {
         /* Initialize action controller here */
+        header_remove();
+        header("Expires: " . date("r", strtotime("+7 days")));
+        header("Cache-Control: max-age=".(60*60*24*7));
     }
 
     public function indexAction()
