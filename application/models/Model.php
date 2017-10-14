@@ -169,7 +169,7 @@ class God_Model_Model extends God_Model_Base_Model
         $newDir = str_pad($maxDir+1, 3, "0", STR_PAD_LEFT);
 
         $targetPath = PUBLIC_PATH . $this->path . DIRECTORY_SEPARATOR . $newDir;
-        mkdir($targetPath);
+        God_Model_File::createPath($targetPath);
 
         $photoset = new God_Model_Photoset();
         $photoset->fromArray(array(

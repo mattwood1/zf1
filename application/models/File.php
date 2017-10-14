@@ -42,6 +42,22 @@ class God_Model_File
             closedir($this->_handle);
         }
     }
+
+    public static function createPath($path)
+    {
+        $pathParts = explode(DIRECTORY_SEPARATOR, $path);
+        $pathParts = array_filter($pathParts);
+
+        $checkPath = null;
+        foreach ($pathParts as $pathPart) {
+            $checkPath .= DIRECTORY_SEPARATOR . $pathPart;
+
+            if (!realpath($checkPath)) {
+                mkdir($checkPath);
+            }
+
+        }
+    }
     
     /**
      * Static function to perform a directory scan
