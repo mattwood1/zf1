@@ -15,8 +15,7 @@ class God_Model_File
         $this->_path = $path;
         
         if (!file_exists($this->_path)) {
-//            _dexit(realpath($this->_path));
-//            mkdir(realpath($this->_path), 0777);
+            self::createPath($this->_path);
         }
         
         $this->_handle = opendir($path);
@@ -53,7 +52,7 @@ class God_Model_File
             $checkPath .= DIRECTORY_SEPARATOR . $pathPart;
 
             if (!realpath($checkPath)) {
-                mkdir($checkPath);
+                mkdir($checkPath, 0777);
             }
 
         }

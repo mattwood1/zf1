@@ -35,10 +35,8 @@ class Job_WebCrawler_Download extends Job_Abstract
             $thumbnails = God_Model_WebCrawlerUrlTable::getThumbnailsFromData($webCrawlerUrl);
 
             // Make a tempory directory to put downloaded images in.
-            $pathname = '/tmp/' . $webCrawlerUrl['id'];
-            if (!realpath($pathname)) {
-                mkdir($pathname);
-            }
+            $pathname = '/tmp' . DIRECTORY_SEPARATOR . $webCrawlerUrl['id'];
+            God_Model_File::createPath($pathname);
 
             $images = array();
             $hashes = array();
