@@ -101,7 +101,8 @@ class Job_WebCrawler_Download extends Job_Abstract
             // If there are images remaining we can use the first $photosets[]
             // Reset check data, manual thumbnail.
             if ($images && $photosets) {
-                $photoset = $photosets[0];
+                $firstPhotoset = reset($photosets);
+                $photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $firstPhotoset->path);
                 $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
                 $photoset->manual_thumbnail = 0;
                 $photoset->save();
