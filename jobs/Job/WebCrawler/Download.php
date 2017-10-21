@@ -22,12 +22,12 @@ class Job_WebCrawler_Download extends Job_Abstract
         $webCrawlerUrlQuery->limit(1);
 
         $webCrawlerUrls = $webCrawlerUrlQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
-            _d($webCrawlerUrl);
+            echo $webCrawlerUrl['url'] . "\r\n";
+            $photosets = null;
 
-            foreach($webCrawlerUrl['linkref'] as $linkRef) {
+            foreach ($webCrawlerUrl['linkref'] as $linkRef) {
                 if (!is_array($linkRef['link']['url'])) continue;
             }
 
@@ -42,6 +42,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             $hashes = array();
 
             // Download thumbnails / images, fingerprint and store in an array $images[]
+            echo 'Downloading images' . "\r\n";
             foreach ($thumbnails as $thumbnail) {
                 $curl->Curl($thumbnail['url']);
                 $filepath = $pathname . '/' . basename($thumbnail['url']);
@@ -62,14 +63,14 @@ class Job_WebCrawler_Download extends Job_Abstract
                     'height' => $fileinfo[1]
                 );
             }
-//            _d($images);
+            echo 'Downloded ' . count($images) . ' images' . "\r\n";
 
             // Check for existing image fingerprints
             $exisingImageHashes = God_Model_ImageHashTable::getInstance()->createQuery('ih')
                 ->whereIn('hash', $hashes)
                 ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-            _d($exisingImageHashes);
+            echo count($exisingImageHashes) . ' Existing images' . "\r\n";
 
             // If there are existing image hashes get photosets that are linked to the found images
             if ($exisingImageHashes) {
@@ -78,7 +79,7 @@ class Job_WebCrawler_Download extends Job_Abstract
                 foreach ($exisingImageHashes as $exisingImageHash) {
 
                     $imageObj = God_Model_ImageTable::getInstance()->find($exisingImageHash['image_id']);
-                    $photosets[] = God_Model_PhotosetTable::getInstance()->find($imageObj->photoset_id);
+                    $photosets[$imageObj->photoset_id] = God_Model_PhotosetTable::getInstance()->find($imageObj->photoset_id);
                     $knownHashes[] = $exisingImageHash['hash']; // Needed?
 
                     // For each image[] if image hash matches check the dimensions of the image.
@@ -93,16 +94,17 @@ class Job_WebCrawler_Download extends Job_Abstract
                         }
                     }
                 }
+                // Remove empty elements
+                $photosets = array_filter($photosets);
             }
 
-            _d($images);
-            _d($photosets);
+            echo count($images) . ' Remaining images' . "\r\n";
 
             // If there are images remaining we can use the first $photosets[]
             // Reset check data, manual thumbnail.
             if ($images && $photosets) {
                 $firstPhotoset = reset($photosets);
-                $photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $firstPhotoset->path);
+                $photoset = God_Model_PhotosetTable::getInstance()->findOneByPathAndActive($firstPhotoset->path, 1);
                 $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
                 $photoset->manual_thumbnail = 0;
                 $photoset->save();
@@ -116,9 +118,9 @@ class Job_WebCrawler_Download extends Job_Abstract
                 }
             }
 
-            _d($images);
-
             if ($images && $photoset) {
+                echo 'Photoset path ' . $photoset->path . "\r\n";
+                echo 'Moving ' . count($images) . ' images' . "\r\n";            
                 // Move the images
                 foreach ($images as $image) {
                     rename(
@@ -127,6 +129,7 @@ class Job_WebCrawler_Download extends Job_Abstract
                 }
 
                 // Trigger updating images
+                echo 'Updating Photoset';
                 $photoset->updateImages();
             }
 

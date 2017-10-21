@@ -164,8 +164,15 @@ class God_Model_Model extends God_Model_Base_Model
     public function createPhotoset()
     {
         $file = new God_Model_File(PUBLIC_PATH . $this->path);
-        $maxDir = max($file->getDirectories());
 
+        // Filter numbers only
+        $dirs = $file->getDirectories();
+        foreach ($dirs as $key => $dir) {
+            if (!preg_match("~\d+~", $dir)) {
+                unset($dirs[$key]);
+            }
+        }
+        $maxDir = max($dirs);
         $newDir = str_pad($maxDir+1, 3, "0", STR_PAD_LEFT);
 
         $targetPath = PUBLIC_PATH . $this->path . DIRECTORY_SEPARATOR . $newDir;
