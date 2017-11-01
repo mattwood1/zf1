@@ -26,7 +26,7 @@ class WebcrawlerUrlController extends Coda_Controller
 
         if ($this->_request->getParam('domainid')) {
 
-            $webUrlQuery->andWhere('wcu.domain_id = ?', $this->_request->getParam('domainid'));
+            $webUrlQuery->andWhere('domain.id = ?', $this->_request->getParam('domainid'));
             $this->view->domain = God_Model_WebCrawlerDomainTable::getInstance()->find($this->_request->getParam('domainid'));
         }
 

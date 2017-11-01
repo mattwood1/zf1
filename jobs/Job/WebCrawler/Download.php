@@ -22,6 +22,7 @@ class Job_WebCrawler_Download extends Job_Abstract
         $webCrawlerUrlQuery->limit(1);
 
         $webCrawlerUrls = $webCrawlerUrlQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        if (count($webCrawlerUrls) > 0) {
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
             echo $webCrawlerUrl['url'] . "\r\n";
@@ -64,6 +65,7 @@ class Job_WebCrawler_Download extends Job_Abstract
                 );
             }
             echo 'Downloded ' . count($images) . ' images' . "\r\n";
+            $downloaded = count($images);
 
             // Check for existing image fingerprints
             $exisingImageHashes = God_Model_ImageHashTable::getInstance()->createQuery('ih')
@@ -71,6 +73,7 @@ class Job_WebCrawler_Download extends Job_Abstract
                 ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
             echo count($exisingImageHashes) . ' Existing images' . "\r\n";
+            $existing = count($exisingImageHashes);
 
             // If there are existing image hashes get photosets that are linked to the found images
             if ($exisingImageHashes) {
@@ -99,6 +102,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             }
 
             echo count($images) . ' Remaining images' . "\r\n";
+            $remaining = count($images);
 
             // If there are images remaining we can use the first $photosets[]
             // Reset check data, manual thumbnail.
@@ -131,6 +135,10 @@ class Job_WebCrawler_Download extends Job_Abstract
                 // Trigger updating images
                 echo 'Updating Photoset';
                 $photoset->updateImages();
+                if ($remaining + $existing != $downloaded) {
+                    echo 'Updating duplicates';
+                    God_Model_ImageHashTable::getDuplicateHashes(false, 1);
+                }
             }
 
             // Mark images as Downloaded using the imageIDs
@@ -147,6 +155,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             // Clean tmp dir
             rmdir($pathname);
 
+        }
         }
     }
 }

@@ -43,7 +43,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
             foreach ($files as $file) {
                 
-                checkCPULoad(1.5);
+                checkCPULoad(1.7);
                 
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);

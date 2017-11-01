@@ -6,7 +6,7 @@
 
     <?php if ($this->paginator->getFirstPage() != $this->paginator->getPage()): ?>
     <li><a href="<?php echo $this->url(array('page' => $this->paginator->getPreviousPage())); ?>">&lt;</a></li>
-    <?php if ($this->paginator->getPage() > ceil($chunk/2)): ?>
+    <?php if ($this->paginator->getPage() >= $chunk): ?>
     <li><a href="<?php echo $this->url(array('page' => $this->paginator->getFirstPage())); ?>"><?php echo $this->paginator->getFirstPage(); ?>...</a></li>
         <?php endif; ?>
     <?php endif; ?>
@@ -20,7 +20,7 @@
     <?php endforeach; ?>
 
     <?php if ($this->paginator->getLastPage() != $this->paginator->getPage()): ?>
-        <?php if ($this->paginator->getLastPage() >= ($this->paginator->getPage() + ceil($chunk/2))): ?>
+        <?php if ($this->paginator->getLastPage() > ($this->paginator->getPage() + floor($chunk/2))): ?>
     <li><a href="<?php echo $this->url(array('page' => $this->paginator->getLastPage())); ?>">...<?php echo $this->paginator->getLastPage(); ?></a></li>
         <?php endif; ?>
     <li><a href="<?php echo $this->url(array('page' => $this->paginator->getNextPage())); ?>">&gt;</a></li>

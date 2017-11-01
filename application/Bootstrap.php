@@ -26,6 +26,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $manager->setAttribute(Doctrine_Core::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
         $manager->setAttribute(Doctrine_Core::ATTR_AUTOLOAD_TABLE_CLASSES, true);
         $manager->setAttribute(Doctrine_Core::ATTR_MODEL_LOADING, 'conservative');
+        $manager->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
 
         // optional result caching
         if (isset($config['cache']) && $config['cache'] == true) {
