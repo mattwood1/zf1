@@ -41,39 +41,47 @@ class Job_WebCrawler_Download extends Job_Abstract
 
             $images = array();
             $hashes = array();
+            $exisingImageHashes = array();
 
             // Download thumbnails / images, fingerprint and store in an array $images[]
             echo 'Downloading images' . "\r\n";
             foreach ($thumbnails as $thumbnail) {
+                $imageIDs[] = $thumbnail['id'];
+
                 $curl->Curl($thumbnail['url']);
                 $filepath = $pathname . '/' . basename($thumbnail['url']);
 
                 file_put_contents($filepath, $curl->rawdata());
 
-                $hash = ph_dct_imagehash_to_array(ph_dct_imagehash($filepath));
-                $hashes[] = implode(',', $hash);
-                $imageIDs[] = $thumbnail['id'];
                 $fileinfo = getimagesize($filepath);
 
-                $images[] = array(
-                    'id' => $thumbnail['id'],
-                    'filepath' => $filepath,
-                    'targetfilename' => basename($filepath),
-                    'hash' => implode(',', $hash),
-                    'width' => $fileinfo[0],
-                    'height' => $fileinfo[1]
-                );
+                if ($fileinfo !== false) {
+                    $hash = ph_dct_imagehash_to_array(ph_dct_imagehash($filepath));
+                    $hashes[] = implode(',', $hash);
+
+                    $images[] = array(
+                        'id' => $thumbnail['id'],
+                        'filepath' => $filepath,
+                        'targetfilename' => basename($filepath),
+                        'hash' => implode(',', $hash),
+                        'width' => $fileinfo[0],
+                        'height' => $fileinfo[1]
+                    );
+                }
             }
             echo 'Downloded ' . count($images) . ' images' . "\r\n";
             $downloaded = count($images);
 
-            // Check for existing image fingerprints
-            $exisingImageHashes = God_Model_ImageHashTable::getInstance()->createQuery('ih')
-                ->whereIn('hash', $hashes)
-                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-            echo count($exisingImageHashes) . ' Existing images' . "\r\n";
-            $existing = count($exisingImageHashes);
+            // Check for existing image fingerprints
+            if ($hashes) {
+                $exisingImageHashes = God_Model_ImageHashTable::getInstance()->createQuery('ih')
+                    ->whereIn('hash', $hashes)
+                    ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+                echo count($exisingImageHashes) . ' Existing images' . "\r\n";
+                $existing = count($exisingImageHashes);
+            }
 
             // If there are existing image hashes get photosets that are linked to the found images
             if ($exisingImageHashes) {
@@ -108,9 +116,10 @@ class Job_WebCrawler_Download extends Job_Abstract
             // Reset check data, manual thumbnail.
             if ($images && $photosets) {
                 $firstPhotoset = reset($photosets);
-                $photoset = God_Model_PhotosetTable::getInstance()->findOneByPathAndActive($firstPhotoset->path, 1);
+                $photoset = God_Model_PhotosetTable::getInstance()->findOneByPath($firstPhotoset->path);
                 $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
                 $photoset->manual_thumbnail = 0;
+                $photoset->active = 1;
                 $photoset->save();
             }
 
