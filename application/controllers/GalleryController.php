@@ -18,7 +18,7 @@ class GalleryController extends Coda_Controller
         $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
 
         $this->view->photoset = $photoset;
-        $this->view->files = God_Model_File::scanPath($photoset->path)->getFiles();
+        $this->view->files = $this->_getFiles($photoset->path);
     }
 
     public function thumbnailAction()
@@ -45,7 +45,7 @@ class GalleryController extends Coda_Controller
         }
 
         $this->view->photoset = $photoset;
-        $this->view->files = God_Model_File::scanPath($photoset->path)->getFiles();
+        $this->view->files = $this->_getFiles($photoset->path);
     }
 
     public function duplicateAction()
@@ -88,7 +88,7 @@ class GalleryController extends Coda_Controller
 
             foreach ($duplicateImages as $duplicateImage) {
 
-                if ( ! (in_array($duplicateImage['photosetid1'], $usedPhotosetIds) || in_array($duplicateImage['photosetid2'], $usedPhotosetIds)) ) {
+                if (!(in_array($duplicateImage['photosetid1'], $usedPhotosetIds) || in_array($duplicateImage['photosetid2'], $usedPhotosetIds))) {
                     // add photosets to photosets array
                     $photosets[$duplicateImage['photosetid1']]['photosets'] = array(
                         'photoset1' => God_Model_PhotosetTable::getInstance()->find($duplicateImage['photosetid1']),
@@ -104,5 +104,42 @@ class GalleryController extends Coda_Controller
         }
 
         $this->view->duplicates = $photosets;
+    }
+
+
+    protected function _getFiles($path)
+    {
+        $data = array();
+        if (is_dir($_SERVER['DOCUMENT_ROOT'].'/'.$path)) {
+            $handle = opendir($_SERVER['DOCUMENT_ROOT'].'/'.$path);
+            //    $counter = 0;
+            while (false !== ($files = readdir($handle))) {
+                if ($files != "." && $files != "..") {        // remove '.' '..' directories
+                    if (is_file($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files) == true) {
+//                        $counter = $this->_threeDigits( str_ireplace(".jpg", "", $files));
+                        list($width,$height)=getimagesize($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files);
+                        $data[] = array(
+                            'uri' => $path.'/'.$files,
+                            'name' => $files,
+                            'width' => $width,
+                            'height' => $height
+                        );
+                    } else {
+                        echo '<p>'.$path.'/'.$files.' is a directory!</p>';
+                    }
+                }
+            }
+            closedir($handle);
+        } else {
+            return false;
+        }
+
+        sort($data, SORT_NUMERIC);
+
+        return $data;
+    }
+
+    protected function _threeDigits($value) {
+        return str_pad($value, 3, '0', STR_PAD_LEFT);
     }
 }
