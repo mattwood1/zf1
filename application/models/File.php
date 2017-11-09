@@ -76,7 +76,7 @@ class God_Model_File
     
     public function getFiles()
     {
-        sort($this->_files);
+        sort($this->_files, SORT_NUMERIC);
         return $this->_files;
     }
 }

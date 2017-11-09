@@ -18,7 +18,7 @@ class GalleryController extends Coda_Controller
         $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
 
         $this->view->photoset = $photoset;
-        $this->view->files = $this->_getFiles($photoset->path);
+        $this->view->files = God_Model_File::scanPath($photoset->path)->getFiles();
     }
 
     public function thumbnailAction()
@@ -45,7 +45,7 @@ class GalleryController extends Coda_Controller
         }
 
         $this->view->photoset = $photoset;
-        $this->view->files = $this->_getFiles($photoset->path);
+        $this->view->files = God_Model_File::scanPath($photoset->path)->getFiles();
     }
 
     public function duplicateAction()
@@ -104,40 +104,5 @@ class GalleryController extends Coda_Controller
         }
 
         $this->view->duplicates = $photosets;
-    }
-
-    protected function _getFiles($path)
-    {
-        $data = array();
-        if (is_dir($_SERVER['DOCUMENT_ROOT'].'/'.$path)) {
-            $handle = opendir($_SERVER['DOCUMENT_ROOT'].'/'.$path);
-            //    $counter = 0;
-            while (false !== ($files = readdir($handle))) {
-                if ($files != "." && $files != "..") {        // remove '.' '..' directories
-                    if (is_file($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files) == true) {
-                        $counter = $this->_threeDigits( str_ireplace(".jpg", "", $files));
-                        list($width,$height)=getimagesize($_SERVER['DOCUMENT_ROOT'].$path.'/'.$files);
-                        $data[$counter]['uri'] = $path.'/'.$files;
-                        $data[$counter]['name'] = $files;
-                        $data[$counter]['width'] = $width;
-                        $data[$counter]['height'] = $height;
-                        $counter++;
-                    } else {
-                        echo '<p>'.$path.'/'.$files.' is a directory!</p>';
-                    }
-                }
-            }
-            closedir($handle);
-        } else {
-            return false;
-        }
-
-        ksort($data);
-
-        return $data;
-    }
-
-    protected function _threeDigits($value) {
-        return str_pad($value, 3, '0', STR_PAD_LEFT);
     }
 }
