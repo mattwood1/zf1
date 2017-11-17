@@ -14,25 +14,21 @@ $this->subtitle = 'Edit';
     <?php if ($this->model->names): ?>
         <h4>Display Names</h4>
         <?php foreach ($this->model->names as $alias): ?>
-        <div>
-            <input type="radio" name="modelName" value="<?php echo $alias->ID; ?>" id="modelName_<?php echo $alias->ID; ?>" <?php echo $this->model->getName() == $alias->name ? ' checked="checked"' : ''; ?>>
-            <label for="modelName_<?php echo $alias->ID; ?>"><?php echo $alias->name; ?></label>
+        <div class="radio">
+            <label>
+                <input type="radio" name="modelName" value="<?php echo $alias->ID; ?>" id="modelName_<?php echo $alias->ID; ?>" <?php echo $this->model->getName() == $alias->name ? ' checked="checked"' : ''; ?>>
+                <?php echo $alias->name; ?>
+            </label>
         </div>
         <?php endforeach; ?>
-        <form method="post">
-            <input type="text" name="alias">
-            <input type="submit" name="submit" value="Add Name" />
-        </form>
+        <a href="<?php echo $this->url(array('controller' => 'model', 'action' => 'add-alias', 'id' => $this->model->ID)); ?>" class="btn btn-primary">Add Alias</a>
     <?php endif; ?>
-
-    <?php // New Alias ?>
 
     <h4>Photosets Updated</h4>
     <div><?php echo $this->model->photosetsChecked;?></div>
 
-    <?php // Last Google search date ?>
-
-    <?php // WebLink Stats for this model ?>
+    <h4>WebCrawler Updated</h4>
+    <div><?php echo $this->model->webcrawler_updated; ?></div>
 
     <p><input type="submit" name="submit" value="Update" /></p>
 

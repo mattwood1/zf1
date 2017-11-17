@@ -92,6 +92,11 @@ class ModelController extends Coda_Controller
         $this->view->model = $model;
     }
 
+    public function addAliasAction()
+    {
+        // Something here
+    }
+
     public function rankingAction()
     {
         $model = null;

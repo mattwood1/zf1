@@ -1,0 +1,10 @@
+<?php
+$this->headTitle('Edit');
+$this->headTitle($this->model->getName());
+$this->title = '<a href="' . $this->url(array('controller' => 'model', 'action' => 'view', 'id' => $this->model->ID), null, true) . '">' . $this->model->getName(). '</a>';
+$this->subtitle = 'Edit';
+?>
+
+<?php echo $this->partial('model/partials/navigation.phtml', array('model' => $this->model, 'active' => 'edit')); ?>
+
+Model Alias
