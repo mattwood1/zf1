@@ -34,6 +34,11 @@ class God_Model_Base_WebCrawlerDomain extends Doctrine_Record
             'length' => '11'
         ));
 
+        $this->hasColumn('subpage_ext', 'string', 10, array(
+            'type' => 'string',
+            'length' => '10'
+        ));
+
         $this->hasColumn('minSize', 'integer', 11, array(
             'type' => 'integer',
             'length' => '11'

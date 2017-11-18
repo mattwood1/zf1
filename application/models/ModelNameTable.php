@@ -32,7 +32,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
             ->andWhere('m.search = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
             ->orderBy('mn.webcrawler_updated asc')
-            ->limit(1);
+            ->limit(100);
         return $modelNamesQuery->execute();
     }
 

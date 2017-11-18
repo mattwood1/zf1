@@ -51,7 +51,8 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             OR  (
                      domain.link_depth = 2
                  and wcu1.contenttype like 'text/html%'
-                 and wcu.domain_id = wcu1.domain_id 
+                 and wcu.domain_id = wcu1.domain_id
+                 and wcu.url not like concat ('%', domain.subpage_ext ,'%')
                  and wcu2.contenttype = 'image/jpeg'
                  and wcu2.pixels > domain.minSize
                  and wcu2.downloaded = 0

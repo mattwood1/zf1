@@ -32,6 +32,9 @@ class WebcrawlerUrlController extends Coda_Controller
 
 //        $webUrlQuery->orderBy('wcu.id DESC');
 
+//        ini_set('xdebug.var_display_max_data', -1);
+//        _d($webUrlQuery);
+
         $paginator = new Doctrine_Pager($webUrlQuery, $this->_getParam('page', 1), 5);
         $webUrls = $paginator->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 

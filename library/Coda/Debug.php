@@ -3,14 +3,17 @@ class Coda_Debug extends Zend_Debug
 {
 }
 
-function checkCPULoad($load = 1, $temp = 50)
+function checkCPULoad($load = 1.7, $temp = 50)
 {
     $sysload = sys_getloadavg();
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
     if ((float)$sysload[0] > $load || $systemp >= $temp) {
         $time = floor(10*$sysload[0]*(1/$load));
-        _d('Sleeping (' . $time . ' secs) ' . $sysload[0] . ' > ' . $load);
+        $string = 'Sleeping (' . $time . ' secs) ';
+        $string .= $sysload[0] > $load ? $sysload[0] . ' > ' . $load : '';
+        $string .= $systemp >= $temp ? $systemp . ' > ' . $temp: '';
+        _d($string);
         sleep($time);
         checkCPULoad($load, $temp);
     }
