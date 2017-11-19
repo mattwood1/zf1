@@ -35,8 +35,11 @@ class ImageController extends Coda_Controller
             if ($path) {
                 unlink($path);
             }
-            $image->delete();
-            $imagehash->delete();
+
+            if (!file_exists($path)) {
+                $image->delete();
+                $imagehash->delete();
+            }
         }
 
         if ($this->_request->getParam('referer')) {
@@ -57,12 +60,16 @@ class ImageController extends Coda_Controller
 
         rename(IMAGE_DIR . $image->filename, IMAGE_DIR . $newname);
 
-        $image->filename = $newname;
-        $image->photoset_id = $photoset->id;
-        $image->save();
+        if (file_exists(IMAGE_DIR . $newname)) {
 
-        $photoset->manual_thumbnail = 0;
-        $photoset->save();
+            $image->filename = $newname;
+            $image->photoset_id = $photoset->id;
+            $image->save();
+
+            $photoset->manual_thumbnail = 0;
+            $photoset->save();
+
+        }
 
         if ($this->_request->getParam('referer')) {
             $this->_redirect(urldecode($this->_request->getParam('referer')));
