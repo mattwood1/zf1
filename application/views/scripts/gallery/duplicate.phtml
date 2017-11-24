@@ -66,11 +66,13 @@
                 </div>
             </div>
             <?php endforeach; ?>
-            <?php if ($photoset1->id != $photoset2->id): ?>
+
             <div class="col-xs-12 text-center">
+            <?php if ($photoset1->id != $photoset2->id): ?>
                 <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'photoset-toggle', 'id' => $photoset1->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn <?php echo $photoset1->active ? 'btn-success' : 'btn-primary'; ?>" role="button"><?php echo $photoset1->active ? 'Photoset Active' : 'Photoset Disabled'; ?></a>
-            </div>
             <?php endif ;?>
+                <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'update', 'photoset' => $photoset1->id)); ?>" class="btn btn-default">Update Photoset</a>
+            </div>
         </div>
     </div>
     
@@ -103,13 +105,17 @@
                 </div>
             </div>
             <?php endforeach; ?>
-            <?php if ($photoset1->id != $photoset2->id): ?>
+
             <div class="col-xs-12 text-center">
+            <?php if ($photoset1->id != $photoset2->id): ?>
                 <a href="<?php echo $this->url(array('controller' => 'image', 'action' => 'photoset-toggle', 'id' => $photoset2->id, 'referer' => urlencode($_SERVER['REQUEST_URI']))); ?>" class="btn <?php echo $photoset2->active ? 'btn-success' : 'btn-primary'; ?>" role="button"><?php echo $photoset2->active ? 'Photoset Active' : 'Photoset Disabled'; ?></a>
-            </div>
+
             <?php endif; ?>
+                <a href="<?php echo $this->url(array('controller' => 'gallery', 'action' => 'update', 'photoset' => $photoset2->id)); ?>" class="btn btn-default">Update Photoset</a>
+            </div>
         </div>
     </div>
+
     <?php endif; ?>
 </div>
     

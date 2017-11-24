@@ -106,6 +106,15 @@ class GalleryController extends Coda_Controller
         $this->view->duplicates = $photosets;
     }
 
+    public function updateAction()
+    {
+        $photoset = God_Model_PhotosetTable::getInstance()->find($this->_request->getParam('photoset'));
+
+        $photoset->updateImages(true);
+
+        $this->gotoRoute(array('controller' => 'gallery', 'action' => 'duplicate'), false, true);
+    }
+
 
     protected function _getFiles($path)
     {

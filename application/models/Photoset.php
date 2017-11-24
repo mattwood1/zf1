@@ -17,10 +17,10 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         return false;
     }
     
-    public function updateImages()
+    public function updateImages($manual = false)
     {
-        $path = APPLICATION_PATH . '/../public' . $this->path;
-        $thumbnail = APPLICATION_PATH . '/../public' . $this->thumbnail;
+        $path = PUBLIC_PATH . $this->path;
+        $thumbnail = PUBLIC_PATH . $this->thumbnail;
         
         if ($this->manual_thumbnail == 1 && realpath($thumbnail) == false) {
             
@@ -32,6 +32,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         if (
             strtotime($this->imagesCheckedDate) < strtotime("-1 month")
             || $this->imagesCheckedDate == "0000-00-00"
+            || $manual == true
         ) {
             
             $files = God_Model_File::scanPath($path)->getFiles();
@@ -44,14 +45,14 @@ class God_Model_Photoset extends God_Model_Base_Photoset
             foreach ($files as $file) {
                 
                 checkCPULoad(1.7);
-                
+
                 $realpath = realpath($path.'/'.$file);
                 $urlPath = str_replace(IMAGE_DIR, '', $realpath);
                 
                 $image = God_Model_ImageTable::getInstance()->createQuery('i')
                         ->where('filename = ?', $urlPath)
                         ->fetchOne();
-                
+
                 // Removing unwanted files
                 if (in_array($file, array('.directory'))) {
                     unlink($realpath);
@@ -64,11 +65,11 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                 if (!$image) {
                     $image = new God_Model_Image();
                 }
-                
+
                 $imageInfo = getimagesize(IMAGE_DIR . $urlPath);
                         
                 if ($imageInfo[0] && $imageInfo[1]) {
-                
+
                     $imageData = array(
                         'photoset_id' => $this->id,
                         'width' => $imageInfo[0],
@@ -92,11 +93,11 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                         $imageHash->image_id = $image->id;
                     }
                     
-                    if (!$imageHash->hash) {
+                    if (!$imageHash->hash || $manual) {
                         $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
                         $imageHash->hash = implode(",", $hash);
                     }
-                    
+
                     $imageHash->save();
                     
                     
