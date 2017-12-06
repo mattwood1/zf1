@@ -1,8 +1,5 @@
 <?php
-class God_Model_WebCrawlerUrlPhotosetsTable extends Doctrine_Record
+class God_Model_WebCrawlerUrlPhotosets extends God_Model_Base_WebCrawlerUrlPhotosets
 {
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('God_Model_Base_WebCrawlerUrlPhotosets');
-    }
+
 }

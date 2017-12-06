@@ -16,6 +16,29 @@ class God_Model_Photoset extends God_Model_Base_Photoset
         }
         return false;
     }
+
+    public function getImageHashes()
+    {
+        $hashes = array();
+        $imageIDs = array();
+        $imageArray = array();
+        $images = God_Model_ImageTable::getInstance()->findBy('photoset_id', $this->id, Doctrine_Core::HYDRATE_ARRAY);
+        foreach ($images as $image) {
+            $imageIDs[] = $image['id'];
+            $imageArray[$image['id']] = $image;
+        }
+        $hashs = God_Model_ImageHashTable::getInstance()->createQuery()
+            ->whereIn('image_id', $imageIDs)
+            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        foreach ($hashs as $hash) {
+            $hashes[$hash['hash']] = array(
+                'width' => $imageArray[$hash['image_id']]['width'],
+                'height' => $imageArray[$hash['image_id']]['height'],
+            );
+        }
+
+        return $hashes;
+    }
     
     public function updateImages($manual = false)
     {

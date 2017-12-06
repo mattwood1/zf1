@@ -18,3 +18,11 @@
     <?php echo $this->partialLoop('GalleryPartial.phtml', $this->files); ?>
 </div>
 <?php endif; ?>
+
+<?php if ($this->webcrawlerurls): ?>
+<ul>
+    <?php foreach($this->webcrawlerurls as $webcrawlerurl): ?>
+    <li><?php echo $webcrawlerurl->id; ?> - <?php echo $webcrawlerurl->url; ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
