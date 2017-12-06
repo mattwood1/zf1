@@ -124,10 +124,10 @@ class Job_WebCrawler_Download extends Job_Abstract
             if ($images && $photosets) {
                 $firstPhotoset = reset($photosets);
                 $photoset = God_Model_PhotosetTable::getInstance()->findOneByPath($firstPhotoset->path);
-//                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
-//                $photoset->manual_thumbnail = 0;
-//                $photoset->active = 1;
-//                $photoset->save();
+                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
+                $photoset->manual_thumbnail = 0;
+                $photoset->active = 1;
+                $photoset->save();
             }
 
 
