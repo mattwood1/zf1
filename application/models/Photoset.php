@@ -77,7 +77,7 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                         ->fetchOne();
 
                 // Removing unwanted files
-                if (in_array($file, array('.directory'))) {
+                if (in_array($file, array('.directory', 'index.html'))) {
                     unlink($realpath);
                     if ($image) {
                         $image->delete();
