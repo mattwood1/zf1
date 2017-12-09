@@ -15,16 +15,21 @@ class GalleryController extends Coda_Controller
 
     public function viewAction()
     {
-        $photoset = Doctrine_Core::getTable('God_Model_Photoset')->findOneBy('id', $this->_request->getParam('photoset'));
+        $photoset = Doctrine_Core::getTable('God_Model_Photoset')
+            ->findOneBy('id', $this->_request->getParam('photoset'));
 
         $urlIDs = array();
         $webCrawlerUrlPhotosets = God_Model_WebCrawlerUrlPhotosetsTable::getInstance()->findBy('photoset_id', $photoset->id);
         foreach ($webCrawlerUrlPhotosets as $webCrawlerUrlPhotoset) {
             $urlIDs[] = $webCrawlerUrlPhotoset->url_id;
         }
-        $webCrawlerUrls = God_Model_WebCrawlerUrlTable::getInstance()->createQuery()
-            ->whereIn('id', $urlIDs)
-            ->execute();
+
+        $webCrawlerUrls = null;
+        if ($urlIDs) {
+            $webCrawlerUrls = God_Model_WebCrawlerUrlTable::getInstance()->createQuery()
+                ->whereIn('id', $urlIDs)
+                ->execute();
+        }
 
         $this->view->photoset = $photoset;
         $this->view->files = $this->_getFiles($photoset->path);

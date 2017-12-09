@@ -73,7 +73,7 @@ class God_Model_Model extends God_Model_Base_Model
 
             // Query for photoset
             $photosetFound = false;
-            if ($photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $this->path . DIRECTORY_SEPARATOR . $directory, Doctrine_Core::HYDRATE_ARRAY)) {
+            if ($photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $this->path . DIRECTORY_SEPARATOR . $directory)) {
                 $photosetFound = true;
                 $photoset->updateImages();
             }
