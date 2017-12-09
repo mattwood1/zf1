@@ -26,7 +26,7 @@ class Job_WebCrawler_Download extends Job_Abstract
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
             $logfile = fopen('/tmp/WC_Download_'.date('Y-m-d').'.txt', 'a');
-            fwrite($logfile, date('H:i:s') . ' ' . $this->url . "\n");
+            fwrite($logfile, date('H:i:s') . ' ' . $webCrawlerUrls['url'] . "\n");
             fclose($logfile);
 
             echo $webCrawlerUrl['url'] . "\r\n";
