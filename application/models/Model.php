@@ -73,21 +73,19 @@ class God_Model_Model extends God_Model_Base_Model
 
             // Query for photoset
             $photosetFound = false;
-            foreach ( $this->photosets as $photoset ) {
-                if ( $photoset->path == $this->path . '/' . $directory ) {
-                    $photosetFound = true;
-                    $photoset->updateImages();
-                }
+            if ($photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $this->path . DIRECTORY_SEPARATOR . $directory, Doctrine_Core::HYDRATE_ARRAY)) {
+                $photosetFound = true;
+                $photoset->updateImages();
             }
 
-            if ( $photosetFound == false && is_array( $files = God_Model_File::scanPath($path . '/' . $directory)->getFiles() ) ) {
+            if ( $photosetFound == false && is_array( $files = God_Model_File::scanPath($path . DIRECTORY_SEPARATOR . $directory)->getFiles() ) ) {
 
                 $photoset = new God_Model_Photoset();
                 $photoset->fromArray(array(
                     'name' => $directory,
-                    'path' => $this->path . '/' . $directory,
-                    'uri' => $this->uri . '/' . $directory,
-                    'thumbnail' => $this->path . '/' . $directory . '/' . $files[floor(count($files)*0.6)]
+                    'path' => $this->path . DIRECTORY_SEPARATOR . $directory,
+                    'uri' => $this->uri . DIRECTORY_SEPARATOR . $directory,
+                    'thumbnail' => $this->path . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . $files[floor(count($files)*0.6)]
                 ));
 
                 $photoset->link('model', array($this->ID));
