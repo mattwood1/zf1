@@ -25,6 +25,10 @@ class Job_WebCrawler_Download extends Job_Abstract
         if (count($webCrawlerUrls) > 0) {
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
+            $logfile = fopen('/tmp/WC_Download_'.date('Y-m-d').'.txt', 'a');
+            fwrite($logfile, date('H:i:s') . ' ' . $this->url . "\n");
+            fclose($logfile);
+
             echo $webCrawlerUrl['url'] . "\r\n";
             $photosets = null;
 
@@ -124,10 +128,10 @@ class Job_WebCrawler_Download extends Job_Abstract
             if ($images && $photosets) {
                 $firstPhotoset = reset($photosets);
                 $photoset = God_Model_PhotosetTable::getInstance()->findOneByPath($firstPhotoset->path);
-                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
-                $photoset->manual_thumbnail = 0;
-                $photoset->active = 1;
-                $photoset->save();
+//                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
+//                $photoset->manual_thumbnail = 0;
+//                $photoset->active = 1;
+//                $photoset->save();
             }
 
 
@@ -168,6 +172,11 @@ class Job_WebCrawler_Download extends Job_Abstract
                         $image['filepath'],
                         PUBLIC_PATH . $photoset->path . DIRECTORY_SEPARATOR . $image['targetfilename']);
                 }
+
+                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
+                $photoset->manual_thumbnail = 0;
+                $photoset->active = 1;
+                $photoset->save();
 
                 // Trigger updating images
                 echo 'Updating Photoset';

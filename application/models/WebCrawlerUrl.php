@@ -43,6 +43,10 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             return $this;
         }
 
+        $logfile = fopen('/tmp/WC_URL_'.date('Y-m-d').'.txt', 'a');
+        fwrite($logfile, date('H:i:s') . ' ' . $this->url . "\n");
+        fclose($logfile);
+
         $this->linkModelName();
 
         $priority = $this->modelnamelinks->count() > 0 ? God_Model_WebCrawlerLink::PRIORTIY_HIGH : God_Model_WebCrawlerLink::PRIORITY_LOW;
