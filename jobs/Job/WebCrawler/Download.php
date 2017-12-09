@@ -47,7 +47,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             $hashes = array();
             $exisingImageHashes = array();
 
-            // Download thumbnails / images, fingerprint and store in an array $images[]
+            // Download images and generate fingerprints and store in an array $images[]
             echo 'Downloading images' . "\r\n";
             foreach ($thumbnails as $thumbnail) {
                 $imageIDs[] = $thumbnail['id'];
@@ -87,56 +87,29 @@ class Job_WebCrawler_Download extends Job_Abstract
                 $existing = count($exisingImageHashes);
             }
 
-            // If there are existing image hashes get photosets that are linked to the found images
+            // Get photosets that are linked to the found image hashes
             if ($exisingImageHashes) {
-
                 $photosets = array();
                 foreach ($exisingImageHashes as $exisingImageHash) {
-
-                    // Could be an array
-                    $imageObj = God_Model_ImageTable::getInstance()->find($exisingImageHash['image_id']);
-
-                    // Used here
-                    $photosets[$imageObj->photoset_id] = God_Model_PhotosetTable::getInstance()->find($imageObj->photoset_id);
-                    $knownHashes[] = $exisingImageHash['hash']; // Needed?
-
-                    // For each image[] if image hash matches check the dimensions of the image.
-                    // If image is larger rename targetfilename to stop overwritting the file.
-                    /*
-                    foreach ($images as $imageKey => $image) {
-                        if ($image['hash'] == $exisingImageHash['hash']) {
-                            if ($image['width'] <= $imageObj['width'] && $image['height'] <= $imageObj['height']) {
-                                unset($images[$imageKey]);
-                            } else {
-                                $images[$imageKey]['targetfilename'] = $webCrawlerUrl['id'] . '-' . $image['targetfilename'];
-                            }
-                        }
-                    }
-                    */
+                    $imageObj = God_Model_ImageTable::getInstance()->find($exisingImageHash['image_id'], Doctrine_Core::HYDRATE_ARRAY);
+                    $photosets[$imageObj['photoset_id']] = God_Model_PhotosetTable::getInstance()->find($imageObj['photoset_id']);
                 }
-                // Remove empty elements
                 $photosets = array_filter($photosets);
             }
 
+            // This will override the photosets if it already exists
             if ($WC_URL = God_Model_WebCrawlerUrlPhotosetsTable::getInstance()->findOneBy('url_id', $webCrawlerUrl['id'], Doctrine_Core::HYDRATE_ARRAY)) {
                 $photosets = array(God_Model_PhotosetTable::getInstance()->find($WC_URL['photoset_id']));
                 echo 'Photoset Defined by Existing Link' . "\r\n";
             }
 
-            // If there are images remaining we can use the first $photosets[]
-            // Reset check data, manual thumbnail.
+            // This will get the photoset object to use later on
             if ($images && $photosets) {
                 $firstPhotoset = reset($photosets);
                 $photoset = God_Model_PhotosetTable::getInstance()->findOneByPath($firstPhotoset->path);
-//                $photoset->imagesCheckedDate = "0000-00-00 00:00:00";
-//                $photoset->manual_thumbnail = 0;
-//                $photoset->active = 1;
-//                $photoset->save();
             }
 
-
-
-            // No Existing images, using the model name create a new photoset from the Model object
+            // We have images but no photoset so we can create one
             elseif ($images) {
                 foreach($webCrawlerUrl['modelnamelinks'] as $modelnamelink) {
                     $model = God_Model_ModelTable::getInstance()->find($modelnamelink['modelName']['model']['ID']);
@@ -144,6 +117,9 @@ class Job_WebCrawler_Download extends Job_Abstract
                 }
             }
 
+            // With the selected photoset, we get the image hashes for that photoset
+            // Ensure that existing images are not transferred. But allow image download if the image
+            // exists in another photoset.
             if ($photosetImageHashes = $photoset->getImageHashes()) {
 
                 foreach ($images as $imageKey => $image) {
@@ -163,6 +139,8 @@ class Job_WebCrawler_Download extends Job_Abstract
             echo count($images) . ' Remaining images' . "\r\n";
             $remaining = count($images);
 
+            // If we have images and photoset, move the files to the location and set the photoset to
+            // be checked, active and not a manual image selected.
             if ($images && $photoset) {
                 echo 'Photoset path ' . $photoset->path . "\r\n";
                 echo 'Moving ' . count($images) . ' images' . "\r\n";            
@@ -191,6 +169,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             $conn = Doctrine_Manager::connection();
             $conn->execute('UPDATE webcrawlerUrls SET downloaded = 1 where id in ('.implode(',', $imageIDs).')');
 
+            // Link the WebCrawler URL to the photoset
             if (! God_Model_WebCrawlerUrlPhotosetsTable::getInstance()->findOneBy('url_id', $webCrawlerUrl['id'])) {
                 $WC_URL = new God_Model_WebCrawlerUrlPhotosets();
                 $WC_URL->fromArray(array(
