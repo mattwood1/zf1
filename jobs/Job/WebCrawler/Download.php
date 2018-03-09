@@ -10,6 +10,14 @@ class Job_WebCrawler_Download extends Job_Abstract
 {
     public function run()
     {
+
+        $photosetTable = new God_Model_PhotosetTable();
+        $query = $photosetTable->getThumbnails();
+        $rows = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        if (count($rows) >= 18 * 3) {
+            exit;
+        }
+
         $curl = new God_Model_Curl();
 //        $id = 3757903;
 
@@ -88,6 +96,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             }
 
             // Get photosets that are linked to the found image hashes
+            // TODO: Group Photosets by more than 1 image hash found. Pick the one with the most hash matches
             if ($exisingImageHashes) {
                 $photosets = array();
                 foreach ($exisingImageHashes as $exisingImageHash) {
@@ -120,7 +129,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             // With the selected photoset, we get the image hashes for that photoset
             // Ensure that existing images are not transferred. But allow image download if the image
             // exists in another photoset.
-            if ($photosetImageHashes = $photoset->getImageHashes()) {
+            if ($images && $photosetImageHashes = $photoset->getImageHashes()) {
 
                 foreach ($images as $imageKey => $image) {
 
@@ -157,10 +166,10 @@ class Job_WebCrawler_Download extends Job_Abstract
                 $photoset->save();
 
                 // Trigger updating images
-                echo 'Updating Photoset';
+                echo 'Updating Photoset' . "\n";
                 $photoset->updateImages();
                 if ($remaining + $existing != $downloaded) {
-                    echo 'Updating duplicates';
+                    echo 'Updating duplicates' . "\n";
                     God_Model_ImageHashTable::getDuplicateHashes(false, 1);
                 }
             }
@@ -170,7 +179,7 @@ class Job_WebCrawler_Download extends Job_Abstract
             $conn->execute('UPDATE webcrawlerUrls SET downloaded = 1 where id in ('.implode(',', $imageIDs).')');
 
             // Link the WebCrawler URL to the photoset
-            if (! God_Model_WebCrawlerUrlPhotosetsTable::getInstance()->findOneBy('url_id', $webCrawlerUrl['id'])) {
+            if ($images && !God_Model_WebCrawlerUrlPhotosetsTable::getInstance()->findOneBy('url_id', $webCrawlerUrl['id'])) {
                 $WC_URL = new God_Model_WebCrawlerUrlPhotosets();
                 $WC_URL->fromArray(array(
                     'url_id' => $webCrawlerUrl['id'],

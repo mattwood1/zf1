@@ -99,6 +99,7 @@ class ModelController extends Coda_Controller
 
     public function rankingAction()
     {
+        touch(APPLICATION_PATH . '/active.txt');
         $model = null;
         if ($this->_request->isPost()) {
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));

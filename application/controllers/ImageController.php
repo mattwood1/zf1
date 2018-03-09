@@ -8,7 +8,7 @@ class ImageController extends Coda_Controller
     protected $_miniWidth = 132;
     protected $_height = 200;
     protected $_ratio = 1.333;
-    protected $_quality = 100; // percent
+    protected $_quality = 70; // percent
     protected $_orientation = "portrait";
 
     public function init()
@@ -58,6 +58,7 @@ class ImageController extends Coda_Controller
         $file = pathinfo(IMAGE_DIR . $image->filename);
         $newname = $photoset->path . '/' . $file['filename'] . '-' . $image->photoset->name . '.' . $file['extension'];
 
+        chmod(IMAGE_DIR . $image->filename, 0766);
         rename(IMAGE_DIR . $image->filename, IMAGE_DIR . $newname);
 
         if (file_exists(IMAGE_DIR . $newname)) {

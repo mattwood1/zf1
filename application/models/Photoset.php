@@ -20,21 +20,35 @@ class God_Model_Photoset extends God_Model_Base_Photoset
     public function getImageHashes()
     {
         $hashes = array();
+        $hashs = array();
         $imageIDs = array();
         $imageArray = array();
         $images = God_Model_ImageTable::getInstance()->findBy('photoset_id', $this->id, Doctrine_Core::HYDRATE_ARRAY);
+
         foreach ($images as $image) {
             $imageIDs[] = $image['id'];
             $imageArray[$image['id']] = $image;
         }
-        $hashs = God_Model_ImageHashTable::getInstance()->createQuery()
-            ->whereIn('image_id', $imageIDs)
-            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
-        foreach ($hashs as $hash) {
-            $hashes[$hash['hash']] = array(
-                'width' => $imageArray[$hash['image_id']]['width'],
-                'height' => $imageArray[$hash['image_id']]['height'],
-            );
+
+        if ($imageIDs) {
+            $hashs = God_Model_ImageHashTable::getInstance()->createQuery()
+                ->whereIn('image_id', $imageIDs)
+                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        }
+
+        if (count($images) != count($hashs) && $imageIDs){
+            $this->updateImages(true);
+            $hashs = God_Model_ImageHashTable::getInstance()->createQuery()
+                ->whereIn('image_id', $imageIDs)                                                          ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+        }
+
+        if ($hashs) {
+            foreach ($hashs as $hash) {
+                $hashes[$hash['hash']] = array(
+                    'width' => $imageArray[$hash['image_id']]['width'],
+                    'height' => $imageArray[$hash['image_id']]['height'],
+                );
+            }
         }
 
         return $hashes;
@@ -58,87 +72,89 @@ class God_Model_Photoset extends God_Model_Base_Photoset
             || $manual == true
         ) {
             
-            $files = God_Model_File::scanPath($path)->getFiles();
+            if($files = God_Model_File::scanPath($path)->getFiles()) {
 
-            if (!$this->thumbnail) {
-                $this->thumbnail = $this->path . DIRECTORY_SEPARATOR . $files[floor(count($files)*0.6)];
-                $this->save();
-            }
+                if (!$this->thumbnail) {
+                    $this->thumbnail = $this->path . DIRECTORY_SEPARATOR . $files[floor(count($files) * 0.6)];
+                    $this->save();
+                }
 
-            foreach ($files as $file) {
-                
-                checkCPULoad(1.7);
+                foreach ($files as $file) {
 
-                $realpath = realpath($path.'/'.$file);
-                $urlPath = str_replace(IMAGE_DIR, '', $realpath);
-                
-                $image = God_Model_ImageTable::getInstance()->createQuery('i')
+                    checkCPULoad(1.7);
+
+                    $realpath = realpath($path . '/' . $file);
+                    $urlPath = str_replace(IMAGE_DIR, '', $realpath);
+
+                    $image = God_Model_ImageTable::getInstance()->createQuery('i')
                         ->where('filename = ?', $urlPath)
                         ->fetchOne();
 
-                // Removing unwanted files
-                if (in_array($file, array('.directory', 'index.html'))) {
-                    unlink($realpath);
-                    if ($image) {
-                        $image->delete();
+                    // Removing unwanted files
+                    if (in_array($file, array('.directory', 'index.html'))) {
+                        unlink($realpath);
+                        if ($image) {
+                            $image->delete();
+                        }
+                        continue;
                     }
-                    continue;
-                }
-                
-                if (!$image) {
-                    $image = new God_Model_Image();
-                }
 
-                $imageInfo = getimagesize(IMAGE_DIR . $urlPath);
-                        
-                if ($imageInfo[0] && $imageInfo[1]) {
+                    if (!$image) {
+                        $image = new God_Model_Image();
+                    }
 
-                    $imageData = array(
-                        'photoset_id' => $this->id,
-                        'width' => $imageInfo[0],
-                        'height' => $imageInfo[1],
-                        'bits' => $imageInfo['bits'],
-                        'channels' => $imageInfo['channels'],
-                        'mime' => $imageInfo['mime'],
-                        'filename' => $urlPath                        
-                    );
-                    
-                    $image->fromArray($imageData);                
-                    $image->save();
+                    $imageInfo = getimagesize(IMAGE_DIR . $urlPath);
 
-                    $imageHash = God_Model_ImageHashTable::getInstance()->createQuery('ih')
+                    if ($imageInfo[0] && $imageInfo[1]) {
+
+                        $imageData = array(
+                            'photoset_id' => $this->id,
+                            'width' => $imageInfo[0],
+                            'height' => $imageInfo[1],
+                            'bits' => $imageInfo['bits'],
+                            'channels' => $imageInfo['channels'],
+                            'mime' => $imageInfo['mime'],
+                            'filename' => $urlPath
+                        );
+
+                        $image->fromArray($imageData);
+                        $image->save();
+
+                        $imageHash = God_Model_ImageHashTable::getInstance()->createQuery('ih')
                             ->where('image_id = ?', $image->id)
                             ->fetchOne();
 
-                    // No point re-hashing an image that hasn't changed.
-                    if (!$imageHash) {
-                        $imageHash = new God_Model_ImageHash();
-                        $imageHash->image_id = $image->id;
-                    }
-                    
-                    if (!$imageHash->hash || $manual) {
-                        $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
-                        $imageHash->hash = implode(",", $hash);
-                    }
+                        // No point re-hashing an image that hasn't changed.
+                        if (!$imageHash) {
+                            $imageHash = new God_Model_ImageHash();
+                            $imageHash->image_id = $image->id;
+                        }
 
-                    $imageHash->save();
-                    
-                    
-                    // Image Hash Index checking for indexes
-                    $imageHashIndex = God_Model_ImageHashIndexTable::getInstance()->createQuery('ihi')
+                        if (!$imageHash->hash || $manual) {
+                            set_time_limit(60);
+                            $hash = ph_dct_imagehash_to_array(ph_dct_imagehash(IMAGE_DIR . $urlPath));
+                            $imageHash->hash = implode(",", $hash);
+                        }
+
+                        $imageHash->save();
+
+
+                        // Image Hash Index checking for indexes
+                        $imageHashIndex = God_Model_ImageHashIndexTable::getInstance()->createQuery('ihi')
                             ->where('image_id = ?', $image->id)
                             ->fetchArray();
-                    
-                    if (!$imageHashIndex) {
-                        foreach (explode(',', $imageHash->hash) as $index => $hash) {
-                            $imageHashIndexItem = new God_Model_ImageHashIndex();
-                            $imageHashIndexItem->position = (int)$index;
-                            $imageHashIndexItem->hash = (int)$hash;
-                            $imageHashIndexItem->image_id = (int)$image->id;
-                            $imageHashIndexItem->save();
-                        }
-                    }
 
+                        if (!$imageHashIndex) {
+                            foreach (explode(',', $imageHash->hash) as $index => $hash) {
+                                $imageHashIndexItem = new God_Model_ImageHashIndex();
+                                $imageHashIndexItem->position = (int)$index;
+                                $imageHashIndexItem->hash = (int)$hash;
+                                $imageHashIndexItem->image_id = (int)$image->id;
+                                $imageHashIndexItem->save();
+                            }
+                        }
+
+                    }
                 }
             }
 

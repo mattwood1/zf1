@@ -11,8 +11,8 @@ function checkCPULoad($load = 1.7, $temp = 50)
     if ((float)$sysload[0] > $load || $systemp >= $temp) {
         $time = floor(10*$sysload[0]*(1/$load));
         $string = 'Sleeping (' . $time . ' secs) ';
-        $string .= $sysload[0] > $load ? $sysload[0] . ' > ' . $load : '';
-        $string .= $systemp >= $temp ? $systemp . ' > ' . $temp: '';
+        $string .= $sysload[0] > $load ? 'cpu ' .$sysload[0] . ' > ' . $load : '';
+        $string .= $systemp >= $temp ? 'temp ' . $systemp . ' => ' . $temp: '';
         _d($string);
         sleep($time);
         checkCPULoad($load, $temp);
