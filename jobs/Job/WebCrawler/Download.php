@@ -15,6 +15,17 @@ class Job_WebCrawler_Download extends Job_Abstract
         $query = $photosetTable->getThumbnails();
         $rows = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
         if (count($rows) >= 18 * 3) {
+
+            $conn = Doctrine_Manager::getInstance()->connection();
+            $sql = "INSERT INTO webcrawlerUrlLink_ref (link_id, url_id) 
+                    SELECT l.id, l.parent_url_id FROM `webcrawlerLinks` l
+                    left outer join webcrawlerUrlLink_ref r on (l.parent_url_id = r.url_id and l.id = r.link_id)
+                        where r.url_id is null
+                        and r.link_id is null
+                        and l.parent_url_id !=0
+                        limit 2000";
+            $query = $conn->execute($sql);
+//            $models = $query->fetchAll();
             exit;
         }
 

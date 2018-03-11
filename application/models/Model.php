@@ -206,13 +206,13 @@ class God_Model_Model extends God_Model_Base_Model
     public static function getRandomPhotoset($modelID)
     {
         $model = God_Model_ModelTable::getInstance()->find($modelID);
-        if ($model->photosets) { // TODO: Needs to be $this->photosets->getActive()
+        if ($model->photosets) { // TODO: Needs to be $this->photosets->getActive(), replaces foreach below
             
             $photosets = $model->photosets;
             $photosetKeys = array();
             
             foreach ($photosets as $photosetKey => $photoset) {
-                if ($photoset->active == 0) {
+                if ($photoset->active == 0 || $photoset->manual == 0) {
                     unset($photosets[$photosetKey]);
                 } else {
                     $photosetKeys[$photosetKey] = $photosetKey;
