@@ -212,7 +212,7 @@ class God_Model_Model extends God_Model_Base_Model
             $photosetKeys = array();
             
             foreach ($photosets as $photosetKey => $photoset) {
-                if ($photoset->active == 0 || $photoset->manual == 0) {
+                if ($photoset->active == 0 || $photoset->manual_thumbnail == 0) {
                     unset($photosets[$photosetKey]);
                 } else {
                     $photosetKeys[$photosetKey] = $photosetKey;
