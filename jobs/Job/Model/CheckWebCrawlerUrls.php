@@ -12,7 +12,7 @@ class Job_Model_CheckWebCrawlerUrls extends Job_Abstract
 
         foreach ($modelNames as $modelName) {
 
-            checkCPULoad(1.7);
+            checkCPULoad();
 
             $modelName->verifyWebCrawlerUrls();
             $modelName->linkWebCrawlerUrls();

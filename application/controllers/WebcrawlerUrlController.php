@@ -20,7 +20,7 @@ class WebcrawlerUrlController extends Coda_Controller
 
             $this->view->model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('modelid'));
 
-            $webUrlQuery->leftJoin('mn.model m');
+            $webUrlQuery->innerJoin('mn.model m');
             $webUrlQuery->andWhere('m.id = ?', $this->_request->getParam('modelid'));
         }
 

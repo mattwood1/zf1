@@ -172,7 +172,7 @@ class ImageController extends Coda_Controller
 
                 if ($curl->statusCode() != 200) {
                     ob_end_clean();
-                    $curl->Curl("http://zf2.privatedns.org/img/error_404.jpg", true, 4, true);
+                    $curl->Curl("http://zf2.mooo.com/img/error_404.jpg", true, 4, true);
                     ob_start();
                     echo $curl->image($this->_request->getParam('width'));
                     $image = ob_get_clean();

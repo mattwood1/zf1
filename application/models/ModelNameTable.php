@@ -1,6 +1,8 @@
 <?php
 class God_Model_ModelNameTable extends Doctrine_Record
 {
+    const daysForRefresh = 7;
+
     public static function getInstance()
     {
         return Doctrine_Core::getTable('God_Model_ModelName');
@@ -11,7 +13,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
     {
         $modelNamesQuery = self::getInstance()
             ->createQuery('mn')
-            ->where('mn.datesearched < ? OR mn.datesearched = "0000-00-00 00:00:00"', date("Y-m-d", strtotime("-1 week")) )
+            ->where('mn.datesearched < ? OR mn.datesearched = "0000-00-00 00:00:00"', date("Y-m-d", strtotime("-".self::daysForRefresh." days")) )
             ->leftJoin('mn.model m')
             ->andWhere('m.active = ?', 1)
             ->andWhere('m.search = ?', 1)
@@ -24,15 +26,24 @@ class God_Model_ModelNameTable extends Doctrine_Record
     // Using the newer WebCrawler
     public static function getModelNameForWebCrawlerUpdate()
     {
+        // total Model Names array set for the day.
+        $modelNameCount = self::getInstance()
+            ->createQuery()
+            ->select('count(*) as count')
+            ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
+        $modelNameCount = reset($modelNameCount);
+        $count = $modelNameCount['count'] / self::daysForRefresh;
+
         $modelNamesQuery = self::getInstance()
             ->createQuery('mn')
-            ->where('mn.webcrawler_updated < ? OR mn.webcrawler_updated = "0000-00-00 00:00:00"', date("Y-m-d h:i:s", strtotime("-1 week")) )
+            ->where('mn.webcrawler_updated < ? OR mn.webcrawler_updated = "0000-00-00 00:00:00"', date("Y-m-d 00:00:00", strtotime("-".self::daysForRefresh." days")) )
             ->leftJoin('mn.model m')
             ->andWhere('m.active = ?', 1)
             ->andWhere('m.search = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
             ->orderBy('mn.webcrawler_updated asc')
-            ->limit(1);
+            ->limit($count);
         return $modelNamesQuery->execute();
     }
 
@@ -50,7 +61,8 @@ class God_Model_ModelNameTable extends Doctrine_Record
 
                 $modelNameQuery = self::getInstance()->createQuery('mn')->innerJoin('mn.model m');
                 foreach ($names as $name) {
-                    $modelNameQuery->orWhere('MATCH (m.name) AGAINST (?)', $name);
+                    //$modelNameQuery->orWhere('MATCH (m.name) AGAINST (?)', $name);
+                    $modelNameQuery->orWhere('m.name like ?', '%' . $name . '%');
                 }
                 $modelNameQuery->andWhere('m.active = 1')->andWhere('m.ranking > -1');
 

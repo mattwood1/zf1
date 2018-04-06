@@ -8,8 +8,6 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
 
     public static function findInsert($linkString, God_Model_WebCrawlerUrl $url)
     {
-//        checkCPULoad(God_Model_WebCrawlerUrl::CPULOAD);
-
         if (strpos($linkString, '@') !== false) {
             return;
         }
@@ -23,9 +21,7 @@ class God_Model_WebCrawlerLinkTable extends Doctrine_Record
         $link = self::getInstance()->findOneBy('link', $linkString);
 
         if (!$link) {
-//            _d('New Link');
             $link = God_Model_WebCrawlerLink::create($linkString);
-//            _d($url->url);
         }
         $link->save();
 

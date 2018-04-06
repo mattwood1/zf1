@@ -205,7 +205,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
     protected function filterLinksFromExistingDBEntries($links)
     {
         // Known links
-        $linkChunks = array_chunk($links, 1000);
+        $linkChunks = array_chunk($links, 10);
         $knownLinks = array();
         foreach ($linkChunks as $linkChunk) {
             $dblinkQuery = God_Model_WebCrawlerLinkTable::getInstance()
@@ -228,7 +228,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
     }
 
     protected function addLinks($links = array(), $priority = 0)
-    {
+    { 
         foreach ($links as $link) {
 
             checkCPULoad();

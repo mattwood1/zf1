@@ -6,8 +6,7 @@ class Job_WebCrawler_Link extends Job_Abstract
 {
     public function run()
     {
-        $cpuload = 1.5;
-        checkCPULoad($cpuload);
+        checkCPULoad();
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
         $curl = new God_Model_Curl();
 
@@ -28,7 +27,7 @@ class Job_WebCrawler_Link extends Job_Abstract
 
         foreach ($webCrawlerLinks as $webCrawlerLink) {
 
-            checkCPULoad($cpuload);
+            checkCPULoad();
 
             $curl->Curl($webCrawlerLink->link, $webCrawlerLink->parent_url->url,false, 10, true, true);
             $webUrl = $webCrawlerUrlTable->findInsert($curl);

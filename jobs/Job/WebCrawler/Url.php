@@ -6,14 +6,14 @@ class Job_WebCrawler_Url extends Job_Abstract
 {
     public function run()
     {
-        checkCPULoad(God_Model_WebCrawlerUrl::CPULOAD);
+        checkCPULoad();
 
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
         $webCrawlerUrls = $webCrawlerUrlTable->getQuery()->execute();
 
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
-            checkCPULoad(God_Model_WebCrawlerUrl::CPULOAD);
+            checkCPULoad();
 
 //            _d($webCrawlerUrl);
             $webCrawlerUrl->processUrl();

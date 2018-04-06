@@ -81,7 +81,12 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
                 foreach ($files as $file) {
 
-                    checkCPULoad(1.7);
+                    $cpu = 1.7; $temp = 50;
+                    
+                    if ($manual) {
+                        $cpu = 3; $temp = 70;
+                    }
+                    checkCPULoad($cpu, $temp);
 
                     $realpath = realpath($path . '/' . $file);
                     $urlPath = str_replace(IMAGE_DIR, '', $realpath);
