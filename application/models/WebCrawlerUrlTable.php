@@ -31,9 +31,9 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             ->innerJoin('linkref1.link as link1')
             ->innerJoin('link1.url as wcu1')
 
-            ->innerJoin('wcu1.linkref as linkref2')
-            ->innerJoin('linkref2.link as link2')
-            ->innerJoin('link2.url as wcu2')
+            ->leftJoin('wcu1.linkref as linkref2')
+            ->leftJoin('linkref2.link as link2')
+            ->leftJoin('link2.url as wcu2')
 
             ->innerJoin('wcu.modelnamelinks mnl')
             ->innerJoin('mnl.modelName mn')
