@@ -40,6 +40,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
 
             ->innerJoin('wcu.domain domain')
 
+            ->andWhere('wcu.followed = ?', God_Model_WebCrawlerUrl::FOLLOWEDTARGET)
             ->andWhere('
             (
                 (    domain.link_depth = 1
@@ -51,6 +52,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             OR  (
                      domain.link_depth = 2
                  and wcu1.contenttype like "text/html%"
+                 and wcu1.followed = "' . God_Model_WebCrawlerUrl::FOLLOWEDTARGET . '"
                  and wcu.domain_id = wcu1.domain_id
                  and wcu.url not like concat ("%", domain.subpage_ext ,"%")
                  and wcu2.contenttype = "image/jpeg"

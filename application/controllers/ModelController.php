@@ -95,6 +95,9 @@ class ModelController extends Coda_Controller
     public function addAliasAction()
     {
         // Something here
+        $model = God_Model_ModelTable::getInstance()->find($this->_request->getParam('id'));
+
+        $this->view->model = $model;
     }
 
     public function rankingAction()

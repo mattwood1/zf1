@@ -2,7 +2,7 @@
 class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 {
     const FOLLOWEDTARGET = -2;
-    const CPULOAD = 1.7;
+    const CPULOAD = 1.85;
 
     protected $_curl;
 

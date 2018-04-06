@@ -81,8 +81,6 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
                 foreach ($files as $file) {
 
-                    $cpu = 1.7; $temp = 50;
-                    
                     if ($manual) {
                         $cpu = 3; $temp = 70;
                     }
