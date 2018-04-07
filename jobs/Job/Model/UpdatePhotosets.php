@@ -22,10 +22,11 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         
         foreach ($models as $model) {
 
-            checkCPULoad(1.9);
+            checkCPULoad();
 
-            echo $model->getName() . " ($model->ID)\n";
+            echo $model->getName() . " ($model->ID)";
             if ($model->isActive()) {
+                echo " - Updating\n";
                 $model->updatePhotosets();
             }
 

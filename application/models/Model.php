@@ -75,7 +75,6 @@ class God_Model_Model extends God_Model_Base_Model
             $photosetFound = false;
             if ($photoset = God_Model_PhotosetTable::getInstance()->findOneBy('path', $this->path . DIRECTORY_SEPARATOR . $directory)) {
                 $photosetFound = true;
-                $photoset->updateImages();
             }
 
             if ( $photosetFound == false && is_array( $files = God_Model_File::scanPath($path . DIRECTORY_SEPARATOR . $directory)->getFiles() ) ) {
@@ -91,9 +90,10 @@ class God_Model_Model extends God_Model_Base_Model
                 $photoset->link('model', array($this->ID));
                 var_dump('Created gallery ' . $photoset->name, $files);                
                 $photoset->save();
-                
-                $photoset->updateImages();
-            }  
+            }
+
+            checkCPULoad();
+            $photoset->updateImages();
         }
 
         $this->photosetsChecked = date("Y-m-d", mktime());

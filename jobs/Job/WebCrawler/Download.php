@@ -16,6 +16,7 @@ class Job_WebCrawler_Download extends Job_Abstract
         $rows = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
         if (count($rows) >= 18 * 50) {
 
+            // Check for missing Links in the Link ref and insert missing data
             $conn = Doctrine_Manager::getInstance()->connection();
             $sql = "INSERT INTO webcrawlerUrlLink_ref (link_id, url_id) 
                     SELECT l.id, l.parent_url_id FROM `webcrawlerLinks` l
@@ -30,15 +31,13 @@ class Job_WebCrawler_Download extends Job_Abstract
         }
 
         $curl = new God_Model_Curl();
-//        $id = 3757903;
 
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
         $webCrawlerUrlQuery = $webCrawlerUrlTable->getDisplayQuery();
         $webCrawlerUrlQuery->innerJoin('mn.model model');
         $webCrawlerUrlQuery->andwhere('domain.download = ?', 1)
             ->andWhere('mn.download = ?', 1);
-//        $webCrawlerUrlQuery->andWhere('wcu.id = ?', $id);
-        $webCrawlerUrlQuery->limit(5);
+        $webCrawlerUrlQuery->limit(1);
 
         $webCrawlerUrls = $webCrawlerUrlQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
         if (count($webCrawlerUrls) > 0) {

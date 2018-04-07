@@ -5,15 +5,18 @@ class Coda_Debug extends Zend_Debug
 
 function checkCPULoad($load = 1.85, $temp = 55)
 {
+    if ($load == 0) $load = 1.85;
+    if ($temp == 0) $temp = 55;
+
     $sysload = sys_getloadavg();
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
     if ((float)$sysload[0] > $load || $systemp >= $temp) {
         $time = floor(10*$sysload[0]*(1/$load));
-        $string = 'Sleeping (' . $time . ' secs) ';
-        $string .= $sysload[0] > $load ? 'cpu ' .$sysload[0] . ' > ' . $load : '';
-        $string .= $systemp >= $temp ? 'temp ' . $systemp . ' => ' . $temp: '';
-        _d($string);
+        $string[] = 'Sleeping (' . $time . ' secs) ';
+        $string[] .= $sysload[0] > $load ? 'cpu ' .$sysload[0] . ' > ' . $load : '';
+        $string[] .= $systemp >= $temp ? 'temp ' . $systemp . ' => ' . $temp: '';
+        echo implode(" ", $string) . "\n";
         sleep($time);
         checkCPULoad($load, $temp);
     }

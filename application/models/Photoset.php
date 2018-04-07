@@ -81,6 +81,8 @@ class God_Model_Photoset extends God_Model_Base_Photoset
 
                 foreach ($files as $file) {
 
+                    $cpu = null; $temp = null;
+
                     if ($manual) {
                         $cpu = 3; $temp = 70;
                     }
@@ -160,7 +162,6 @@ class God_Model_Photoset extends God_Model_Base_Photoset
                     }
                 }
             }
-
 
             $this->imagesCheckedDate = date("Y-m-d");
             $this->save();
