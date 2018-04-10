@@ -56,6 +56,16 @@ class God_Model_Photoset extends God_Model_Base_Photoset
     
     public function updateImages($manual = false)
     {
+        if ($images = $this->images) {
+            foreach ($images as $image) {
+                $imagefile = realpath(PUBLIC_PATH . $image->filename);
+                if (!file_exists($imagefile)) {
+                    $image->delete();
+                }
+            }
+        }
+
+
         $path = PUBLIC_PATH . $this->path;
         $thumbnail = PUBLIC_PATH . $this->thumbnail;
         

@@ -22,7 +22,11 @@
 <?php if ($this->webcrawlerurls): ?>
 <ul>
     <?php foreach($this->webcrawlerurls as $webcrawlerurl): ?>
-    <li><?php echo $webcrawlerurl->id; ?> - <?php echo $webcrawlerurl->url; ?></li>
+        <li>
+            <?php echo $webcrawlerurl->id; ?> -
+            <?php echo $webcrawlerurl->url; ?>
+            <a href="<?php echo $webcrawlerurl->url; ?>" target="_blank"><i class="fa fa-external-link"></i></a>
+        </li>
     <?php endforeach; ?>
 </ul>
 <?php endif; ?>
