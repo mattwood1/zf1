@@ -24,6 +24,7 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
             $url->width = $width;
             $url->height = $height;
             $url->pixels = $width * $height;
+            $url->followed = self::FOLLOWEDTARGET;
         }
 
         if (strlen($curl->lastUrl()) > 1000) {

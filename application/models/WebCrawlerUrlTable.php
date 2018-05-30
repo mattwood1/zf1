@@ -27,6 +27,11 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
     {
         $webUrlQuery = $this->getInstance()
             ->createQuery('wcu')
+
+            ->innerJoin('wcu.modelnamelinks mnl')
+            ->innerJoin('mnl.modelName mn')
+            ->innerJoin('wcu.domain domain')
+
             ->innerJoin('wcu.linkref as linkref1')
             ->innerJoin('linkref1.link as link1')
             ->innerJoin('link1.url as wcu1')
@@ -35,11 +40,8 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             ->leftJoin('linkref2.link as link2')
             ->leftJoin('link2.url as wcu2')
 
-            ->innerJoin('wcu.modelnamelinks mnl')
-            ->innerJoin('mnl.modelName mn')
-
-            ->innerJoin('wcu.domain domain')
-
+            ->andWhere('wcu.statuscode = 200')
+            ->andWhere('wcu1.statuscode = 200')
             ->andWhere('wcu.followed = ?', God_Model_WebCrawlerUrl::FOLLOWEDTARGET)
             ->andWhere('
             (
@@ -58,7 +60,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
                  and wcu2.contenttype = "image/jpeg"
                  and wcu2.pixels > domain.minSize
                  and wcu2.downloaded = 0
-                )
+                ) 
             )');
 
         return $webUrlQuery;

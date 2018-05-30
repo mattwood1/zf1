@@ -10,7 +10,7 @@ class Job_WebCrawler_Download extends Job_Abstract
 {
     public function run()
     {
-
+/*
         $photosetTable = new God_Model_PhotosetTable();
         $query = $photosetTable->getThumbnails();
         $rows = $query->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
@@ -29,7 +29,7 @@ class Job_WebCrawler_Download extends Job_Abstract
 //            $models = $query->fetchAll();
             exit;
         }
-
+*/
         $curl = new God_Model_Curl();
 
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();
@@ -37,15 +37,18 @@ class Job_WebCrawler_Download extends Job_Abstract
         $webCrawlerUrlQuery->innerJoin('mn.model model');
         $webCrawlerUrlQuery->andwhere('domain.download = ?', 1)
             ->andWhere('mn.download = ?', 1);
-        $webCrawlerUrlQuery->limit(1);
+        $webCrawlerUrlQuery->limit(10);
+
+        _d($webCrawlerUrlQuery);
+        exit;
 
         $webCrawlerUrls = $webCrawlerUrlQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
         if (count($webCrawlerUrls) > 0) {
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
 
             $logfile = fopen('/tmp/WC_Download_'.date('Y-m-d').'.txt', 'a');
-            fwrite($logfile, date('H:i:s') . ' ' . $webCrawlerUrl['url'] . "\n");
-            fclose($logfile);
+            //fwrite($logfile, date('H:i:s') . ' ' . $webCrawlerUrl['url'] . "\n");
+            //fclose($logfile);
 
             echo $webCrawlerUrl['url'] . "\r\n";
             $photosets = null;
@@ -197,6 +200,10 @@ class Job_WebCrawler_Download extends Job_Abstract
                 ));
                 $WC_URL->save();
             }
+
+            // Write Log file details
+            fwrite($logfile, date('H:i:s') . ' ' . $webCrawlerUrl['url'] . ' (Downloaded = ' . $downloaded . ', Exisiting = ' . $existing . ', Remaining = ' . $remaining . (($remaining + $existing != $downloaded) ? ', Duplicates found' : '') . ')' . "\n");
+            fclose($logfile);
 
             // Clean up files
             if ($files = God_Model_File::scanPath($pathname)->getFiles()) {

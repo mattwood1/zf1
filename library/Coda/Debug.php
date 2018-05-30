@@ -3,9 +3,9 @@ class Coda_Debug extends Zend_Debug
 {
 }
 
-function checkCPULoad($load = 1.85, $temp = 55)
+function checkCPULoad($load = 1.75, $temp = 55)
 {
-    if ($load == 0) $load = 1.85;
+    if ($load == 0) $load = 1.75;
     if ($temp == 0) $temp = 55;
 
     $sysload = sys_getloadavg();

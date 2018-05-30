@@ -12,7 +12,7 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         $modelsQuery = $modelTable->getInstance()
             ->createQuery('m')
             ->leftJoin('m.photosets p')
-            ->where('photosetsChecked < ? OR photosetsChecked = ?', array(date("Y-m-d", strtotime("today")), "0000-00-00"))
+            ->where('photosetsChecked < ? OR photosetsChecked = ?', array(date("Y-m-d", strtotime("-1 day")), "0000-00-00"))
             ->andWhere('m.ranking >= ?', 0)
             ->andWhere('m.active = ?', 1)
             ->limit(20)
@@ -22,7 +22,7 @@ class Job_Model_UpdatePhotosets extends Job_Abstract
         
         foreach ($models as $model) {
 
-            checkCPULoad();
+            //checkCPULoad();
 
             echo $model->getName() . " ($model->ID)";
             if ($model->isActive()) {
