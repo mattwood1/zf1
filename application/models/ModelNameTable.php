@@ -30,6 +30,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
         $modelNameCount = self::getInstance()
             ->createQuery()
             ->select('count(*) as count')
+            ->where('name != ""')
             ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $modelNameCount = reset($modelNameCount);
@@ -42,6 +43,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
             ->andWhere('m.active = ?', 1)
             ->andWhere('m.search = ?', 1)
             ->andWhere('m.ranking >= ?', 0)
+            ->andWhere('mn.name != ""')
             ->orderBy('mn.webcrawler_updated asc')
             ->limit($count);
         return $modelNamesQuery->execute();

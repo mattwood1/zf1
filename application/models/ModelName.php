@@ -43,7 +43,7 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         if ((array)$webCrawlerUrls) {
             foreach ($webCrawlerUrls as $webCrawlerUrl) {
                 if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($name, $webCrawlerUrl->url) == false) {
-                    // $webCrawlerUrl->delete(); // WTF Removing Web Crawler URLS!
+                     $webCrawlerUrl->delete(); // WTF Removing Web Crawler URLS! Needed
                 }
             }
         }
