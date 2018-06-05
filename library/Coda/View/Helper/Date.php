@@ -27,59 +27,82 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
             return date($format, $date);
         }
         else {
+            $hour = 60 * 60;
+            $day = $hour * 24;
+            $week = $day * 7;
+            $year = $day * 365;
+            $month = $year / 12;
+
+            $strings = array(
+                'hours' => array(
+                    0 => 'Less than an hour',
+                    1 => 'An hour ago',
+                    2 => '%d %s ago'
+                ),
+                'days' => array(
+                    0 => 'Today',
+                    1 => 'Yesterday',
+                    2 => '%d %s ago'
+                ),
+                'weeks' => array(
+                    1 => 'A week ago',
+                    2 => '%d %s ago'
+                ),
+                'months' => array(
+                    1 => 'A month ago',
+                    2 => '%d %s ago'
+                ),
+                'years' => array(
+                    1 => 'A year ago',
+                    2 => '%d %s ago'
+                )
+            );
+
             $input = $date;
             $now = time();
-            $diff = $now - $date; 
+            $diff = $now - $input;
             $string = 'Don\'t know';
+            $period = null;
+
             // Hours
-            $hour = 60*60;
             if ($diff < $hour * 8) {
-                $hours= ceil($diff/$hour);
-                switch ($hours) {
-                    case 0:
-                        $string = 'Less than an hour';
-                        break;
-                    case 1:
-                        $string = 'An hour ago';
-                        break;
-                    default:
-                        $string = $hours . ' hours ago';
-                        break;
-                }
+                $period = 'hours';
+                $hourFactor= floor($diff/$hour);
+                if ($hourFactor > 2) $hourFactor = 2;
             }
             else {
-                $inputDate = strtotime(date('Y-m-d', $input));
-                $nowDate = strtotime(date('Y-m-d', $now));
-                $diffDate = $nowDate - $inputDate;
-                $day = 86400;
+                $period = 'days';
+                $periodFactor = floor($diff/$day);
+                $periodValue = $diff/$day;
 
-                if (!$diffDate) {
-                    $string = 'Today';
-                }
-                else {
-                    $days = floor($diffDate / $day);
-                    if ($days < 7) {
-                    switch ($days) {
-                        case 1:
-                            $string = 'Yesterday';
-                            break;
-                        default:
-                            $string = $days . ' days ago';
-                            break;
-                    }
+                if ($periodValue >= 7) {
+                    $period = 'weeks';
+                    $periodFactor = floor($diff/$week);
+                    $periodValue = $diff/$week;
+
+                    if ($periodValue >= floor($month/$week) && $periodValue < 12) {
+                        $period = 'months';
+                        $periodFactor = round($diff/$month);
+                        $periodValue = round($diff/$month);
+
+
                     }
                     else {
-                        $weeks = floor( $days / 7);
-                        switch ($weeks) {
-                            case 1:
-                                $string = 'A week ago';
-                                break;
-                            default:
-                                $string = $weeks . ' weeks ago';
-                                break;
-                        }
+                        $period = 'years';
+                        $periodFactor = $diff/$year;
+                        $periodValue = $diff/$year;
                     }
                 }
+
+                if ($periodFactor > 2) $periodFactor = 2;
+
+//                var_dump(array(
+//                    'period' => $period,
+//                    'factor' => $periodFactor,
+//                    'value' => $periodValue
+//                ));
+
+                $string = sprintf($strings[$period][$periodFactor], $periodValue, $period);
             }
 
             return $string;

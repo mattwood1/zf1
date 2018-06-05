@@ -39,9 +39,6 @@ class Job_WebCrawler_Download extends Job_Abstract
             ->andWhere('mn.download = ?', 1);
         $webCrawlerUrlQuery->limit(10);
 
-        _d($webCrawlerUrlQuery);
-        exit;
-
         $webCrawlerUrls = $webCrawlerUrlQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
         if (count($webCrawlerUrls) > 0) {
         foreach ($webCrawlerUrls as $webCrawlerUrl) {
