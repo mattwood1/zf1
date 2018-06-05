@@ -67,8 +67,8 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
             // Hours
             if ($diff < $hour * 8) {
                 $period = 'hours';
-                $hourFactor= floor($diff/$hour);
-                if ($hourFactor > 2) $hourFactor = 2;
+                $periodFactor= floor($diff/$hour);
+                if ($periodFactor > 2) $periodFactor = 2;
             }
             else {
                 $period = 'days';
@@ -80,16 +80,16 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
                     $periodFactor = floor($diff/$week);
                     $periodValue = $diff/$week;
 
+                    if ($periodFactor > 2) $periodFactor = 2;
+
                     if ($periodValue >= floor($month/$week) && $periodValue < 12) {
                         $period = 'months';
                         $periodFactor = round($diff/$month);
                         $periodValue = round($diff/$month);
-
-
                     }
-                    else {
+                    elseif ($periodValue > 12) {
                         $period = 'years';
-                        $periodFactor = $diff/$year;
+                        $periodFactor = floor($diff/$year);
                         $periodValue = $diff/$year;
                     }
                 }
