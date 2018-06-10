@@ -14,6 +14,9 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         return $webUrls;
     }
 
+    /**
+     * @throws Doctrine_Query_Exception
+     */
     public function verifyWebCrawlerUrls()
     {
         // Get the existing links from Model Name to WebCrawler URLs
@@ -40,10 +43,19 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         $name = God_Model_WebCrawlerUrlModelName::formatNameForUrlReg($this->name);
 
         // Check the URL is valid for the name
+        $unlinkModelNameWebCrawlerIds = array();
         if ((array)$webCrawlerUrls) {
             foreach ($webCrawlerUrls as $webCrawlerUrl) {
                 if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($name, $webCrawlerUrl->url) == false) {
-                     $webCrawlerUrl->delete(); // WTF Removing Web Crawler URLS! Needed
+                    $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id();
+                }
+            }
+        }
+
+        if ($unlinkModelNameWebCrawlerIds) {
+            foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
+                if (in_array($webCrawlerModelNameLink->webcrawler_url_id, $unlinkModelNameWebCrawlerIds)) {
+                    $webCrawlerModelNameLink->delete();
                 }
             }
         }
