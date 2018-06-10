@@ -27,13 +27,19 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
             return date($format, $date);
         }
         else {
-            $hour = 60 * 60;
+	        $minute = 60;
+            $hour = $minute * 60;
             $day = $hour * 24;
             $week = $day * 7;
             $year = $day * 365;
             $month = $year / 12;
 
             $strings = array(
+                'minutes' => array(
+                    0 => 'Just now',
+                    1 => 'A minute ago',
+                    2 => '%d %s ago'
+                ),
                 'hours' => array(
                     0 => 'Less than an hour',
                     1 => 'An hour ago',
@@ -64,10 +70,17 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
             $string = 'Don\'t know';
             $period = null;
 
+            if ($diff < $hour) {
+                $period = 'minutes';
+                $periodFactor = floor($diff/$minute);
+                $periodValue = $diff/$minute;
+                if ($periodFactor > 2) $periodFactor = 2;
+            }
             // Hours
-            if ($diff < $hour * 8) {
+            elseif ($diff <= $hour * 8) {
                 $period = 'hours';
                 $periodFactor= floor($diff/$hour);
+                $periodValue = $diff/$hour;
                 if ($periodFactor > 2) $periodFactor = 2;
             }
             else {
@@ -79,13 +92,13 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
                     $period = 'weeks';
                     $periodFactor = floor($diff/$week);
                     $periodValue = $diff/$week;
-
                     if ($periodFactor > 2) $periodFactor = 2;
 
-                    if ($periodValue >= floor($month/$week) && $periodValue < 12) {
+                    if ($periodValue >= floor($month/$week) && $periodValue < $year/$week) {
                         $period = 'months';
                         $periodFactor = round($diff/$month);
                         $periodValue = round($diff/$month);
+                        if ($periodFactor > 2) $periodFactor = 2;
                     }
                     elseif ($periodValue > 12) {
                         $period = 'years';
@@ -95,17 +108,9 @@ class Coda_View_Helper_Date extends Zend_View_Helper_Abstract
                 }
 
                 if ($periodFactor > 2) $periodFactor = 2;
-
-//                var_dump(array(
-//                    'period' => $period,
-//                    'factor' => $periodFactor,
-//                    'value' => $periodValue
-//                ));
-
-                $string = sprintf($strings[$period][$periodFactor], $periodValue, $period);
             }
 
-            return $string;
+            return sprintf($strings[$period][$periodFactor], $periodValue, $period);;
         }
     }
 }

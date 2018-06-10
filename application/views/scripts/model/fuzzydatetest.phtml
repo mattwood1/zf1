@@ -1,0 +1,73 @@
+<h1>Fuzzy Date Test</h1>
+
+<h3>Seconds</h3>
+<ul>
+    <?php for ($i = 0; $i <= 120; $i = $i + 15): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' second')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Second
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Minutes</h3>
+<ul>
+    <?php for ($i = 1; $i <= 10; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' minute')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Minute
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Hours</h3>
+<ul>
+    <?php for ($i = 1; $i <= 36; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' hour')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Hour
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Days</h3>
+<ul>
+    <?php for ($i = 1; $i <= 14; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' day')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Day
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Weeks</h3>
+<ul>
+    <?php for ($i = 1; $i <= 8; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' week')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Week
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Months</h3>
+<ul>
+    <?php for ($i = 1; $i <= 24; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' month')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Month
+        </li>
+    <?php endfor; ?>
+</ul>
+
+<h3>Years</h3>
+<ul>
+    <?php for ($i = 1; $i <= 8; $i++): ?>
+        <li>
+            <?php echo $this->date(date("Y-m-d H:i:s", strtotime('-'.$i.' year')), Coda_View_Helper_Date::FUZZY); ?>
+            / -<?php echo $i;?> Year
+        </li>
+    <?php endfor; ?>
+</ul>
+
+
