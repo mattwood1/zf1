@@ -47,15 +47,16 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         if ((array)$webCrawlerUrls) {
             foreach ($webCrawlerUrls as $webCrawlerUrl) {
                 if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($name, $webCrawlerUrl->url) == false) {
-                    $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id();
+                    $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id;
                 }
             }
         }
 
         if ($unlinkModelNameWebCrawlerIds) {
             foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
-                if (in_array($webCrawlerModelNameLink->webcrawler_url_id, $unlinkModelNameWebCrawlerIds)) {
-                    $webCrawlerModelNameLink->delete();
+                if (in_array($webCrawlerModelNameLink['webcrawler_url_id'], $unlinkModelNameWebCrawlerIds)) {
+                    $webCrawlerModelNameLinkObj = God_Model_WebCrawlerUrlModelNameTable::getInstance()->find($webCrawlerModelNameLink['id']);
+                    $webCrawlerModelNameLinkObj->delete();
                 }
             }
         }
