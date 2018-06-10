@@ -34,7 +34,7 @@ class God_Model_ModelNameTable extends Doctrine_Record
             ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
         $modelNameCount = reset($modelNameCount);
-        $count = $modelNameCount['count'] / self::daysForRefresh;
+        $count = ceil($modelNameCount['count'] / self::daysForRefresh);
 
         $modelNamesQuery = self::getInstance()
             ->createQuery('mn')
