@@ -104,15 +104,37 @@ class ModelController extends Coda_Controller
     {
         $model = null;
         if ($this->_request->isPost()) {
+
             $model = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_id'));
 
             // Check the ranking value to prevent mis clicks and multi clicks
             if ($model->ranking == $this->_request->getParam('model_ranking')) {
                 unset($this->modelSession->ranking[$model->ranking]);
-                
-                $model->ranking++;
+
+                // Decrease ranking increment on the losing model
+                $model_lost = Doctrine_Core::getTable('God_Model_Model')->findOneBy('ID', $this->_request->getParam('model_lost_id'));
+                $model_lost->ranking_inc--;
+                if ($model_lost->ranking_inc < 1) {
+                    $model_lost->ranking_inc = 1;
+                }
+                $model_lost->save();
+
+                // Increase winning model by the ranking increment
+                $model->ranking = $model->ranking + $model->ranking_inc;
                 $model->rankDate = date("Y-m-d h:i:s", mktime());
                 $model->search = (bool)$this->_request->getParam('search');
+
+                // If the mode is of type bottom increase the ranking increment
+                if (strpos($this->_request->getParam('mode'), 'bottom') !== false) {
+                    $model->ranking_inc++;
+                    if ($model->ranking_inc > 3) {
+                        $model->ranking_inc = 3;
+                    }
+                }
+                else {
+                    $model->ranking_inc = 1;
+                }
+
                 $model->save();
                 
                 $this->modelSession->ranking[$model->ranking] = $model->ID;

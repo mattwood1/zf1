@@ -1,14 +1,14 @@
 <?php
 class God_Model_ModelNameTable extends Doctrine_Record
 {
-    const daysForRefresh = 7;
+    const daysForRefresh = 6;
 
     public static function getInstance()
     {
         return Doctrine_Core::getTable('God_Model_ModelName');
     }
 
-    // TODO: To be removed
+    // TODO: To be removed replaced by function below
     public static function getModelNameToBeSearched()
     {
         $modelNamesQuery = self::getInstance()

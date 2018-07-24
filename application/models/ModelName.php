@@ -6,8 +6,8 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         $webUrlsQuery = God_Model_WebURLTable::getInstance()->createQuery('wu');
         $webUrlsQuery->where('linked <= 0');
         foreach (explode(" ", $this->name) as $namepart) {
-            //$webUrlsQuery->andWhere('MATCH (`url`) against (?)', "' . $namepart . '");
-            $webUrlsQuery->andWhere('url like ?', '%' . $namepart .'%');
+            $webUrlsQuery->andWhere('MATCH (`url`) against (?)', "' . $namepart . '");
+            //$webUrlsQuery->andWhere('url like ?', '%' . $namepart .'%');
         }
         $webUrls = $webUrlsQuery->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
@@ -92,8 +92,8 @@ class God_Model_ModelName extends God_Model_Base_ModelName
         }
 
         foreach (explode(" ", $this->name) as $namepart) {
-            //$webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against (?)', $namepart);
-            $webUrCrawlerUrlsQuery->andWhere('url like ?', '%' . $namepart . '%');
+            $webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against (?)', $namepart);
+            //$webUrCrawlerUrlsQuery->andWhere('url like ?', '%' . $namepart . '%');
         }
 
         $webCrawlerUrls = $webUrCrawlerUrlsQuery->execute();

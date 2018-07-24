@@ -6,7 +6,7 @@
     <div class="col-md-6 col-sm-10 col-xs-12 col-md-offset-3 col-sm-offset-1">
 	<div class="row">
             <?php
-                foreach ($this->models as $model):
+                foreach ($this->models as $key => $model):
                     $photoset = God_Model_Model::getRandomPhotoset($model['ID']);
             ?>
             <div class="col-xs-6">
@@ -45,6 +45,8 @@
                              -->
                             <input type="hidden" name="model_id" value="<?php echo $model['ID']; ?>" />
                             <input type="hidden" name="model_ranking" value="<?php echo $model['ranking']; ?>" />
+                            <input type="hidden" name="model_lost_id" value="<?php echo $key == 0 ? $this->models[1]['ID'] : $this->models[0]['ID']; ?>" />
+                            <input type="hidden" name="mode" value="<?php echo $this->mode; ?>" />
                             <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-thumbs-o-up"></i> God Like!</button>
                         </form>
 

@@ -35,8 +35,13 @@ class God_Model_Base_Model extends Doctrine_Record
         ));
 
         $this->hasColumn('ranking', 'integer', 11, array(
-                'type'               => 'integer',
-                'length'             => '11'
+            'type'               => 'integer',
+            'length'             => '11'
+        ));
+
+        $this->hasColumn('ranking_inc', 'integer', 11, array(
+            'type'               => 'integer',
+            'length'             => '11'
         ));
 
         $this->hasColumn('date', 'date', 25, array(
