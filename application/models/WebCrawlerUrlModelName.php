@@ -42,7 +42,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
     public static function checkUrlWithName($name, $url)
     {
-        $regex = self::$space . '(' . self::formatNameForUrlReg($name) . ')' . self::$space . '?';
+        $regex = self::$space . '(' . self::formatNameForUrlReg($name) . ')(?:' . self::$space . '|$)';
         if (preg_match("~" . $regex . "~i", $url, $matches)) {
             return true;
         }
