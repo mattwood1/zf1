@@ -14,19 +14,17 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
         if ($names) {
             foreach ($names as $modelNameID => $name) {
 
-                //checkCPULoad();
-
-                if (self::checkUrlWithName($name, $url['url'])) {
+                if (self::checkUrlWithName(self::formatNameForUrlReg($name), $url->url)) {
 
                     self::_createLink($modelNameID, $url->id);
 
                     $link = $url->link;
-                    $link->priority = 100;
+                    $link->priority = God_Model_WebCrawlerLink::PRIORTIY_HIGH;
                     $link->save();
 
                     $sublinks = $link->sublinks;
                     foreach ($sublinks as $sublink) {
-                        $sublink->priority = 100;
+                        $sublink->priority = God_Model_WebCrawlerLink::PRIORTIY_HIGH;
                         $sublink->save();
                     }
                 }
@@ -37,12 +35,11 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
     public static function formatNameForUrlReg($name)
     {
-        return strtolower(str_replace(" ", self::$space, $name));
+        return self::$space . '(' . strtolower(preg_replace("~[\s\-]~", self::$space, $name)) . ')(?:' . self::$space . '|$)';
     }
 
-    public static function checkUrlWithName($name, $url)
+    public static function checkUrlWithName($regex, $url)
     {
-        $regex = self::$space . '(' . self::formatNameForUrlReg($name) . ')(?:' . self::$space . '|$)';
         if (preg_match("~" . $regex . "~i", $url, $matches)) {
             return true;
         }

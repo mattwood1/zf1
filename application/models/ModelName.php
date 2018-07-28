@@ -25,44 +25,54 @@ class God_Model_ModelName extends God_Model_Base_ModelName
             ->where('model_name_id = ?', $this->ID)
             ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 
-        $webCrawlerUrls = array();
-        $unlinkModelNameWebCrawlerIds = array();
+        $chunks = array_chunk($webCrawlerModelNameLinks, 10);
 
-        if ($webCrawlerModelNameLinks) {
-            foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
-                $webCrawlerUrls[] = $webCrawlerModelNameLink['id'];
-            }
-        }
+        foreach ($chunks as $chunkKey => $webCrawlerModelNameLinks) {
 
-        if ($webCrawlerUrls) {
-            $webCrawlerUrlsObj = God_Model_WebCrawlerUrlTable::getInstance()
-                ->createQuery('wcu')
-                ->whereIn('id', $webCrawlerUrls)
-                ->execute();
-        }
+            $webCrawlerUrls = array();
+            $unlinkModelNameWebCrawlerIds = array();
 
-        // Format the name
-        $name = God_Model_WebCrawlerUrlModelName::formatNameForUrlReg($this->name);
-
-        // Check the URL is valid for the name
-        if ((array)$webCrawlerUrlsObj) {
-            foreach ($webCrawlerUrlsObj as $webCrawlerUrl) {
-                if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($name, $webCrawlerUrl->url) == false) {
-                    $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id;
+            if ($webCrawlerModelNameLinks) {
+                foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
+                    checkCPULoad();
+                    $webCrawlerUrls[] = $webCrawlerModelNameLink['webcrawler_url_id'];
                 }
-                unset($webCrawlerUrls[$webCrawlerUrl->id]);
             }
-        }
 
-        if ($webCrawlerUrls) {
-            $unlinkModelNameWebCrawlerIds = array_merge($unlinkModelNameWebCrawlerIds, $webCrawlerUrls);
-        }
+            if ($webCrawlerUrls) {
+                $webCrawlerUrlsObj = God_Model_WebCrawlerUrlTable::getInstance()
+                    ->createQuery('wcu')
+                    ->whereIn('id', $webCrawlerUrls)
+                    ->execute();
+            }
 
-        if ($unlinkModelNameWebCrawlerIds) {
-            foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
-                if (in_array($webCrawlerModelNameLink['webcrawler_url_id'], $unlinkModelNameWebCrawlerIds)) {
-                    $webCrawlerModelNameLinkObj = God_Model_WebCrawlerUrlModelNameTable::getInstance()->find($webCrawlerModelNameLink['id']);
-                    $webCrawlerModelNameLinkObj->delete();
+            // Format the name for regular expression url matching
+            $nameregex = God_Model_WebCrawlerUrlModelName::formatNameForUrlReg($this->name);
+
+            // Check the URL is valid for the name
+            if ((array)$webCrawlerUrlsObj) {
+                foreach ($webCrawlerUrlsObj as $webCrawlerUrl) {
+                    checkCPULoad();
+                    if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($nameregex, $webCrawlerUrl->url) == false) {
+                        $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id;
+                    }
+                    else {
+                        unset($webCrawlerUrls[$webCrawlerUrl->id]);
+                    }
+                }
+            }
+
+            if ($webCrawlerUrls) {
+                $unlinkModelNameWebCrawlerIds = array_merge($unlinkModelNameWebCrawlerIds, $webCrawlerUrls);
+            }
+
+            if ($unlinkModelNameWebCrawlerIds) {
+                foreach ($webCrawlerModelNameLinks as $webCrawlerModelNameLink) {
+                    checkCPULoad();
+                    if (in_array($webCrawlerModelNameLink['webcrawler_url_id'], $unlinkModelNameWebCrawlerIds)) {
+                        $webCrawlerModelNameLinkObj = God_Model_WebCrawlerUrlModelNameTable::getInstance()->find($webCrawlerModelNameLink['id']);
+                        $webCrawlerModelNameLinkObj->delete();
+                    }
                 }
             }
         }
@@ -91,11 +101,9 @@ class God_Model_ModelName extends God_Model_Base_ModelName
             $webUrCrawlerUrlsQuery->andWhereNotIn('id', $alreadyLinked);
         }
 
-        foreach (explode(" ", $this->name) as $namepart) {
+        foreach (preg_split("~[\s-]~", str_replace("'", "", $this->name)) as $namepart) {
             $webUrCrawlerUrlsQuery->andWhere('MATCH (`url`) against (?)', $namepart);
-            //$webUrCrawlerUrlsQuery->andWhere('url like ?', '%' . $namepart . '%');
         }
-
         $webCrawlerUrls = $webUrCrawlerUrlsQuery->execute();
 
         if ((array)$webCrawlerUrls) {

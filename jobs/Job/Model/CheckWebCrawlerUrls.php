@@ -32,5 +32,25 @@ class Job_Model_CheckWebCrawlerUrls extends Job_Abstract
 
             fclose($logfile);
         }
+
+        $conn = Doctrine_Manager::getInstance()->connection();
+
+        $badLinks = $conn->execute('
+            SELECT wcumn.* FROM `webcrawlerURL_model_name` as wcumn
+            left join webcrawlerUrls as wcu on (wcumn.webcrawler_url_id = wcu.id)
+            where wcu.id is null
+            limit 10000');
+        $badLinksResults = $badLinks->fetchAll();
+
+        if ($badLinksResults) {
+            $removeIds = array();
+            foreach ($badLinksResults as $badLinksResult) {
+                $removeIds[] = $badLinksResult['id'];
+            }
+
+            $conn->execute('
+                DELETE FROM `webcrawlerURL_model_name` 
+                WHERE `webcrawlerURL_model_name`.`id` in (' . implode(',', $removeIds) . ')');
+        }
     }
 }
