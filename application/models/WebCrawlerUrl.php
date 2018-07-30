@@ -108,6 +108,19 @@ class God_Model_WebCrawlerUrl extends God_Model_Base_WebCrawlerUrl
 
     }
 
+    public function promoteLinks($priority)
+    {
+        $link = $this->link;
+        $link->priority = $priority;
+        $link->save();
+
+        $sublinks = $link->sublinks;
+        foreach ($sublinks as $sublink) {
+            $sublink->priority = $priority;
+            $sublink->save();
+        }
+    }
+
     protected function processHTMLLinks($html)
     {
         $dom = new DOMDocument();

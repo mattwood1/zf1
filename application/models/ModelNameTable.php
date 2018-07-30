@@ -1,7 +1,7 @@
 <?php
 class God_Model_ModelNameTable extends Doctrine_Record
 {
-    const daysForRefresh = 6;
+    const daysForRefresh = 7;
 
     public static function getInstance()
     {

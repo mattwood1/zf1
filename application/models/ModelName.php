@@ -55,8 +55,10 @@ class God_Model_ModelName extends God_Model_Base_ModelName
                     checkCPULoad();
                     if (God_Model_WebCrawlerUrlModelName::checkUrlWithName($nameregex, $webCrawlerUrl->url) == false) {
                         $unlinkModelNameWebCrawlerIds[] = $webCrawlerUrl->id;
+                        $webCrawlerUrl->promoteLinks(God_Model_WebCrawlerLink::PRIORITY_MED);
                     }
                     else {
+                        $webCrawlerUrl->promoteLinks(God_Model_WebCrawlerLink::PRIORTIY_HIGH);
                         unset($webCrawlerUrls[$webCrawlerUrl->id]);
                     }
                 }

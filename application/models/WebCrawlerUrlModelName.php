@@ -18,15 +18,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
                     self::_createLink($modelNameID, $url->id);
 
-                    $link = $url->link;
-                    $link->priority = God_Model_WebCrawlerLink::PRIORTIY_HIGH;
-                    $link->save();
-
-                    $sublinks = $link->sublinks;
-                    foreach ($sublinks as $sublink) {
-                        $sublink->priority = God_Model_WebCrawlerLink::PRIORTIY_HIGH;
-                        $sublink->save();
-                    }
+                    $url->promoteLinks(God_Model_WebCrawlerLink::PRIORTIY_HIGH);
                 }
             }
             return $names;
