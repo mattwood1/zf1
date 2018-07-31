@@ -41,6 +41,7 @@ class God_Model_WebCrawlerUrlTable extends Doctrine_Record
             ->leftJoin('link2.url as wcu2')
 
             ->andWhere('wcu.statuscode = 200')
+            ->andWhere('mnl.action = "Download"')
             ->andWhere('wcu1.statuscode = 200')
             ->andWhere('wcu.followed = ?', God_Model_WebCrawlerUrl::FOLLOWEDTARGET)
             ->andWhere('

@@ -1,7 +1,7 @@
 <?php
 class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModelName
 {
-    public static $space = "[\/\s\-\_\+]";
+    public static $space = "(?:[\/\s\-\_\+]|%20)";
 
     public static function createLink(God_Model_WebCrawlerUrl $url, $names = array())
     {
@@ -16,9 +16,14 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
                 if (self::checkUrlWithName(self::formatNameForUrlReg($name), $url->url)) {
 
+                    echo "PASS - " . self::formatNameForUrlReg($name) . " - " . $url->url . "\r\n";
+
                     self::_createLink($modelNameID, $url->id);
 
                     $url->promoteLinks(God_Model_WebCrawlerLink::PRIORTIY_HIGH);
+                }
+                else {
+                    echo "FAIL - " . self::formatNameForUrlReg($name) . " - " .$url->url . "\r\n";
                 }
             }
             return $names;
@@ -27,7 +32,7 @@ class God_Model_WebCrawlerUrlModelName extends God_Model_Base_WebCrawlerUrlModel
 
     public static function formatNameForUrlReg($name)
     {
-        return self::$space . '(' . strtolower(preg_replace("~[\s\-]~", self::$space, $name)) . ')(?:' . self::$space . '|$)';
+        return '(' . strtolower(preg_replace("~[\s\-]~", self::$space, $name)) . ')(?:' . self::$space . '|$)?';
     }
 
     public static function checkUrlWithName($regex, $url)
