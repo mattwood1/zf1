@@ -3,12 +3,15 @@ class Coda_Debug extends Zend_Debug
 {
 }
 
-function checkCPULoad($load = 1.75, $temp = 55)
+function checkCPULoad($load = 1.75, $temp = 55, $freeMemory = 500000)
 {
     if ($load == 0) $load = 1.75;
     if ($temp == 0) $temp = 55;
 
     $sysload = sys_getloadavg();
+
+    if ($sysload[1] >= 4 || freeMemory() < $freeMemory) exit;
+
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
     if ((float)$sysload[0] > $load || $systemp >= $temp) {
@@ -22,6 +25,25 @@ function checkCPULoad($load = 1.75, $temp = 55)
     }
     
     return;
+}
+
+function freeMemory() {
+    $meminfo = @file_get_contents("/proc/meminfo");
+    $memFree = null;
+
+    if ($meminfo) {
+
+        $lines = explode('kB', $meminfo);
+        foreach ($lines as $line) {
+
+            $line = explode(':', $line);
+            if (trim($line[0]) == 'MemFree') {
+                $memFree = trim($line[1]);
+            }
+        }
+    }
+
+    return $memFree;
 }
 
 function _d()
