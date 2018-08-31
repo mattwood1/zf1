@@ -19,8 +19,11 @@ class Job_WebCrawler_Url extends Job_Abstract
         }
 
         if ($ids) {
-            $sql = "delete from webcrawlerUrlLink_ref where id in (" . implode(',', $ids) . ")";
-            $conn->execute($sql);
+            foreach ($ids as $linkid) {
+                if ($link = God_Model_WebCrawlerUrlLinkTable::getInstance()->find($linkid)) {
+                    $link->delete();
+                }
+            }
         }
 
         $webCrawlerUrlTable = new God_Model_WebCrawlerUrlTable();

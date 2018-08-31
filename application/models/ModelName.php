@@ -34,6 +34,8 @@ class God_Model_ModelName extends God_Model_Base_ModelName
 
             foreach ($chunks as $chunkKey => $webCrawlerModelNameLinks) {
 
+checkCPULoad();
+
                 echo "Chunk - " . ($chunkKey + 1) . "/" . count($chunks) . "\r\n";
 
                 $webCrawlerUrls = array();
@@ -68,6 +70,12 @@ class God_Model_ModelName extends God_Model_Base_ModelName
                         } else {
                             $webCrawlerUrl->promoteLinks(God_Model_WebCrawlerLink::PRIORTIY_HIGH);
                             echo "PASS - " . $nameregex . " - " . $webCrawlerUrl->url . "\r\n";
+
+//                            foreach ($webCrawlerUrl->link->sublinks as $link) {
+//                                _d($link->url);
+//                            }
+//                            exit;
+
                             $passedWebCrawlerUrls[] = $webCrawlerUrl->id;
                             unset($webCrawlerUrls[$webCrawlerUrl->id]);
                         }

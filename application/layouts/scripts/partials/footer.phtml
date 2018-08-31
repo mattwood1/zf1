@@ -7,7 +7,7 @@ $temp = str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors 
     <div class="pull-left">
         <?php if (Zend_Auth::getInstance()->hasIdentity()): ?>
         <div class="cpu">
-            <?php echo implode(', ', $load) . ', ' . $temp; ?>
+            <?php echo implode(', ', $load) . ', ' . $temp; ?> <?PHP echo freeMemory();  ?>
         </div>
         <?php endif; ?>
     </div>

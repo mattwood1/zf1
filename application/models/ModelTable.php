@@ -151,11 +151,20 @@ class God_Model_ModelTable extends Doctrine_Record
                 'uri'  => $uri,
                 'active' => 1,
                 'ranking' => 0,
-                'search' => 1
+                'search' => 1,
+'names' => array(
+    array(
+    'name' => $name,
+    'default' => 1,
+    'download' => 1
+)
+)
             ));
+_d($model);
             $model->save();
 
-            $model->addModelName($name, $default = 1);
+// not needed as it's included above
+            //$model->addModelName($name, $default = 1);
             return $model;
         } else {
             return false;

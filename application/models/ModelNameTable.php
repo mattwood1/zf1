@@ -36,6 +36,9 @@ class God_Model_ModelNameTable extends Doctrine_Record
         $modelNameCount = reset($modelNameCount);
         $count = ceil($modelNameCount['count'] / self::daysForRefresh);
 
+        $count = ceil($count / 6); // run 6 times a day every 4 hours
+        $count = 10;
+
         $modelNamesQuery = self::getInstance()
             ->createQuery('mn')
             ->where('mn.webcrawler_updated < ? OR mn.webcrawler_updated = "0000-00-00 00:00:00"', date("Y-m-d 00:00:00", strtotime("-".self::daysForRefresh." days")) )

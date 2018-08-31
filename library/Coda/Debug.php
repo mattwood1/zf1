@@ -10,7 +10,11 @@ function checkCPULoad($load = 1.75, $temp = 55, $freeMemory = 500000)
 
     $sysload = sys_getloadavg();
 
-    if ($sysload[1] >= 4 || freeMemory() < $freeMemory) exit;
+    if ($sysload[1] >= 4 || freeMemory() < $freeMemory) {
+        gc_enable();
+        gc_collect_cycles();
+        exit;
+    }
 
     $systemp = (float)str_replace('°C', '', str_replace('+', '', trim(str_ireplace('Core0 Temp:', '', exec('sensors | sed -n 3p')))));
     
@@ -19,8 +23,9 @@ function checkCPULoad($load = 1.75, $temp = 55, $freeMemory = 500000)
         $string[] = 'Sleeping (' . $time . ' secs) ';
         $string[] .= $sysload[0] > $load ? 'cpu ' .$sysload[0] . ' > ' . $load : '';
         $string[] .= $systemp >= $temp ? 'temp ' . $systemp . ' => ' . $temp: '';
-        echo implode(" ", $string) . "\n";
+        echo implode(" ", $string);
         sleep($time);
+        echo "\n";
         checkCPULoad($load, $temp);
     }
     
